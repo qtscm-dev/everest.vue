@@ -64,23 +64,19 @@ const router = new VueRouter({
           path: "/index/project/project/apppro/:id",
           name: "apppro",
           component: () => import("../views/project/summaryInfo/Apppro.vue"),
-        },{
+        },
+        {
           path: "/index/project/project/toapppro/:id",
           name: "apppro",
           component: () => import("../views/project/summaryInfo/Toapppro.vue"),
         },
-
         // 指派中心
-        // {
-        //   path: "/index/assign/assign",
-        //   name: "assign",
-        //   component: () => import("../views/assign/Assign.vue")
-        // }
+        {
+          path: "/index/assign/assign",
+          name: "assign",
+          component: () => import("../views/assign/Assign.vue"),
+        },
       ],
-    },
-    {
-      path: "/ceshi",
-      component: () => import("../views/User/ceshi.vue"),
     },
   ],
 });
