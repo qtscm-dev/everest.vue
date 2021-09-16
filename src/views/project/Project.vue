@@ -88,7 +88,7 @@
           <template slot="operation" slot-scope="text, record">
             <div>
               <span
-                style="color: #1890ff"
+                style="color: #1890ff; font-size: 14px"
                 @click="() => handlerJump(record.id, record.status)"
                 >详情</span
               >
@@ -111,6 +111,7 @@ export default {
         key: "code",
         width: 100,
         fixed: "left",
+        align: "center",
       },
       {
         title: "项目名称",
@@ -123,6 +124,7 @@ export default {
         dataIndex: "client_nm",
         key: "client_nm",
         width: 100,
+        ellipsis: true,
       },
       {
         title: "幕墙面积",
@@ -134,7 +136,8 @@ export default {
         title: "建筑类型",
         dataIndex: "build_lbl",
         key: "build_lbl",
-        width: 150,
+        width: 100,
+        ellipsis: true,
       },
       {
         title: "项目类型",
@@ -159,6 +162,7 @@ export default {
         dataIndex: "bulid_addr",
         key: "bulid_addr",
         width: 180,
+        ellipsis: true,
       },
       {
         title: "创建时间",
@@ -177,6 +181,8 @@ export default {
         dataIndex: "operation",
         scopedSlots: { customRender: "operation" },
         fixed: "right",
+        width: 70,
+        align: "center",
       },
     ];
     return {
@@ -232,8 +238,8 @@ export default {
       this.$api
         .get(this.baseURL + "project/project/", {
           params: {
-            proj_cycle: this.conditionForm.proj_cycle,
             search: this.conditionForm.search,
+            proj_cycle: this.conditionForm.proj_cycle,
             client_nm: this.conditionForm.client_nm,
           },
           headers: {
@@ -242,7 +248,9 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
+          console.log(this.projectList);
           this.projeList = result.datarows;
+          console.log(this.projectList);
         })
         .catch((err) => {
           console.log(err);
@@ -415,3 +423,4 @@ export default {
   margin-bottom: 0;
 }
 </style>
+let i ; // 1,i = 0; 2, i = 9; i = list2 list let i ; 2 i = 9 ;

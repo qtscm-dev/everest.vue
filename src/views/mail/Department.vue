@@ -54,7 +54,12 @@
                 >新增部门</a-button
               >
             </div>
-            <a-table :columns="columns" :data-source="departlist" size="middle">
+            <a-table
+              :columns="columns"
+              :data-source="departlist"
+              size="middle"
+              :scroll="{ x: 800 }"
+            >
               <template slot="operation" slot-scope="text, record">
                 <span
                   style="color: #1890ff"
@@ -226,35 +231,45 @@ export default {
         title: "部门名称",
         dataIndex: "nm",
         key: "nm",
+        width: 120,
+        fixed: "left",
+        align: "center",
       },
       {
         title: "部门等级",
         dataIndex: "lvl",
         key: "lvl",
+        align: "center",
       },
       {
         title: "部门顺序",
         dataIndex: "o",
         key: "o",
+        align: "center",
       },
       {
         title: "上级部门",
         dataIndex: "pnm",
         key: "pnm",
+        align: "center",
       },
       {
         title: "创建时间",
         dataIndex: "created",
         key: "created",
+        width: 180,
       },
       {
         title: "更新时间",
         dataIndex: "updated",
         key: "updated",
+        width: 180,
       },
       {
         title: "操作",
         dataIndex: "operation",
+        width: 150,
+        fixed: "right",
         scopedSlots: { customRender: "operation" },
       },
     ];

@@ -42,14 +42,30 @@ div
         </div>
       </div>
       <div class="concent">
-        <div>
+        <div style="margin-bottom: 24px">
           <span>员工信息</span>
-          <a-button type="primary" class="concent-button">新增员工</a-button>
+          <a-button type="primary" class="concent-button" @click="handlerNewem"
+            >新增员工</a-button
+          >
         </div>
-        <a-radio-group class="concent-radio">
-          <a-radio-button> 已激活 </a-radio-button>
-          <a-radio-button> 已禁用 </a-radio-button>
-          <a-radio-button> 全部 </a-radio-button>
+        <a-radio-group style="margin-bottom: 24px" v-model="value">
+          <a-radio-button
+            value="a"
+            @click="handlerTrue"
+            style="font-size: 14px"
+          >
+            已激活&nbsp;&nbsp;{{ listLenght.trueLenght }}
+          </a-radio-button>
+          <a-radio-button
+            value="b"
+            @click="handlerFalse"
+            style="font-size: 14px"
+          >
+            已禁用&nbsp;&nbsp;{{ listLenght.falseLenght }}
+          </a-radio-button>
+          <a-radio-button value="c" @click="handlerAll" style="font-size: 14px">
+            全部&nbsp;&nbsp;{{ listLenght.allLenght }}
+          </a-radio-button>
         </a-radio-group>
         <a-table
           :columns="columns"
@@ -69,6 +85,20 @@ div
               :src="record.avatar"
             />
           </span>
+          <a-badge
+            v-if="text == '已激活'"
+            slot="status"
+            slot-scope="text"
+            status="success"
+            :text="text"
+          />
+          <a-badge
+            v-else-if="text == '已禁用'"
+            slot="status"
+            slot-scope="text"
+            status="error"
+            :text="text"
+          />
           <template slot="operation" slot-scope="text, record">
             <span
               style="font-size: 14px; font-weight: initial; color: #1890ff"
@@ -84,7 +114,7 @@ div
             </span>
             <a-divider type="vertical" />
             <a-popconfirm
-              title="请确认是否要删除该部门？"
+              title="请确认是否要删除该员工？"
               ok-text="确定"
               cancel-text="取消"
               @confirm="() => handlerDelete(record.id)"
@@ -104,6 +134,206 @@ div
             >
           </template>
         </a-table>
+        <!-- 新增员工 -->
+        <a-form
+          :form="form"
+          :model="editList"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
+        >
+          <a-modal
+            v-model="visibles1"
+            title="新增员工"
+            @ok="handleOk"
+            :wrapper-col="wrapperCol"
+            :destroyOnClose="true"
+          >
+            <a-form-item label="上传图像：">
+              <a-upload
+                name="avatar"
+                list-type="picture-card"
+                class="avatar-uploader"
+                :show-upload-list="false"
+                :action="imgUrl"
+                :before-upload="beforeUpload"
+                @change="handleChange"
+              >
+                <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                <div v-else>
+                  <a-icon :type="loading ? 'loading' : 'plus'" />
+                  <div class="ant-upload-text">Upload</div>
+                </div>
+              </a-upload>
+            </a-form-item>
+            <a-form-item label="姓名">
+              <a-input
+                v-model="editList.nm"
+                placeholder="请输入"
+                v-decorator="[
+                  '姓名',
+                  {
+                    rules: [{ required: true, message: '该项为必填项' }],
+                  },
+                ]"
+              ></a-input>
+            </a-form-item>
+            <a-form-item label="手机号码">
+              <a-input
+                v-model="editList.mob"
+                type="text"
+                maxLength="11"
+                onkeyup="this.value=this.value.replace(/\D/g,'')"
+                placeholder="请输入"
+                v-decorator="[
+                  '手机号码',
+                  {
+                    rules: [{ required: true, message: '该项为必填项' }],
+                  },
+                ]"
+              ></a-input>
+            </a-form-item>
+            <a-form-item label="账号">
+              <a-input
+                v-model="editList.login_nm"
+                type="text"
+                onkeyup="this.value=this.value.replace(/\D/g,'')"
+                placeholder="请输入"
+                v-decorator="[
+                  '账号',
+                  {
+                    rules: [{ required: true, message: '该项为必填项' }],
+                  },
+                ]"
+              ></a-input>
+            </a-form-item>
+            <a-form-item label="角色">
+              <a-select
+                v-model="editList.role_id"
+                style="width: 275.33px"
+                placeholder="请选择"
+                v-decorator="[
+                  '角色',
+                  {
+                    rules: [{ required: true, message: '该项为必填项' }],
+                  },
+                ]"
+              >
+                <a-select-option
+                  v-for="(roles, i) in role_list"
+                  :key="i"
+                  :value="roles.id"
+                >
+                  {{ roles.lbl }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="性别">
+              <a-select
+                v-model="editList.gender"
+                style="width: 275.33px"
+                placeholder="请选择"
+                v-decorator="[
+                  '性别',
+                  {
+                    rules: [{ required: true, message: '该项为必填项' }],
+                  },
+                ]"
+              >
+                <a-select-option value="1"> 男 </a-select-option>
+                <a-select-option value="0"> 女 </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="职位">
+              <a-select
+                v-model="editList.job_id"
+                style="width: 275.33px"
+                placeholder="请选择"
+                v-decorator="[
+                  '职位',
+                  {
+                    rules: [{ required: true, message: '该项为必填项' }],
+                  },
+                ]"
+              >
+                <a-select-option
+                  v-for="(jobs, i) in job_list"
+                  :key="i"
+                  :value="jobs.id"
+                >
+                  {{ jobs.un }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="部门">
+              <a-select
+                v-model="editList.dept_id"
+                style="width: 275.33px"
+                placeholder="请选择"
+                v-decorator="[
+                  '部门',
+                  {
+                    rules: [{ required: true, message: '该项为必填项' }],
+                  },
+                ]"
+              >
+                <a-select-option
+                  v-for="(depts, i) in dept_list"
+                  :key="i"
+                  :value="depts.id"
+                >
+                  {{ depts.nm }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="是否领导">
+              <a-select
+                v-model="editList.is_leader"
+                style="width: 275.33px"
+                placeholder="请选择"
+                v-decorator="[
+                  '是否领导',
+                  {
+                    rules: [{ required: true, message: '该项为必填项' }],
+                  },
+                ]"
+              >
+                <a-select-option value="true"> 是 </a-select-option>
+                <a-select-option value="false"> 否 </a-select-option>
+              </a-select>
+            </a-form-item>
+            <a-form-item label="电话号码">
+              <a-input-group v-model="editList.phone">
+                <a-row :gutter="8">
+                  <a-col :span="8">
+                    <a-input placeholder="     +86" />
+                  </a-col>
+                  <a-col :span="16">
+                    <a-input />
+                  </a-col>
+                </a-row>
+              </a-input-group>
+            </a-form-item>
+            <a-form-item label="邮箱">
+              <a-input v-model="editList.email" placeholder="请输入"></a-input>
+            </a-form-item>
+            <a-form-item label="地址">
+              <a-cascader
+                v-model="editList.address"
+                expand-trigger="hover"
+                :options="options"
+                style="width: 275.33px; margin-bottom: 24px"
+                placeholder="请选择地址，如“xx省xx市xx区”"
+              ></a-cascader>
+              <a-input placeholder="请输入具体地址，如“xx街道xx小区”"></a-input>
+            </a-form-item>
+            <a-form-item label="状态">
+              <a-radio-group v-model="editList.active" name="radioGroup">
+                <a-radio :value="true"> 已激活 </a-radio>
+                <a-radio :value="false"> 已禁用 </a-radio>
+              </a-radio-group>
+            </a-form-item>
+          </a-modal>
+        </a-form>
         <!-- 编辑员工 -->
         <a-form
           :form="form"
@@ -310,9 +540,8 @@ div
                 :defaultValue="staff_info.address"
                 v-model="staff_list.address"
                 expand-trigger="hover"
-                :options="options"
                 style="width: 275.33px; margin-bottom: 24px"
-                placeholder="请选择地址，如“xx省xx市xx区”"
+                placeholder="请选择"
               ></a-cascader>
               <a-input placeholder="请输入具体地址，如“xx街道xx小区”"></a-input>
             </a-form-item>
@@ -332,7 +561,7 @@ div
 <script>
 import imgUrl1 from "../../../public/portrait/woman.jpg";
 import imgUrl2 from "../../../public/portrait/man.jpg";
-// import { Modal } from "ant-design-vue";
+import { Modal } from "ant-design-vue";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -368,7 +597,7 @@ export default {
       {
         title: "状态",
         dataIndex: "status",
-        key: "status",
+        scopedSlots: { customRender: "status" },
       },
       {
         title: "性别",
@@ -419,14 +648,45 @@ export default {
         xs: { span: 12 },
         sm: { span: 14 },
       },
-      visibles2: true,
+      visibles1: false,
+      visibles2: false,
+      loading: false,
+      value: "a",
       // 部门详情
       depart: "",
       // 员工信息
       columns,
       empList: [],
       staff_info: "",
-      imgURL: this.baseURL + "project/upload_file/",
+      staff_list: "",
+      role_list: "",
+      job_list: "",
+      dept_list: "",
+      imgUrl: this.baseURL + "project/upload_file/",
+      imageUrl: "",
+      listLenght: {
+        trueLenght: "",
+        falseLenght: "",
+        allLenght: "",
+      },
+      // 新增员工
+      editList: [
+        {
+          login_nm: "",
+          nm: "",
+          mob: "",
+          phone: "",
+          active: "",
+          email: "",
+          address: "",
+          avatar: "",
+          job_id: "",
+          dept_id: "",
+          is_leader: "",
+          gender: "",
+          role_id: "",
+        },
+      ],
       // 跳转路径
       viewUrl: "",
       // 分页
@@ -444,10 +704,13 @@ export default {
     // 获取信息
     parameter() {
       this.param = this.$router.currentRoute.params.id.slice(4);
+    },
+    getInfo(id, stat) {
       this.$api
         .get(this.baseURL + "dept/dept_detail/", {
           params: {
-            dept_id: this.param,
+            dept_id: id,
+            sta: stat,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
@@ -457,6 +720,9 @@ export default {
           let result = res.data.data.data;
           this.depart = result.dept_info;
           this.empList = result.staff_list;
+          this.listLenght.trueLenght = result.count_num.active_num;
+          this.listLenght.falseLenght = result.count_num.disabled_num;
+          this.listLenght.allLenght = result.count_num.total_num;
           for (let i = 0; i < this.empList.length; i++) {
             if (this.empList[i].avatar == null) {
               if (this.empList[i].sex == "女") {
@@ -472,12 +738,55 @@ export default {
           console.log(err);
         });
     },
+    // 已激活
+    handlerTrue() {
+      this.getInfo(this.param, "t");
+    },
+    // 已禁用
+    handlerFalse() {
+      this.getInfo(this.param, "f");
+    },
+    // 全部
+    handlerAll() {
+      this.getInfo(this.param, "all");
+    },
+    // 新增员工
+    handlerNewem() {
+      this.visibles1 = true;
+    },
+    handleOk(e) {
+      e.preventDefault();
+      this.form.validateFields((err) => {
+        var qs = require("qs");
+        this.loading = true;
+        if (!err) {
+          this.$api
+            .post(this.baseURL + "dept/new_mbr/", qs.stringify(this.editList), {
+              headers: {
+                Authorization: localStorage.getItem("Authorization"),
+              },
+            })
+            .then((res) => {
+              let result = res.data;
+              console.log(this.editList);
+              console.log(result);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          this.visibles1 = false;
+          this.loading = false;
+          this.handlerInfo("t");
+        }
+      });
+    },
     // 员工详情
     handlerInfo(id) {
       this.$router.push("/index/employee/emdetails/:id=" + id);
     },
     // 员工编辑
     handlerEdit(id) {
+      this.visibles2 = true;
       this.$api
         .get(this.baseURL + "dept/mbr_detail/", {
           params: {
@@ -488,6 +797,7 @@ export default {
           },
         })
         .then((res) => {
+          console.log(id);
           let result = res.data.data.data;
           this.staff_info = result.staff_info;
           console.log(result);
@@ -593,9 +903,36 @@ export default {
       }
       return isJpgOrPng && isLt2M;
     },
+    // 删除员工
+    handlerDelete(id) {
+      this.$api
+        .get(this.baseURL + "dept/del_mbr/", {
+          params: {
+            user_id: id,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data;
+          if (!result.code) {
+            Modal.error({
+              title: "删除员工",
+              content: result.data.errmsg,
+              okText: "返回",
+            });
+          }
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
   mounted() {
     this.parameter();
+    this.handlerTrue();
   },
 };
 </script>

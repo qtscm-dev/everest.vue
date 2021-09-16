@@ -99,7 +99,6 @@
               :columns="columns"
               :data-source="employlist"
               :scroll="{ x: 1500 }"
-              :customRow="rowClick"
               :pagination="pagination"
               size="middle"
             >
@@ -128,22 +127,33 @@
                 status="error"
                 :text="text"
               />
-              <span slot="action">
-                <router-link :to="emUrl">详情</router-link>
+              <template slot="operation" slot-scope="text, record">
+                <span
+                  style="color: #1890ff"
+                  @click="() => handlerEmpl(record.id)"
+                  >详情</span
+                >
                 <a-divider type="vertical" />
-                <span style="color: #1890ff" @click="handlerEdit">编辑</span>
+                <span
+                  style="color: #1890ff"
+                  @click="() => handlerEdit(record.id)"
+                >
+                  编辑
+                </span>
                 <a-divider type="vertical" />
                 <a-popconfirm
                   title="请确认是否要删除该员工？"
                   ok-text="确定"
                   cancel-text="取消"
-                  @confirm="handlerDelete"
+                  @confirm="() => handlerDelete(record.id)"
                 >
-                  <a class="ant-dropdown-link"> 删除</a>
+                  <span style="color: #1890ff" class="ant-dropdown-link">
+                    删除</span
+                  >
                 </a-popconfirm>
                 <a-divider type="vertical" />
                 <a class="ant-dropdown-link"> 重置</a>
-              </span>
+              </template>
             </a-table>
           </div>
         </a-tab-pane>
@@ -592,81 +602,60 @@ export default {
         title: "头像",
         dataIndex: "avatar",
         fixed: "left",
-        key: "avatar",
-        width: 70,
+        width: 60,
         scopedSlots: { customRender: "pic" },
       },
       {
         title: "姓名",
-        fixed: "left",
         dataIndex: "nm",
-        width: 80,
-        key: "nm",
+        fixed: "left",
+        width: 60,
       },
       {
         title: "手机号码",
         dataIndex: "mob",
-        key: "mob",
-        width: 120,
       },
       {
         title: "状态",
         dataIndex: "status",
-        key: "status",
-        width: 100,
         scopedSlots: { customRender: "status" },
       },
       {
         title: "性别",
         dataIndex: "sex",
-        key: "sex",
-        width: 80,
       },
       {
         title: "职位",
         dataIndex: "job",
-        key: "job",
-        width: 80,
       },
       {
         title: "部门",
         dataIndex: "dept_nm",
-        key: "dept_nm",
-        width: 80,
       },
       {
         title: "部门等级",
         dataIndex: "lvl",
-        key: "lvl",
-        width: 100,
       },
       {
         title: "部门顺序",
         dataIndex: "o",
-        key: "o",
-        width: 100,
       },
       {
         title: "是否领导",
         dataIndex: "is_leader",
-        key: "is_leader",
-        width: 100,
       },
       {
         title: "创建时间",
         dataIndex: "created",
-        key: "created",
       },
       {
         title: "更新时间",
         dataIndex: "updated",
-        key: "updated",
       },
       {
         title: "操作",
-        key: "action",
         fixed: "right",
-        scopedSlots: { customRender: "action" },
+        scopedSlots: { customRender: "operation" },
       },
     ];
     return {
@@ -945,11 +934,11 @@ export default {
         });
     },
     // 删除员工信息
-    handlerDelete() {
+    handlerDelete(id) {
       this.$api
         .get(this.baseURL + "dept/del_mbr/", {
           params: {
-            user_id: this.id,
+            user_id: id,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
@@ -959,7 +948,7 @@ export default {
           let result = res.data;
           if (!result.code) {
             Modal.error({
-              title: "删除部门",
+              title: "删除员工",
               content: result.data.errmsg,
               okText: "返回",
             });
@@ -970,19 +959,9 @@ export default {
           console.log(err);
         });
     },
-    // 获取id
-    rowClick(record) {
-      return {
-        on: {
-          click: () => {
-            this.id = record.id;
-            // 员工详情
-            this.emUrl = "/index/employee/emdetails/:id=" + this.id;
-            this.staff_info = record;
-            console.log(this.staff_info);
-          },
-        },
-      };
+    // 详情
+    handlerEmpl(id) {
+      this.$router.push("/index/employee/emdetails/:id=" + id);
     },
     handlerIn() {
       this.$api
@@ -1002,12 +981,12 @@ export default {
         });
     },
     // 编辑员工
-    handlerEdit() {
+    handlerEdit(id) {
       this.visibles2 = true;
       this.$api
         .get(this.baseURL + "dept/mbr_detail/", {
           params: {
-            user_id: this.id,
+            user_id: id,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),

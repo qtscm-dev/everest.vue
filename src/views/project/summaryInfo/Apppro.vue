@@ -192,8 +192,47 @@
           </div>
         </a-tab-pane>
         <a-tab-pane key="4" tab="项目文件">
-          <div>
-            <div class="top"></div>
+          <a-form class="top">
+            <a-row :gutter="24">
+              <a-col :span="8">
+                <a-form-item label="文件名称">
+                  <a-input placeholder="请输入" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+            <div class="top_button">
+              <a-button type="primary" style="margin-right: 8px">查询</a-button>
+              <a-button>重置</a-button>
+            </div>
+          </a-form>
+          <div style="width: 100%; height: 24px"></div>
+          <div style="padding: 24px">
+            <div class="concent-title">
+              <span>项目文件</span>
+              <a-button style="float: right" type="primary">上传文件</a-button>
+            </div>
+            <a-table :columns="proj_docu" :data-source="proj_doculist">
+              <template slot="operation" slot-scope="text, record">
+                <div class="editable-row-operations">
+                  <span v-if="record.editable">
+                    <a @click="() => save(record.id)">下载</a>
+                    <a-popconfirm
+                      title="Sure to cancel?"
+                      @confirm="() => cancel(record.id)"
+                    >
+                      <a>删除</a>
+                    </a-popconfirm>
+                  </span>
+                  <span v-else>
+                    <a
+                      :disabled="editingKey !== ''"
+                      @click="() => edit(record.id)"
+                      >重命名</a
+                    >
+                  </span>
+                </div>
+              </template>
+            </a-table>
           </div>
         </a-tab-pane>
         <a-tab-pane key="5" tab="操作记录"> Content of Tab Pane 3 </a-tab-pane>
@@ -286,6 +325,28 @@ export default {
         scopedSlots: { customRender: "operation" },
       },
     ];
+    const proj_docu = [
+      {
+        title: "文件名称",
+        dataIndex: "nm",
+        scopedSlots: { customRender: "nm" },
+      },
+      {
+        title: "操作人",
+        dataIndex: "nm",
+        scopedSlots: { customRender: "nm" },
+      },
+      {
+        title: "创建时间",
+        dataIndex: "nm",
+        scopedSlots: { customRender: "nm" },
+      },
+      {
+        title: "操作",
+        dataIndex: "operation",
+        scopedSlots: { customRender: "operation" },
+      },
+    ];
     return {
       param: "",
       contactsid: "",
@@ -308,6 +369,9 @@ export default {
       pagination: {
         pageSize: 20,
       },
+      // 项目文件
+      proj_docu,
+      proj_doculist: "",
     };
   },
   methods: {
@@ -597,11 +661,34 @@ export default {
           console.log(err);
         });
     },
+    // 项目文件
+    getProjdoculist() {
+      this.$api
+        .get(this.baseURL + "project/proj_file", {
+          params: {
+            proj_id: this.param,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          this.proj_doculist = result.datarows;
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 项目上传
+    handlerProjup() {},
   },
   mounted() {
     this.parameter();
     this.getProdepa();
     this.getContacts();
+    this.getProjdoculist();
   },
 };
 </script>
@@ -648,5 +735,35 @@ export default {
 .concenter .content {
   box-sizing: border-box;
   padding: 24px;
+}
+.top {
+  padding: 24px;
+  /* background: #fff; */
+  position: relative;
+}
+.top .ant-form-item {
+  display: flex;
+}
+.top.ant-form-item-control-wrapper {
+  flex: 1;
+}
+.ant-row .ant-form-item {
+  margin-bottom: 0;
+}
+.top > .top_button {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+.con_table {
+  margin-top: 24px;
+}
+.concent-title {
+  width: 100%;
+  height: 32px;
+  padding-left: 24px;
+  padding-right: 24px;
+  margin-bottom: 24px;
+  line-height: 32px;
 }
 </style>
