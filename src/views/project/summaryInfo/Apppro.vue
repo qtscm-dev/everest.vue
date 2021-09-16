@@ -765,5 +765,7 @@ export default {
   padding-right: 24px;
   margin-bottom: 24px;
   line-height: 32px;
+  font-size: 16px;
+  color: #000;
 }
 </style>
