@@ -118,7 +118,7 @@
             <div class="content">
               <a-table :columns="columns" :data-source="prodepa">
                 <span slot="tags" slot-scope="tags">
-                  <a-tag v-if="tags" color="geekblue">
+                  <a-tag v-if="tags" color="blue">
                     {{ tags }}
                   </a-tag>
                 </span>
@@ -209,33 +209,93 @@
           <div style="padding: 24px">
             <div class="concent-title">
               <span>项目文件</span>
-              <a-button style="float: right" type="primary">上传文件</a-button>
+              <a-upload
+                name="avatar"
+                :multiple="true"
+                :show-upload-list="false"
+                :customRequest="customRequest"
+                style="float: right"
+              >
+                <a-button type="primary">上传文件</a-button>
+              </a-upload>
             </div>
-            <a-table :columns="proj_docu" :data-source="proj_doculist">
+            <div
+              :style="{ display: proj_doculist == false ? 'block' : 'none' }"
+            >
+              <a-empty />
+            </div>
+            <div
+              :style="{ display: proj_doculist == false ? 'none' : 'block' }"
+            >
+              <a-table :columns="proj_docu" :data-source="proj_doculist">
+                <template slot="operation">
+                  <div class="editable-row-operations">
+                    <span style="color: #1890ff">下载</span>
+                    <a-divider type="vertical" />
+                    <span style="color: #1890ff">重命名</span>
+                    <a-divider type="vertical" />
+                    <span disabled="" style="color: #1890ff">删除</span>
+                  </div>
+                </template>
+              </a-table>
+            </div>
+          </div>
+        </a-tab-pane>
+        <a-tab-pane key="5" tab="操作记录">
+          <div class="concenter">
+            <a-form v-bind="formItemLayout" class="top">
+              <a-row :gutter="24">
+                <a-col :span="8">
+                  <a-form-item label="操作人">
+                    <a-input
+                      v-model="operForm.oper_act"
+                      placeholder="请输入名称"
+                    ></a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="8">
+                  <a-form-item label="日期">
+                    <a-range-picker
+                      v-model="operForm.oper_date"
+                      @change="onChange"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="8" :style="{ textAlign: 'right' }">
+                  <a-button
+                    type="primary"
+                    style="margin-right: 8px"
+                    @click="handlerOperquery"
+                    >查询</a-button
+                  >
+                  <a-button @change="handlerOperreset">重置</a-button>
+                </a-col>
+              </a-row>
+            </a-form>
+          </div>
+          <div>
+            <div class="oper_title">
+              <span>操作记录</span>
+            </div>
+            <a-table
+              :style="{ display: oper_recolist == null ? 'block' : 'none' }"
+              class="oper_table"
+              :columns="oper_reco"
+              :pagination="paginationOper"
+              :data-source="oper_recolist"
+            >
               <template slot="operation" slot-scope="text, record">
-                <div class="editable-row-operations">
-                  <span v-if="record.editable">
-                    <a @click="() => save(record.id)">下载</a>
-                    <a-popconfirm
-                      title="Sure to cancel?"
-                      @confirm="() => cancel(record.id)"
-                    >
-                      <a>删除</a>
-                    </a-popconfirm>
-                  </span>
-                  <span v-else>
-                    <a
-                      :disabled="editingKey !== ''"
-                      @click="() => edit(record.id)"
-                      >重命名</a
-                    >
-                  </span>
+                <div>
+                  <span
+                    style="color: #1890ff; font-size: 14px"
+                    @click="() => handlerJump(record.id, record.status)"
+                    >详情</span
+                  >
                 </div>
               </template>
             </a-table>
           </div>
         </a-tab-pane>
-        <a-tab-pane key="5" tab="操作记录"> Content of Tab Pane 3 </a-tab-pane>
       </a-tabs>
     </div>
   </div>
@@ -243,6 +303,7 @@
 
 <script>
 import { Modal } from "ant-design-vue";
+import { message } from "ant-design-vue";
 export default {
   name: "apppro",
   data() {
@@ -329,20 +390,36 @@ export default {
       {
         title: "文件名称",
         dataIndex: "nm",
-        scopedSlots: { customRender: "nm" },
       },
       {
         title: "操作人",
-        dataIndex: "nm",
-        scopedSlots: { customRender: "nm" },
+        dataIndex: "oper_nm",
       },
       {
         title: "创建时间",
-        dataIndex: "nm",
-        scopedSlots: { customRender: "nm" },
+        dataIndex: "updated",
       },
       {
         title: "操作",
+        dataIndex: "operation",
+        scopedSlots: { customRender: "operation" },
+      },
+    ];
+    const oper_reco = [
+      {
+        title: "创建时间",
+        dataIndex: "nm",
+      },
+      {
+        title: "操作人姓名",
+        dataIndex: "oper_nm",
+      },
+      {
+        title: "操作类型",
+        dataIndex: "updated",
+      },
+      {
+        title: "操作内容",
         dataIndex: "operation",
         scopedSlots: { customRender: "operation" },
       },
@@ -358,6 +435,17 @@ export default {
       styless: "margin-left:16px",
       proj: "",
       placement: "bottomRight",
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 8 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
+      },
+
       // 项目部门
       columns,
       prodepa: "",
@@ -372,6 +460,32 @@ export default {
       // 项目文件
       proj_docu,
       proj_doculist: "",
+      // 操作记录
+      oper_reco,
+      oper_recolist: "",
+      operForm: {
+        oper_act: "",
+        oper_date: "",
+      },
+      // 分页
+      paginationOper: {
+        defaultPageSize: 20,
+        showTotal: (total) => `共 ${total} 条数据`,
+        showSizeChanger: true,
+        size: "middle",
+        total: "",
+        proj: "",
+        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+        // onChange: (current, pageSize) => {
+        //   this.getProject(this.pagination.proj, current, pageSize);
+        // },
+      },
+      // 上传文件
+      headers: {
+        Authorization: localStorage.getItem("Authorization"),
+      },
+      docuURL: this.baseURL + "project/upload_file",
+      fileList: [],
     };
   },
   methods: {
@@ -596,7 +710,9 @@ export default {
             //       this.param
             // this.contactsid
           },
-          headers: {},
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
         })
         .then((res) => {
           let result = res.data;
@@ -675,20 +791,89 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.proj_doculist = result.datarows;
-          console.log(result);
+          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
         });
     },
     // 项目上传
-    handlerProjup() {},
+    customRequest(data) {
+      const formData = new FormData();
+      formData.append("proj_id", this.param);
+      formData.append("avatar", data.file);
+      this.$api({
+        method: "post",
+        url: this.baseURL + "project/new_file",
+        headers: { Authorization: localStorage.getItem("Authorization") },
+        data: formData,
+      })
+        .then((res) => {
+          let result = res.data;
+          if (result.code) {
+            message.success(`${data.file.name} 上传成功.`);
+          } else if (!result.code) {
+            message.error(`${data.file.name} 上传失败.`);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 下载
+
+    // 操作记录
+    getOper() {
+      // this.$api
+      //   .get(this.baseURL + "", {
+      //     params: {},
+      //     headers: {
+      //       Authorization: localStorage.getItem("Authorization"),
+      //     },
+      //   })
+      //   .then((res) => {
+      //     let result = res.data;
+      //     // this.oper_recolist = result.datarows;
+      //     console.log(result);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    },
+    // 操作记录查询
+    handlerOperquery() {
+      // this.$api
+      //   .get(this.baseURL + "", {
+      //     params: {},
+      //     headers: {
+      //       Authorization: localStorage.getItem("Authorization"),
+      //     },
+      //   })
+      //   .then((res) => {
+      //     let result = res.data;
+      //     console.log(result);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    },
+    // 操作记录重置
+    handlerOperreset() {
+      // this.operForm.oper_act = "";
+      // this.operForm.oper_date = "";
+      // this.getOper();
+    },
+    onChange(date, datestring) {
+      console.log(date);
+      this.operForm.oper_date = datestring;
+    },
   },
   mounted() {
     this.parameter();
     this.getProdepa();
     this.getContacts();
     this.getProjdoculist();
+    this.getOper();
   },
 };
 </script>
@@ -738,7 +923,6 @@ export default {
 }
 .top {
   padding: 24px;
-  /* background: #fff; */
   position: relative;
 }
 .top .ant-form-item {
@@ -761,11 +945,20 @@ export default {
 .concent-title {
   width: 100%;
   height: 32px;
-  padding-left: 24px;
-  padding-right: 24px;
   margin-bottom: 24px;
   line-height: 32px;
   font-size: 16px;
   color: #000;
+}
+.oper_title {
+  padding: 12px 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  font-size: 16px;
+  color: #000;
+  border-bottom: 1px solid #e8e8e8;
+}
+.oper_table {
+  padding: 24px;
 }
 </style>

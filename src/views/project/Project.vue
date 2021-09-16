@@ -22,6 +22,7 @@
             <a-range-picker
               v-model="conditionForm.proj_cycle"
               v-decorator="['range-picker']"
+              @change="onChange"
             />
           </a-form-item>
         </a-col>
@@ -247,6 +248,7 @@ export default {
           },
         })
         .then((res) => {
+          console.log(this.conditionForm.proj_cycle);
           let result = res.data.data.data;
           console.log(this.projectList);
           this.projeList = result.datarows;
@@ -255,6 +257,10 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    onChange(date, dateString) {
+      console.log(date);
+      this.conditionForm.proj_cycle = dateString;
     },
     // 重置
     hanslerReset() {

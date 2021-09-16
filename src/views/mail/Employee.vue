@@ -23,7 +23,7 @@
                   >
                     <a-input
                       v-model="queryForm.nm"
-                      placeholder="请输入编号/员工姓名"
+                      placeholder="请输入账号/名称"
                     ></a-input>
                   </a-form-item>
                 </a-col>
@@ -179,10 +179,16 @@
               class="avatar-uploader"
               :show-upload-list="false"
               :action="imgUrl"
+              :headers="headers"
               :before-upload="beforeUpload"
               @change="handleChange"
             >
-              <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+              <img
+                style="width: 128px; height: 128px"
+                v-if="imageUrl"
+                :src="imageUrl"
+                alt="avatar"
+              />
               <div v-else>
                 <a-icon :type="loading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">Upload</div>
@@ -379,10 +385,16 @@
               class="avatar-uploader"
               :show-upload-list="false"
               :action="imgUrl"
+              :headers="headers"
               :before-upload="beforeUpload"
               @change="handleChange"
             >
-              <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+              <img
+                style="width: 128px; height: 128px"
+                v-if="imageUrl"
+                :src="imageUrl"
+                alt="avatar"
+              />
               <div v-else>
                 <a-icon :type="loading ? 'loading' : 'plus'" />
                 <div class="ant-upload-text">Upload</div>
@@ -586,13 +598,10 @@
 import imgSrc1 from "../../../public/portrait/woman.jpg";
 import imgSrc2 from "../../../public/portrait/man.jpg";
 import { Modal } from "ant-design-vue";
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
 }
 export default {
   name: "employee",
@@ -663,6 +672,9 @@ export default {
       visibles1: false,
       visibles2: false,
       form: this.$form.createForm(this, { name: "coordinated" }),
+      headers: {
+        Authorization: localStorage.getItem("Authorization"),
+      },
       // 员工表格
       columns,
       employlist: [],
@@ -833,8 +845,7 @@ export default {
         return;
       }
       if (info.file.status === "done") {
-        let result = info.file.response.data;
-        console.log(result);
+        // Get this url from response in real world.
         getBase64(info.file.originFileObj, (imageUrl) => {
           this.imageUrl = imageUrl;
           this.loading = false;
