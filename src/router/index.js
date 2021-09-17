@@ -64,7 +64,8 @@ const router = new VueRouter({
           path: "/index/project/project/apppro/:id",
           name: "apppro",
           component: () => import("../views/project/summaryInfo/Apppro.vue"),
-        },{
+        },
+        {
           path: "/index/project/project/toapppro/:id",
           name: "apppro",
           component: () => import("../views/project/summaryInfo/Toapppro.vue"),
@@ -76,6 +77,13 @@ const router = new VueRouter({
         //   name: "assign",
         //   component: () => import("../views/assign/Assign.vue")
         // }
+
+        // 认领中心
+        {
+          path: "/index/claim/claim_list",
+          name: "claim",
+          component: () => import("../views/Claim"),
+        },
       ],
     },
     {

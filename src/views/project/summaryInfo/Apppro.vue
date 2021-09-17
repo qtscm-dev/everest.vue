@@ -34,81 +34,7 @@
       </div>
       <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="4">
         <a-tab-pane key="1" tab="概要信息">
-          <div class="concenter">
-            <div class="title">
-              <span>基础信息</span>
-            </div>
-            <a-descriptions class="content">
-              <a-descriptions-item label="项目编号">{{
-                viewList[0].code
-              }}</a-descriptions-item>
-              <a-descriptions-item label="项目名称">{{
-                viewList[0].nm
-              }}</a-descriptions-item>
-              <a-descriptions-item label="项目状态">
-                <a-badge :status="badges" />{{
-                  viewList[0].pro_status
-                }}</a-descriptions-item
-              >
-              <a-descriptions-item label="合同编号">{{
-                viewList[0].contract_no
-              }}</a-descriptions-item>
-              <a-descriptions-item label="流程编号">{{
-                viewList[0].proc_code
-              }}</a-descriptions-item>
-              <a-descriptions-item label="项目类型">{{
-                viewList[0].project_lbl
-              }}</a-descriptions-item>
-              <a-descriptions-item label="建设单位">{{
-                viewList[0].client_nm
-              }}</a-descriptions-item>
-              <a-descriptions-item label="建筑面积"
-                >{{ viewList[0].build_area }}平方米
-              </a-descriptions-item>
-              <a-descriptions-item label="幕墙面积"
-                >{{ viewList[0].wall_area }}平方米</a-descriptions-item
-              >
-              <a-descriptions-item label="门窗面积"
-                >{{ viewList[0].dw_area }}平方米</a-descriptions-item
-              >
-              <a-descriptions-item label="建筑高度"
-                >{{ viewList[0].build_height }}米</a-descriptions-item
-              >
-              <a-descriptions-item label="幕墙高度"
-                >{{ viewList[0].wall_height }}米</a-descriptions-item
-              >
-              <a-descriptions-item label="项目周期">{{
-                viewList[0].pro_cycle
-              }}</a-descriptions-item>
-              <a-descriptions-item label="建筑类型">{{
-                viewList[0].build_lbl
-              }}</a-descriptions-item>
-              <a-descriptions-item label="设计类型">{{
-                viewList[0].major_lbl
-              }}</a-descriptions-item>
-              <a-descriptions-item label="主设专业">
-                {{ viewList[0].main_major_lbl }}
-              </a-descriptions-item>
-              <a-descriptions-item label="建设地点">
-                {{ viewList[0].bulid_addr }}
-              </a-descriptions-item>
-              <a-descriptions-item label="竞争单位">
-                {{ viewList[0].competitor }}
-              </a-descriptions-item>
-              <a-descriptions-item label="设计报价">
-                {{ viewList[0].fee }}
-              </a-descriptions-item>
-              <a-descriptions-item label="代建">
-                {{ viewList[0].construction }}
-              </a-descriptions-item>
-              <a-descriptions-item label="母公司">
-                {{ viewList[0].parent_company }}
-              </a-descriptions-item>
-              <a-descriptions-item label="备注">
-                {{ viewList[0].cmt }}
-              </a-descriptions-item>
-            </a-descriptions>
-          </div>
+          <ProjectBasicInfo :ProjectBasicInfo="projectBasicInfo" />
         </a-tab-pane>
         <a-tab-pane key="2" tab="项目部门" force-render>
           <div class="concenter">
@@ -204,8 +130,10 @@
 
 <script>
 import { Modal } from "ant-design-vue";
+import ProjectBasicInfo from "../../../components/ProjectDetail/BasicInfo";
 export default {
   name: "apppro",
+  components: { ProjectBasicInfo },
   data() {
     const columns = [
       {
@@ -286,10 +214,12 @@ export default {
         scopedSlots: { customRender: "operation" },
       },
     ];
+
     return {
       param: "",
       contactsid: "",
       viewList: [],
+      projectBasicInfo: {},
       badges: "",
       types: "",
       ghosts: "",
@@ -330,6 +260,7 @@ export default {
             this.badges = "processing";
             this.styles = "margin-right: 16px";
             this.styless = "display: none";
+            this.projectBasicInfo = this.viewList[0];
           } else if (this.viewList[0].status == 1211) {
             this.badges = "error";
             this.styless = "margin-left: 16px";
@@ -631,22 +562,5 @@ export default {
 .ant-tabs-tabpane {
   background: #fff;
   box-sizing: border-box;
-}
-</style>
-<style scoped>
-.concenter {
-  width: 100%;
-  height: auto;
-}
-.concenter .title {
-  line-height: 56px;
-  padding: 0 24px;
-  border-bottom: 1px solid #e8e8e8;
-  font-size: 16px;
-  color: #000;
-}
-.concenter .content {
-  box-sizing: border-box;
-  padding: 24px;
 }
 </style>

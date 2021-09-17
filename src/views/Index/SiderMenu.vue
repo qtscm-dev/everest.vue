@@ -31,6 +31,12 @@
           <router-link :to="{ name: 'assign' }">指派中心</router-link>
         </a-menu-item>
       </a-sub-menu> -->
+      <a-sub-menu key="claim">
+        <span slot="title"><a-icon type="form" /><span>认领中心</span></span>
+        <a-menu-item key="3">
+          <router-link :to="{ name: 'claim' }">认领中心</router-link>
+        </a-menu-item>
+      </a-sub-menu>
     </a-menu>
   </div>
 </template>

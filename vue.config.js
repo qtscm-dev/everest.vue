@@ -1,19 +1,19 @@
 module.exports = {
-    css: {
-        loaderOptions: {
-            less: {
-                javascriptEnabled: true,
-            },
-        },
+  css: {
+    loaderOptions: {
+      less: {
+        javascriptEnabled: true,
+      },
     },
-    devServer: {
-		proxy: {
-			'/api': {
-				// 代理api
-				target: 'https://dev.qtscm.net', // 代理接口(注意只要域名就够了)
-				changeOrigin: true,
-				pathRewrite:{'^/api' : ''},
-				/* bypass: function(req, res) {
+  },
+  devServer: {
+    proxy: {
+      "/api": {
+        // 代理api
+        target: "https://dev.qtscm.net", // 代理接口(注意只要域名就够了)
+        changeOrigin: true,
+        pathRewrite: { "^/api": "" },
+        /* bypass: function(req, res) {
 					if (req.headers.accept.indexOf('html') !== -1){
 						return '/index.html';
 					}else if (process.env.MOCK !== "none"){
@@ -27,7 +27,7 @@ module.exports = {
 						return res.send(result);
 					}
 				} */
-			}
-		}
-	}
+      },
+    },
+  },
 };
