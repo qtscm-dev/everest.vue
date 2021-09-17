@@ -40,8 +40,10 @@ import {
   Badge,
   Popconfirm,
   ConfigProvider,
+  Avatar,
 } from "ant-design-vue";
 
+Vue.use(Avatar);
 Vue.use(Popconfirm);
 Vue.use(Badge);
 Vue.use(Descriptions);

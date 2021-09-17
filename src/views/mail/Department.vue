@@ -59,20 +59,14 @@
               :data-source="departlist"
               size="middle"
               :scroll="{ x: 800 }"
+              :rowClassName="
+                (record, index) => (index % 2 === 1 ? 'table-depa' : null)
+              "
             >
               <template slot="operation" slot-scope="text, record">
-                <span
-                  style="color: #1890ff"
-                  @click="() => handlerInfo(record.id)"
-                  >详情</span
-                >
+                <a @click="() => handlerInfo(record.id)">详情</a>
                 <a-divider type="vertical" />
-                <span
-                  style="color: #1890ff"
-                  @click="() => handleredit(record.id)"
-                >
-                  编辑
-                </span>
+                <a @click="() => handleredit(record.id)"> 编辑 </a>
                 <a-divider type="vertical" />
                 <a-popconfirm
                   title="请确认是否要删除该部门？"
@@ -80,9 +74,7 @@
                   cancel-text="取消"
                   @confirm="() => handlerDelete(record.id)"
                 >
-                  <span style="color: #1890ff" class="ant-dropdown-link">
-                    删除</span
-                  >
+                  <a class="ant-dropdown-link"> 删除</a>
                 </a-popconfirm>
               </template>
             </a-table>
@@ -231,27 +223,25 @@ export default {
         title: "部门名称",
         dataIndex: "nm",
         key: "nm",
-        width: 120,
-        fixed: "left",
-        align: "center",
+        ellipsis: true,
       },
       {
         title: "部门等级",
         dataIndex: "lvl",
         key: "lvl",
-        align: "center",
+        ellipsis: true,
       },
       {
         title: "部门顺序",
         dataIndex: "o",
         key: "o",
-        align: "center",
+        ellipsis: true,
       },
       {
         title: "上级部门",
         dataIndex: "pnm",
         key: "pnm",
-        align: "center",
+        ellipsis: true,
       },
       {
         title: "创建时间",
@@ -507,6 +497,9 @@ export default {
 </script>
 
 <style scooed>
+.table-depa {
+  background: #fafafa;
+}
 .ant-spin-nested-loading {
   position: relative;
   width: 100%;

@@ -101,6 +101,9 @@
               :scroll="{ x: 1500 }"
               :pagination="pagination"
               size="middle"
+              :rowClassName="
+                (record, index) => (index % 2 === 1 ? 'table-emplo' : null)
+              "
             >
               <span slot="pic" slot-scope="text, record">
                 <img
@@ -128,18 +131,9 @@
                 :text="text"
               />
               <template slot="operation" slot-scope="text, record">
-                <span
-                  style="color: #1890ff"
-                  @click="() => handlerEmpl(record.id)"
-                  >详情</span
-                >
+                <a @click="() => handlerEmpl(record.id)">详情</a>
                 <a-divider type="vertical" />
-                <span
-                  style="color: #1890ff"
-                  @click="() => handlerEdit(record.id)"
-                >
-                  编辑
-                </span>
+                <a @click="() => handlerEdit(record.id)"> 编辑 </a>
                 <a-divider type="vertical" />
                 <a-popconfirm
                   title="请确认是否要删除该员工？"
@@ -147,9 +141,7 @@
                   cancel-text="取消"
                   @confirm="() => handlerDelete(record.id)"
                 >
-                  <span style="color: #1890ff" class="ant-dropdown-link">
-                    删除</span
-                  >
+                  <a class="ant-dropdown-link"> 删除</a>
                 </a-popconfirm>
                 <a-divider type="vertical" />
                 <a class="ant-dropdown-link"> 重置</a>
@@ -1091,6 +1083,9 @@ export default {
 </script>
 
 <style scooed>
+.table-emplo {
+  background: #fafafa;
+}
 .ant-spin-nested-loading {
   position: relative;
   width: 100%;

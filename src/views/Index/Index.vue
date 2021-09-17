@@ -24,10 +24,8 @@
         <div class="icon">
           <a-icon class="icon-1" type="search" />
           <a-icon class="icon-1" type="bell" />
-          <!-- <div> -->
-          <img :src="imgSrc" alt="" />
+          <a-avatar :src="imgSrc" alt="" />
           <span>{{ loginname }}</span>
-          <!-- </div> -->
         </div>
       </a-layout-header>
       <!-- 主体 -->
@@ -61,7 +59,13 @@ export default {
         .then((res) => {
           let result = res.data.data;
           this.loginname = result.login_nm;
-          this.imgSrc = result.avatar;
+          // console.log(result);
+          // if (result.avatar == null) {
+          //   this.imgSrc = "../../../public/portrait/man.jpg";
+          // } else {
+          this.imgSrc = this.baseURL + result.avatar;
+          // }
+          // console.log(this.imgSrc);
         })
         .catch((err) => {
           console.log(err);

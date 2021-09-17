@@ -13,7 +13,7 @@
         }"
       >
         <a-button :style="styles" type="danger" ghost @click="handlerWithpro"
-          >撤回立项</a-button
+          >中止立项</a-button
         >
         <a-dropdown :placement="placement">
           <a-button>返回</a-button>
@@ -116,7 +116,13 @@
               <span>项目部门</span>
             </div>
             <div class="content">
-              <a-table :columns="columns" :data-source="prodepa">
+              <a-table
+                :columns="columns"
+                :data-source="prodepa"
+                :rowClassName="
+                  (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
+                "
+              >
                 <span slot="tags" slot-scope="tags">
                   <a-tag v-if="tags" color="blue">
                     {{ tags }}
@@ -132,7 +138,13 @@
               <span>联系人列表</span>
             </div>
             <div class="content">
-              <a-table :columns="contacts" :data-source="contactsList">
+              <a-table
+                :columns="contacts"
+                :data-source="contactsList"
+                :rowClassName="
+                  (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
+                "
+              >
                 <template
                   v-for="col in [
                     'nm',
@@ -205,7 +217,6 @@
               <a-button>重置</a-button>
             </div>
           </a-form>
-          <div style="width: 100%; height: 24px"></div>
           <div style="padding: 24px">
             <div class="concent-title">
               <span>项目文件</span>
@@ -227,14 +238,67 @@
             <div
               :style="{ display: proj_doculist == false ? 'none' : 'block' }"
             >
-              <a-table :columns="proj_docu" :data-source="proj_doculist">
-                <template slot="operation">
-                  <div class="editable-row-operations">
-                    <span style="color: #1890ff">下载</span>
+              <a-table
+                :columns="proj_docu"
+                :data-source="proj_doculist"
+                :rowClassName="
+                  (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
+                "
+              >
+                <template slot="operation" slot-scope="text, record">
+                  <!-- 无权限不能操作 -->
+                  <div
+                    class="editable-row-operations"
+                    v-if="record.is_allow == 'f'"
+                  >
+                    <a :disabled="record.is_allow !== ''">下载</a>
                     <a-divider type="vertical" />
-                    <span style="color: #1890ff">重命名</span>
+                    <a :disabled="record.is_allow !== ''">重命名</a>
                     <a-divider type="vertical" />
-                    <span disabled="" style="color: #1890ff">删除</span>
+                    <a :disabled="record.is_allow !== ''">删除</a>
+                  </div>
+                  <!-- 有权限可操作 -->
+                  <div
+                    class="editable-row-operations"
+                    v-if="record.is_allow == 't'"
+                  >
+                    <a
+                      :disabled="record.is_allow == ''"
+                      @click="handlerProjdown(record.id, record.nm)"
+                      >下载</a
+                    >
+                    <a-divider type="vertical" />
+                    <a-popconfirm
+                      placement="topLeft"
+                      ok-text="确定"
+                      cancel-text="取消"
+                      @confirm="handlerProjrenm(record.id, record.nm)"
+                    >
+                      <a-icon slot="icon" />
+                      <template
+                        slot="title"
+                        style="position: relative; top: 0; left: 0"
+                      >
+                        <p>重命名</p>
+                        <a-input
+                          v-model="record.nm"
+                          style="margin-top: 10px"
+                        ></a-input>
+                      </template>
+                      <a :disabled="record.is_allow == ''">重命名</a>
+                    </a-popconfirm>
+                    <a-divider type="vertical" />
+                    <a-popconfirm
+                      placement="topRight"
+                      ok-text="确定"
+                      cancel-text="取消"
+                      @confirm="handlerProjdelete(record.id)"
+                    >
+                      <template slot="title">
+                        <p>请确认是否要删除该文件？</p>
+                      </template>
+                      <a :disabled="record.is_allow == ''">删除</a>
+                    </a-popconfirm>
                   </div>
                 </template>
               </a-table>
@@ -283,6 +347,9 @@
               :columns="oper_reco"
               :pagination="paginationOper"
               :data-source="oper_recolist"
+              :rowClassName="
+                (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
+              "
             >
               <template slot="operation" slot-scope="text, record">
                 <div>
@@ -392,7 +459,7 @@ export default {
         dataIndex: "nm",
       },
       {
-        title: "操作人",
+        title: "创建者",
         dataIndex: "oper_nm",
       },
       {
@@ -426,7 +493,6 @@ export default {
     ];
     return {
       param: "",
-      contactsid: "",
       viewList: [],
       badges: "",
       types: "",
@@ -445,7 +511,6 @@ export default {
           sm: { span: 16 },
         },
       },
-
       // 项目部门
       columns,
       prodepa: "",
@@ -480,12 +545,6 @@ export default {
         //   this.getProject(this.pagination.proj, current, pageSize);
         // },
       },
-      // 上传文件
-      headers: {
-        Authorization: localStorage.getItem("Authorization"),
-      },
-      docuURL: this.baseURL + "project/upload_file",
-      fileList: [],
     };
   },
   methods: {
@@ -517,15 +576,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    rowClick(record) {
-      return {
-        on: {
-          click: () => {
-            this.contactsid = record.id;
-          },
-        },
-      };
     },
     // 撤回立项
     handlerWithpro() {
@@ -706,10 +756,7 @@ export default {
     handlerEdit() {
       this.$api
         .get(this.baseURL + "project/edit_contact/", {
-          params: {
-            //       this.param
-            // this.contactsid
-          },
+          params: {},
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
@@ -721,43 +768,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    edit(id) {
-      const newData = this.contactsList;
-      const target = newData.filter((item) => id === item.id)[0];
-      this.editingKey = id;
-      if (target) {
-        target.editable = true;
-        this.data = newData;
-      }
-    },
-    save(id) {
-      const newData = [...this.contactsList];
-      console.log(newData);
-      this.cacheData = newData.map((item) => ({ ...item }));
-      const newCacheData = [...this.cacheData];
-      const target = newData.filter((item) => id === item.id)[0];
-      const targetCache = newCacheData.filter((item) => id === item.id)[0];
-      if (!target && targetCache) {
-        delete target.editable;
-        this.data = newData;
-        Object.assign(targetCache, target);
-        this.cacheData = newCacheData;
-      }
-      this.editingKey = "";
-    },
-    cancel(key) {
-      const newData = [...this.contactsList];
-      const target = newData.filter((item) => key === item.key)[0];
-      this.editingKey = "";
-      if (target) {
-        Object.assign(
-          target,
-          this.cacheData.filter((item) => key === item.key)[0]
-        );
-        delete target.editable;
-        this.data = newData;
-      }
     },
     // 删除联系人
     handlerDelete(id) {
@@ -791,7 +801,6 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.proj_doculist = result.datarows;
-          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -815,13 +824,82 @@ export default {
           } else if (!result.code) {
             message.error(`${data.file.name} 上传失败.`);
           }
+          this.getProjdoculist();
         })
         .catch((err) => {
           console.log(err);
         });
     },
     // 下载
-
+    handlerProjdown(id, nm) {
+      console.log(id);
+      const formData = new FormData();
+      formData.append("rsc_id", "10930");
+      this.$api({
+        method: "post",
+        url: this.baseURL + "project/down_file",
+        headers: { Authorization: localStorage.getItem("Authorization") },
+        data: formData,
+        responseType: "blob",
+      })
+        .then((res) => {
+          let url = window.URL.createObjectURL(new Blob([res.data]));
+          let link = document.createElement("a");
+          link.style.display = "none";
+          link.href = url;
+          link.setAttribute("download", nm);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 重命名
+    handlerProjrenm(id, nm) {
+      var qs = require("qs");
+      let params = {
+        rsc_id: id,
+        rename: nm,
+      };
+      this.$api
+        .post(this.baseURL + "project/rename", qs.stringify(params), {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          if (res.data.code) {
+            message.success("重命名成功");
+          } else {
+            message.error("重命名失败");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 删除
+    handlerProjdelete(id) {
+      var qs = require("qs");
+      let params = {
+        rsc_id: id,
+      };
+      this.$api
+        .post(this.baseURL + "project/del_file", qs.stringify(params), {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.getProjdoculist();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     // 操作记录
     getOper() {
       // this.$api
@@ -879,6 +957,9 @@ export default {
 </script>
 
 <style>
+.table-apppro {
+  background: #fafafa;
+}
 .header {
   width: 100%;
   height: 112px;
@@ -903,6 +984,9 @@ export default {
 .ant-tabs-tabpane {
   background: #fff;
   box-sizing: border-box;
+}
+.ant-popover-message-title {
+  padding-left: 0;
 }
 </style>
 <style scoped>

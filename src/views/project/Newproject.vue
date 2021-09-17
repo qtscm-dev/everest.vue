@@ -131,6 +131,7 @@
             <a-input
               v-model="newproForm.build_area"
               style="width: 70%"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
               v-decorator="[
                 '建筑面积',
                 { rules: [{ required: true, message: '该项为必填项' }] },
@@ -145,6 +146,7 @@
             <a-input
               v-model="newproForm.wall_area"
               style="width: 70%"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
               v-decorator="[
                 '幕墙面积',
                 { rules: [{ required: true, message: '该项为必填项' }] },
@@ -159,6 +161,7 @@
             <a-input
               v-model="newproForm.dw_area"
               style="width: 70%"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
               v-decorator="[
                 '门窗面积',
                 { rules: [{ required: true, message: '该项为必填项' }] },
@@ -173,6 +176,7 @@
             <a-input
               v-model="newproForm.build_height"
               style="width: 70%"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
               v-decorator="[
                 '建筑高度',
                 { rules: [{ required: true, message: '该项为必填项' }] },
@@ -187,6 +191,7 @@
             <a-input
               v-model="newproForm.wall_height"
               style="width: 70%"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
               v-decorator="[
                 '幕墙高度',
                 { rules: [{ required: true, message: '该项为必填项' }] },
@@ -555,7 +560,9 @@ export default {
     },
     // 删除竞争单位
     handlerDelete(index) {
-      this.plus.splice(index, 1);
+      if (this.plus.length > 1) {
+        this.plus.splice(index, 1);
+      }
     },
     // 保存返回
     handlerpreser() {

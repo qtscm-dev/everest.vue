@@ -22,7 +22,7 @@
       <a-sub-menu key="sub2">
         <span slot="title"><a-icon type="form" /><span>立项中心</span></span>
         <a-menu-item key="3">
-          <router-link :to="{ name: 'project' }">立项中心</router-link>
+          <router-link :to="{ name: 'project' }">公司项目</router-link>
         </a-menu-item>
       </a-sub-menu>
       <!-- <a-sub-menu key="sub3">

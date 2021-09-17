@@ -7,7 +7,7 @@
       </a-breadcrumb>
       <span>立项中心</span>
     </div>
-    <a-form class="ant-advanced-search-form">
+    <a-form v-bind="formItemLayout" class="ant-advanced-search-form">
       <a-row>
         <a-col :span="8">
           <a-form-item label="编号名称">
@@ -26,19 +26,7 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :span="8" :style="{ display: 3 < count ? 'none' : 'block' }">
-          <a-form-item label="建设单位">
-            <a-input v-model="conditionForm.client_nm" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8" :style="{ display: 3 < count ? 'none' : 'block' }">
-          <a-form-item label="工程地点">
-            <a-cascader placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <a-row>
-        <a-col :span="24" :style="{ textAlign: 'right' }">
+        <a-col :span="8" :style="{ textAlign: 'right' }">
           <a-button type="primary" @click="handlerSubmit"> 查询 </a-button>
           <a-button :style="{ marginLeft: '8px' }" @click="hanslerReset">
             重置
@@ -51,6 +39,18 @@
             收起
           </a>
           <a-icon style="color: #1890ff" :type="expand ? 'up' : 'down'" />
+        </a-col>
+      </a-row>
+      <a-row :style="{ display: 3 < count ? 'none' : 'block' }">
+        <a-col :span="8">
+          <a-form-item label="建设单位">
+            <a-input v-model="conditionForm.client_nm" placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-item label="工程地点">
+            <a-cascader placeholder="请输入" />
+          </a-form-item>
         </a-col>
       </a-row>
     </a-form>
@@ -85,13 +85,16 @@
           :pagination="pagination"
           :scroll="{ x: 1500 }"
           size="middle"
+          :rowClassName="
+            (record, index) => (index % 2 === 1 ? 'table-proj' : null)
+          "
         >
           <template slot="operation" slot-scope="text, record">
             <div>
-              <span
-                style="color: #1890ff; font-size: 14px"
+              <a
+                style="font-size: 14px"
                 @click="() => handlerJump(record.id, record.status)"
-                >详情</span
+                >详情</a
               >
             </div>
           </template>
@@ -110,87 +113,87 @@ export default {
         title: "项目ID",
         dataIndex: "code",
         key: "code",
-        width: 100,
-        fixed: "left",
-        align: "center",
       },
       {
         title: "项目名称",
         dataIndex: "nm",
         key: "nm",
-        width: 100,
       },
       {
         title: "建设单位",
         dataIndex: "client_nm",
         key: "client_nm",
-        width: 100,
         ellipsis: true,
       },
       {
         title: "幕墙面积",
         dataIndex: "wall_area",
         key: "wall_area",
-        width: 100,
       },
       {
         title: "建筑类型",
         dataIndex: "build_lbl",
         key: "build_lbl",
-        width: 100,
         ellipsis: true,
       },
       {
         title: "项目类型",
         dataIndex: "project_lbl",
         key: "project_lbl",
-        width: 80,
       },
       {
         title: "设计内容",
         dataIndex: "major_lbl",
         key: "major_lbl",
-        width: 150,
       },
       {
         title: "项目周期",
         dataIndex: "pro_cycle",
         key: "pro_cycle",
-        width: 180,
+        ellipsis: true,
       },
       {
         title: "项目地点",
         dataIndex: "bulid_addr",
         key: "bulid_addr",
-        width: 180,
         ellipsis: true,
       },
       {
         title: "创建时间",
         dataIndex: "created",
         key: "created",
-        width: 180,
+        ellipsis: true,
       },
       {
         title: "更新时间",
         dataIndex: "updated",
         key: "updated",
-        width: 180,
+        ellipsis: true,
       },
       {
         title: "操作",
         dataIndex: "operation",
         scopedSlots: { customRender: "operation" },
         fixed: "right",
-        width: 70,
-        align: "center",
+        width: 60,
       },
     ];
     return {
       expand: false,
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 8 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
+      },
       // 列表展示
       columns,
       projeList: [],
+      rowClassName: "",
       // 单选框
       value: "a",
       // 条件查询
@@ -273,7 +276,7 @@ export default {
     handlerNewpro() {
       this.$router.push({ name: "newproject" });
     },
-    // 项目列表(待立项)
+    // 待立项
     projectList() {
       this.getProject("1000");
     },
@@ -304,7 +307,6 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
-          console.log(result);
           this.projeList = result.datarows;
           this.dataLength.listLength = result.count_num.not_approved_num;
           this.dataLength.approvedLength = result.count_num.approved_num;
@@ -329,6 +331,7 @@ export default {
     },
     // 查看详情
     handlerJump(id, status) {
+      console.log(id);
       if (status == 1000) {
         this.$router.push("/index/project/project/toapppro/:id=" + id);
       } else {
@@ -371,6 +374,11 @@ export default {
 };
 </script>
 
+<style>
+.table-proj {
+  background: #fafafa;
+}
+</style>
 <style scoped>
 .header {
   width: 100%;
@@ -429,4 +437,3 @@ export default {
   margin-bottom: 0;
 }
 </style>
-let i ; // 1,i = 0; 2, i = 9; i = list2 list let i ; 2 i = 9 ;
