@@ -32,7 +32,7 @@
           >恢复项目</a-button
         >
       </div>
-      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="4">
+      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="3">
         <a-tab-pane key="1" tab="概要信息">
           <div class="concenter">
             <div class="title">
@@ -40,72 +40,72 @@
             </div>
             <a-descriptions class="content">
               <a-descriptions-item label="项目编号">{{
-                viewList[0].code
+                viewList.code
               }}</a-descriptions-item>
               <a-descriptions-item label="项目名称">{{
-                viewList[0].nm
+                viewList.nm
               }}</a-descriptions-item>
               <a-descriptions-item label="项目状态">
                 <a-badge :status="badges" />{{
-                  viewList[0].pro_status
+                  viewList.pro_status
                 }}</a-descriptions-item
               >
               <a-descriptions-item label="合同编号">{{
-                viewList[0].contract_no
+                viewList.contract_no
               }}</a-descriptions-item>
               <a-descriptions-item label="流程编号">{{
-                viewList[0].proc_code
+                viewList.proc_code
               }}</a-descriptions-item>
               <a-descriptions-item label="项目类型">{{
-                viewList[0].project_lbl
+                viewList.project_lbl
               }}</a-descriptions-item>
               <a-descriptions-item label="建设单位">{{
-                viewList[0].client_nm
+                viewList.client_nm
               }}</a-descriptions-item>
               <a-descriptions-item label="建筑面积"
-                >{{ viewList[0].build_area }}平方米
+                >{{ viewList.build_area }}平方米
               </a-descriptions-item>
               <a-descriptions-item label="幕墙面积"
-                >{{ viewList[0].wall_area }}平方米</a-descriptions-item
+                >{{ viewList.wall_area }}平方米</a-descriptions-item
               >
               <a-descriptions-item label="门窗面积"
-                >{{ viewList[0].dw_area }}平方米</a-descriptions-item
+                >{{ viewList.dw_area }}平方米</a-descriptions-item
               >
               <a-descriptions-item label="建筑高度"
-                >{{ viewList[0].build_height }}米</a-descriptions-item
+                >{{ viewList.build_height }}米</a-descriptions-item
               >
               <a-descriptions-item label="幕墙高度"
-                >{{ viewList[0].wall_height }}米</a-descriptions-item
+                >{{ viewList.wall_height }}米</a-descriptions-item
               >
               <a-descriptions-item label="项目周期">{{
-                viewList[0].pro_cycle
+                viewList.pro_cycle
               }}</a-descriptions-item>
               <a-descriptions-item label="建筑类型">{{
-                viewList[0].build_lbl
+                viewList.build_lbl
               }}</a-descriptions-item>
               <a-descriptions-item label="设计类型">{{
-                viewList[0].major_lbl
+                viewList.major_lbl
               }}</a-descriptions-item>
               <a-descriptions-item label="主设专业">
-                {{ viewList[0].main_major_lbl }}
+                {{ viewList.main_major_lbl }}
               </a-descriptions-item>
               <a-descriptions-item label="建设地点">
-                {{ viewList[0].bulid_addr }}
+                {{ viewList.bulid_addr }}
               </a-descriptions-item>
               <a-descriptions-item label="竞争单位">
-                {{ viewList[0].competitor }}
+                {{ viewList.competitor }}
               </a-descriptions-item>
               <a-descriptions-item label="设计报价">
-                {{ viewList[0].fee }}
+                {{ viewList.fee }}
               </a-descriptions-item>
               <a-descriptions-item label="代建">
-                {{ viewList[0].construction }}
+                {{ viewList.construction }}
               </a-descriptions-item>
               <a-descriptions-item label="母公司">
-                {{ viewList[0].parent_company }}
+                {{ viewList.parent_company }}
               </a-descriptions-item>
               <a-descriptions-item label="备注">
-                {{ viewList[0].cmt }}
+                {{ viewList.cmt }}
               </a-descriptions-item>
             </a-descriptions>
           </div>
@@ -116,12 +116,17 @@
               <span>项目部门</span>
             </div>
             <div class="content">
+              <a-empty
+                :style="{ display: contactsList == false ? 'block' : 'none' }"
+              />
               <a-table
                 :columns="columns"
                 :data-source="prodepa"
+                :rowKey="(record) => record.id"
                 :rowClassName="
                   (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
                 "
+                :style="{ display: contactsList == false ? 'none' : 'block' }"
               >
                 <span slot="tags" slot-scope="tags">
                   <a-tag v-if="tags" color="blue">
@@ -138,12 +143,18 @@
               <span>联系人列表</span>
             </div>
             <div class="content">
+              <a-empty
+                :style="{ display: contactsList == false ? 'block' : 'none' }"
+              />
               <a-table
                 :columns="contacts"
                 :data-source="contactsList"
+                :scroll="{ x: 1500 }"
+                :rowKey="(record) => record.id"
                 :rowClassName="
                   (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
                 "
+                :style="{ display: contactsList == false ? 'none' : 'block' }"
               >
                 <template
                   v-for="col in [
@@ -166,6 +177,17 @@
                         (e) => handleChange(e.target.value, record.id, col)
                       "
                     />
+
+                    <a-select
+                      placeholder="请选择"
+                      style="display: block"
+                      v-else-if="record.typ"
+                      :value="text"
+                      @change="onChangeSelect($event, record.key, col)"
+                    >
+                      <a-select-option value="lucy">Lucy</a-select-option>
+                      <a-select-option value="jack">Jack</a-select-option>
+                    </a-select>
                     <template v-else>
                       {{ text }}
                     </template>
@@ -174,29 +196,23 @@
                 <template slot="operation" slot-scope="text, record">
                   <div class="editable-row-operations">
                     <span v-if="record.editable">
-                      <a @click="() => save(record.id)">保存</a>
-                      <a-popconfirm
-                        title="Sure to cancel?"
-                        @confirm="() => cancel(record.id)"
-                      >
-                        <a>取消</a>
-                      </a-popconfirm>
+                      <a @click="() => handlerSave(record.id)">保存</a
+                      >&nbsp;&nbsp;&nbsp;
+                      <a @click="() => handlerClear(record.id)">取消</a>
                     </span>
                     <span v-else>
                       <a
                         :disabled="editingKey !== ''"
-                        @click="() => edit(record.id)"
+                        @click="() => handlerEdit(record.id)"
                         >编辑</a
                       >
                     </span>
                     <a-divider type="vertical" />
-                    <span>
-                      <a
-                        :disabled="editingKey !== ''"
-                        @click="() => handlerDelete(record.id)"
-                        >删除</a
-                      >
-                    </span>
+                    <a
+                      :disabled="editingKey !== ''"
+                      @click="() => handlerDelete(record.id)"
+                      >删除</a
+                    >
                   </div>
                 </template>
               </a-table>
@@ -217,6 +233,7 @@
               <a-button>重置</a-button>
             </div>
           </a-form>
+          <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
           <div style="padding: 24px">
             <div class="concent-title">
               <span>项目文件</span>
@@ -230,79 +247,75 @@
                 <a-button type="primary">上传文件</a-button>
               </a-upload>
             </div>
-            <div
+            <a-empty
               :style="{ display: proj_doculist == false ? 'block' : 'none' }"
-            >
-              <a-empty />
-            </div>
-            <div
+            />
+            <a-table
               :style="{ display: proj_doculist == false ? 'none' : 'block' }"
+              :columns="proj_docu"
+              :data-source="proj_doculist"
+              :rowKey="(record) => record.id"
+              :rowClassName="
+                (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
+              "
             >
-              <a-table
-                :columns="proj_docu"
-                :data-source="proj_doculist"
-                :rowClassName="
-                  (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
-                "
-              >
-                <template slot="operation" slot-scope="text, record">
-                  <!-- 无权限不能操作 -->
-                  <div
-                    class="editable-row-operations"
-                    v-if="record.is_allow == 'f'"
+              <template slot="operation" slot-scope="text, record">
+                <!-- 无权限不能操作 -->
+                <div
+                  class="editable-row-operations"
+                  v-if="record.is_allow == 'f'"
+                >
+                  <a :disabled="record.is_allow !== ''">下载</a>
+                  <a-divider type="vertical" />
+                  <a :disabled="record.is_allow !== ''">重命名</a>
+                  <a-divider type="vertical" />
+                  <a :disabled="record.is_allow !== ''">删除</a>
+                </div>
+                <!-- 有权限可操作 -->
+                <div
+                  class="editable-row-operations"
+                  v-if="record.is_allow == 't'"
+                >
+                  <a
+                    :disabled="record.is_allow == ''"
+                    @click="handlerProjdown(record.id, record.nm)"
+                    >下载</a
                   >
-                    <a :disabled="record.is_allow !== ''">下载</a>
-                    <a-divider type="vertical" />
-                    <a :disabled="record.is_allow !== ''">重命名</a>
-                    <a-divider type="vertical" />
-                    <a :disabled="record.is_allow !== ''">删除</a>
-                  </div>
-                  <!-- 有权限可操作 -->
-                  <div
-                    class="editable-row-operations"
-                    v-if="record.is_allow == 't'"
+                  <a-divider type="vertical" />
+                  <a-popconfirm
+                    placement="topLeft"
+                    ok-text="确定"
+                    cancel-text="取消"
+                    @confirm="handlerProjrenm(record.id, record.nm)"
                   >
-                    <a
-                      :disabled="record.is_allow == ''"
-                      @click="handlerProjdown(record.id, record.nm)"
-                      >下载</a
+                    <a-icon slot="icon" />
+                    <template
+                      slot="title"
+                      style="position: relative; top: 0; left: 0"
                     >
-                    <a-divider type="vertical" />
-                    <a-popconfirm
-                      placement="topLeft"
-                      ok-text="确定"
-                      cancel-text="取消"
-                      @confirm="handlerProjrenm(record.id, record.nm)"
-                    >
-                      <a-icon slot="icon" />
-                      <template
-                        slot="title"
-                        style="position: relative; top: 0; left: 0"
-                      >
-                        <p>重命名</p>
-                        <a-input
-                          v-model="record.nm"
-                          style="margin-top: 10px"
-                        ></a-input>
-                      </template>
-                      <a :disabled="record.is_allow == ''">重命名</a>
-                    </a-popconfirm>
-                    <a-divider type="vertical" />
-                    <a-popconfirm
-                      placement="topRight"
-                      ok-text="确定"
-                      cancel-text="取消"
-                      @confirm="handlerProjdelete(record.id)"
-                    >
-                      <template slot="title">
-                        <p>请确认是否要删除该文件？</p>
-                      </template>
-                      <a :disabled="record.is_allow == ''">删除</a>
-                    </a-popconfirm>
-                  </div>
-                </template>
-              </a-table>
-            </div>
+                      <p>重命名</p>
+                      <a-input
+                        v-model="record.nm"
+                        style="margin-top: 10px"
+                      ></a-input>
+                    </template>
+                    <a :disabled="record.is_allow == ''">重命名</a>
+                  </a-popconfirm>
+                  <a-divider type="vertical" />
+                  <a-popconfirm
+                    placement="topRight"
+                    ok-text="确定"
+                    cancel-text="取消"
+                    @confirm="handlerProjdelete(record.id)"
+                  >
+                    <template slot="title">
+                      <p>请确认是否要删除该文件？</p>
+                    </template>
+                    <a :disabled="record.is_allow == ''">删除</a>
+                  </a-popconfirm>
+                </div>
+              </template>
+            </a-table>
           </div>
         </a-tab-pane>
         <a-tab-pane key="5" tab="操作记录">
@@ -337,30 +350,37 @@
               </a-row>
             </a-form>
           </div>
+          <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
           <div>
             <div class="oper_title">
               <span>操作记录</span>
             </div>
-            <a-table
-              :style="{ display: oper_recolist == null ? 'block' : 'none' }"
-              class="oper_table"
-              :columns="oper_reco"
-              :pagination="paginationOper"
-              :data-source="oper_recolist"
-              :rowClassName="
-                (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
-              "
-            >
-              <template slot="operation" slot-scope="text, record">
-                <div>
-                  <span
-                    style="color: #1890ff; font-size: 14px"
-                    @click="() => handlerJump(record.id, record.status)"
-                    >详情</span
-                  >
-                </div>
-              </template>
-            </a-table>
+            <div style="padding: 24px">
+              <a-empty
+                :style="{ display: oper_recolist == false ? 'block' : 'none' }"
+              />
+              <a-table
+                class="oper_table"
+                :columns="oper_reco"
+                :data-source="oper_recolist"
+                :pagination="paginationOper"
+                :rowKey="(record) => record.id"
+                :rowClassName="
+                  (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
+                "
+                :style="{ display: oper_recolist == false ? 'none' : 'block' }"
+              >
+                <template slot="operation" slot-scope="text, record">
+                  <div>
+                    <span
+                      style="color: #1890ff; font-size: 14px"
+                      @click="() => handlerJump(record.id, record.status)"
+                      >详情</span
+                    >
+                  </div>
+                </template>
+              </a-table>
+            </div>
           </div>
         </a-tab-pane>
       </a-tabs>
@@ -451,6 +471,8 @@ export default {
         title: "操作",
         dataIndex: "operation",
         scopedSlots: { customRender: "operation" },
+        fixed: "right",
+        width: 120,
       },
     ];
     const proj_docu = [
@@ -493,7 +515,7 @@ export default {
     ];
     return {
       param: "",
-      viewList: [],
+      viewList: {},
       badges: "",
       types: "",
       ghosts: "",
@@ -562,12 +584,13 @@ export default {
         })
         .then((res) => {
           let result = res.data;
-          this.viewList = result.data.data.project_info;
-          if (this.viewList[0].status == 2000) {
+          this.viewList = result.data.data.project_info[0];
+          console.log(this.viewList);
+          if (this.viewList.status == 2000) {
             this.badges = "processing";
             this.styles = "margin-right: 16px";
             this.styless = "display: none";
-          } else if (this.viewList[0].status == 1211) {
+          } else if (this.viewList.status == 1211) {
             this.badges = "error";
             this.styless = "margin-left: 16px";
             this.styles = "display: none";
@@ -631,7 +654,7 @@ export default {
       that.$api
         .get(that.baseURL + "project/revoke_proj/", {
           params: {
-            project_id: that.viewList[0].id,
+            project_id: that.viewList.id,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
@@ -698,7 +721,7 @@ export default {
       that.$api
         .get(that.baseURL + "project/recover_proj/", {
           params: {
-            project_id: that.viewList[0].id,
+            project_id: that.viewList.id,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
@@ -753,24 +776,70 @@ export default {
         });
     },
     // 编辑联系人
-    handlerEdit() {
+    handleChange(value, id, column) {
+      const newData = [...this.contactsList];
+      const target = newData.filter((item) => id === item.id)[0];
+      if (target) {
+        target[column] = value;
+        this.contactsList = newData;
+      }
+    },
+    // 编辑
+    handlerEdit(id) {
+      const newData = [...this.contactsList];
+      const target = newData.filter((item) => id === item.id)[0];
+      this.editingKey = id;
+      if (target) {
+        target.editable = true;
+        this.contactsList = newData;
+      }
+    },
+    // 保存
+    handlerSave(id) {
+      const newData = [...this.contactsList];
+      const target = newData.filter((item) => id === item.id)[0];
+      var qs = require("qs");
+      let params = {
+        proj_id: "10137",
+        proj_contact_id: id,
+        typ: "53",
+        nm: target.nm,
+        comp_nm: target.comp_nm,
+        dept_nm: target.dept_nm,
+        job: target.job,
+        mob: target.mob,
+      };
       this.$api
-        .get(this.baseURL + "project/edit_contact/", {
-          params: {},
+        .post(this.baseURL + "project/edit_contact", qs.stringify(params), {
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
         })
         .then((res) => {
-          let result = res.data;
-          console.log(result);
+          console.log(res);
+          this.getContacts();
         })
         .catch((err) => {
           console.log(err);
         });
+      if (target) {
+        delete target.editable;
+      }
+      this.editingKey = "";
+    },
+    // 取消
+    handlerClear(id) {
+      const newData = [...this.contactsList];
+      const target = newData.filter((item) => id === item.id)[0];
+      this.editingKey = "";
+      if (target) {
+        delete target.editable;
+      }
+      this.getContacts();
     },
     // 删除联系人
     handlerDelete(id) {
+      console.log(id);
       this.$api
         .get(this.baseURL + "project/del_contact", {
           params: {
@@ -781,7 +850,12 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res);
+          if (res.data.code) {
+            message.success("联系人删除成功");
+            this.getContacts();
+          } else {
+            message.error(res.data.data.errmsg);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -988,8 +1062,6 @@ export default {
 .ant-popover-message-title {
   padding-left: 0;
 }
-</style>
-<style scoped>
 .concenter {
   width: 100%;
   height: auto;

@@ -59,6 +59,7 @@
               :data-source="departlist"
               size="middle"
               :scroll="{ x: 800 }"
+              :rowKey="(record) => record.id"
               :rowClassName="
                 (record, index) => (index % 2 === 1 ? 'table-depa' : null)
               "
@@ -86,7 +87,7 @@
         :form="form"
         :model="depaForm"
         style="box-size: border-box; padding-left: 90px"
-        :label-col="{ span: 8 }"
+        :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
         <a-modal
@@ -150,18 +151,19 @@
         </a-modal>
       </a-form>
       <!-- 编辑 -->
-      <a-form
-        :form="form"
-        :model="depaForm"
-        style="box-size: border-box; padding-left: 90px"
-        :label-col="{ span: 8 }"
-        :wrapper-col="wrapperCol"
-      >
-        <a-modal v-model="visibilie" title="编辑部门" :destroyOnClose="true">
-          <template slot="footer">
-            <a-button @click="handleBack"> 返回 </a-button>
-            <a-button type="primary" @click="handlerDetemine"> 提交 </a-button>
-          </template>
+      <a-modal v-model="visibilie" title="编辑部门" :destroyOnClose="true">
+        <template slot="footer">
+          <a-button @click="handleBack"> 返回 </a-button>
+          <a-button type="primary" @click="handlerDetemine">
+            提交
+          </a-button> </template
+        ><a-form
+          :form="form"
+          :v-model="editForm"
+          style="box-size: border-box; padding-left: 90px"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
+        >
           <a-form-item label="部门名称">
             <a-input
               :initialValue="editForm.nm"
@@ -173,7 +175,9 @@
           <a-form-item label="上级部门">
             <a-select
               style="width: 236px"
-              v-model="editList.pid"
+              :initialValue="editForm.nm"
+              :default-Value="editForm.pnm"
+              v-model="editList.pnm"
               v-decorator="['上级部门', { rules: [{ required: true }] }]"
             >
               <a-select-option
@@ -204,8 +208,8 @@
               ]"
             />
           </a-form-item>
-        </a-modal>
-      </a-form>
+        </a-form>
+      </a-modal>
     </div>
   </div>
 </template>
@@ -275,6 +279,7 @@ export default {
         xs: { span: 24 },
         sm: { span: 12 },
       },
+      vi: false,
       // 列表信息
       columns,
       departlist: [],
@@ -304,6 +309,9 @@ export default {
         pnm: "",
         pid: "",
         o: "",
+      },
+      maskStyle: {
+        background: "rgba(0,0,0,0.05)",
       },
     };
   },
@@ -389,6 +397,7 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.editForm = result.dept_info;
+          console.log(this.editForm);
           return this.editForm;
         })
         .catch((err) => {
@@ -486,7 +495,6 @@ export default {
     handlerInfo(id) {
       console.log(id);
       this.$router.push("/index/department/dedetails/:id=" + id);
-      // this.$router.push("/index/department/dedetails/:id=" + id);
     },
   },
   mounted() {

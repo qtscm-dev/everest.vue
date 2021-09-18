@@ -8,8 +8,8 @@
       <span>立项中心</span>
     </div>
     <a-form v-bind="formItemLayout" class="ant-advanced-search-form">
-      <a-row>
-        <a-col :span="8">
+      <a-row style="margin-bottom: 20px">
+        <a-col :span="6">
           <a-form-item label="编号名称">
             <a-input
               v-model="conditionForm.search"
@@ -17,7 +17,7 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :span="8">
+        <a-col :span="6">
           <a-form-item label="选择日期">
             <a-range-picker
               v-model="conditionForm.proj_cycle"
@@ -26,7 +26,16 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :span="8" :style="{ textAlign: 'right' }">
+        <a-col :span="6">
+          <a-form-item label="选择日期">
+            <a-range-picker
+              v-model="conditionForm.proj_cycle"
+              v-decorator="['range-picker']"
+              @change="onChange"
+            />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6" :style="{ textAlign: 'right' }">
           <a-button type="primary" @click="handlerSubmit"> 查询 </a-button>
           <a-button :style="{ marginLeft: '8px' }" @click="hanslerReset">
             重置
@@ -42,13 +51,23 @@
         </a-col>
       </a-row>
       <a-row :style="{ display: 3 < count ? 'none' : 'block' }">
-        <a-col :span="8">
+        <a-col :span="6">
           <a-form-item label="建设单位">
             <a-input v-model="conditionForm.client_nm" placeholder="请输入" />
           </a-form-item>
         </a-col>
-        <a-col :span="8">
-          <a-form-item label="工程地点">
+        <a-col :span="6">
+          <a-form-item label="工程地x点">
+            <a-cascader placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="建设单位">
+            <a-input v-model="conditionForm.client_nm" placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="工程地x点">
             <a-cascader placeholder="请输入" />
           </a-form-item>
         </a-col>
@@ -66,17 +85,17 @@
       </div>
       <div ref="emptys">
         <a-radio-group class="pro_radio" v-model="value">
-          <a-radio-button value="a" @click="projectList">
-            待立项&nbsp;&nbsp;{{ dataLength.listLength }}
+          <a-radio-button class="radio-but" value="a" @click="projectList">
+            待立项&nbsp;&nbsp;&nbsp;{{ dataLength.listLength }}
           </a-radio-button>
-          <a-radio-button value="b" @click="handlerApproved">
-            已立项&nbsp;&nbsp;{{ dataLength.approvedLength }}
+          <a-radio-button class="radio-but" value="b" @click="handlerApproved">
+            已立项&nbsp;&nbsp;&nbsp;{{ dataLength.approvedLength }}
           </a-radio-button>
-          <a-radio-button value="c" @click="handlerWithdrawn">
-            已撤回&nbsp;&nbsp;{{ dataLength.withdrawnLength }}
+          <a-radio-button class="radio-but" value="c" @click="handlerWithdrawn">
+            已撤回&nbsp;&nbsp;&nbsp;{{ dataLength.withdrawnLength }}
           </a-radio-button>
-          <a-radio-button value="d" @click="handlerAll">
-            全部&nbsp;&nbsp;{{ dataLength.allLength }}
+          <a-radio-button class="radio-but" value="d" @click="handlerAll">
+            全部&nbsp;&nbsp;&nbsp;{{ dataLength.allLength }}
           </a-radio-button>
         </a-radio-group>
         <a-table
@@ -84,6 +103,7 @@
           :data-source="projeList"
           :pagination="pagination"
           :scroll="{ x: 1500 }"
+          :rowKey="(record) => record.id"
           size="middle"
           :rowClassName="
             (record, index) => (index % 2 === 1 ? 'table-proj' : null)
@@ -145,6 +165,7 @@ export default {
         title: "设计内容",
         dataIndex: "major_lbl",
         key: "major_lbl",
+        ellipsis: true,
       },
       {
         title: "项目周期",
@@ -182,8 +203,8 @@ export default {
       expand: false,
       formItemLayout: {
         labelCol: {
-          xs: { span: 24 },
-          sm: { span: 8 },
+          xs: { span: 12 },
+          sm: { span: 6 },
         },
         wrapperCol: {
           xs: { span: 24 },
@@ -375,6 +396,10 @@ export default {
 </script>
 
 <style>
+.radio-but {
+  width: 146px;
+  text-align: center;
+}
 .table-proj {
   background: #fafafa;
 }

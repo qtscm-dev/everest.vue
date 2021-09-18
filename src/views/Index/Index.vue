@@ -1,7 +1,10 @@
 <template>
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-      <div class="logo">
+      <div
+        class="logo"
+        style="width: 100%; padding: 18px; box-sizing: border-box"
+      >
         <img src="../../../public/favicon.png" />
         <span>中南幕墙</span>
       </div>
@@ -59,13 +62,7 @@ export default {
         .then((res) => {
           let result = res.data.data;
           this.loginname = result.login_nm;
-          // console.log(result);
-          // if (result.avatar == null) {
-          //   this.imgSrc = "../../../public/portrait/man.jpg";
-          // } else {
           this.imgSrc = this.baseURL + result.avatar;
-          // }
-          // console.log(this.imgSrc);
         })
         .catch((err) => {
           console.log(err);
@@ -111,16 +108,14 @@ export default {
 .icon span {
   font-size: 14px;
 }
-#components-layout-demo-custom-trigger .logo {
-  height: 43px;
-  margin: 16px;
-}
 .logo img {
-  width: 43px;
-  height: 43px;
+  width: 32px;
+  height: 32px;
+  margin-right: 6px;
 }
 .logo span {
   font-size: 20px;
   color: #fff;
+  text-align: center;
 }
 </style>
