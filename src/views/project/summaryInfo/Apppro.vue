@@ -32,113 +32,24 @@
           >恢复项目</a-button
         >
       </div>
-      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="3">
+      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="4">
         <a-tab-pane key="1" tab="概要信息">
-          <div class="concenter">
-            <div class="title">
-              <span>基础信息</span>
-            </div>
-            <a-descriptions class="content">
-              <a-descriptions-item label="项目编号">{{
-                viewList.code
-              }}</a-descriptions-item>
-              <a-descriptions-item label="项目名称">{{
-                viewList.nm
-              }}</a-descriptions-item>
-              <a-descriptions-item label="项目状态">
-                <a-badge :status="badges" />{{
-                  viewList.pro_status
-                }}</a-descriptions-item
-              >
-              <a-descriptions-item label="合同编号">{{
-                viewList.contract_no
-              }}</a-descriptions-item>
-              <a-descriptions-item label="流程编号">{{
-                viewList.proc_code
-              }}</a-descriptions-item>
-              <a-descriptions-item label="项目类型">{{
-                viewList.project_lbl
-              }}</a-descriptions-item>
-              <a-descriptions-item label="建设单位">{{
-                viewList.client_nm
-              }}</a-descriptions-item>
-              <a-descriptions-item label="建筑面积"
-                >{{ viewList.build_area }}平方米
-              </a-descriptions-item>
-              <a-descriptions-item label="幕墙面积"
-                >{{ viewList.wall_area }}平方米</a-descriptions-item
-              >
-              <a-descriptions-item label="门窗面积"
-                >{{ viewList.dw_area }}平方米</a-descriptions-item
-              >
-              <a-descriptions-item label="建筑高度"
-                >{{ viewList.build_height }}米</a-descriptions-item
-              >
-              <a-descriptions-item label="幕墙高度"
-                >{{ viewList.wall_height }}米</a-descriptions-item
-              >
-              <a-descriptions-item label="项目周期">{{
-                viewList.pro_cycle
-              }}</a-descriptions-item>
-              <a-descriptions-item label="建筑类型">{{
-                viewList.build_lbl
-              }}</a-descriptions-item>
-              <a-descriptions-item label="设计类型">{{
-                viewList.major_lbl
-              }}</a-descriptions-item>
-              <a-descriptions-item label="主设专业">
-                {{ viewList.main_major_lbl }}
-              </a-descriptions-item>
-              <a-descriptions-item label="建设地点">
-                {{ viewList.bulid_addr }}
-              </a-descriptions-item>
-              <a-descriptions-item label="竞争单位">
-                {{ viewList.competitor }}
-              </a-descriptions-item>
-              <a-descriptions-item label="设计报价">
-                {{ viewList.fee }}
-              </a-descriptions-item>
-              <a-descriptions-item label="代建">
-                {{ viewList.construction }}
-              </a-descriptions-item>
-              <a-descriptions-item label="母公司">
-                {{ viewList.parent_company }}
-              </a-descriptions-item>
-              <a-descriptions-item label="备注">
-                {{ viewList.cmt }}
-              </a-descriptions-item>
-            </a-descriptions>
-          </div>
+          <ProjectBasicInfo
+            :ProjectBasicInfo="projectBasicInfo"
+            :badges="badges"
+            :msg="msg"
+          />
         </a-tab-pane>
         <a-tab-pane key="2" tab="项目部门" force-render>
-          <div class="concenter">
-            <div class="title">
-              <span>项目部门</span>
-            </div>
-            <div class="content">
-              <a-empty
-                :style="{ display: contactsList == false ? 'block' : 'none' }"
-              />
-              <a-table
-                :columns="columns"
-                :data-source="prodepa"
-                :rowKey="(record) => record.id"
-                :rowClassName="
-                  (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
-                "
-                :style="{ display: contactsList == false ? 'none' : 'block' }"
-              >
-                <span slot="tags" slot-scope="tags">
-                  <a-tag v-if="tags" color="blue">
-                    {{ tags }}
-                  </a-tag>
-                </span>
-              </a-table>
-            </div>
-          </div>
+          <DepartInfo :prodepa="prodepa" />
         </a-tab-pane>
         <a-tab-pane key="3" tab="联系人">
-          <div class="concenter">
+          <ContactInfo
+            :contactsList="contactsList"
+            :contact_typ="contact_typ"
+            :proj_id="proj_id"
+          />
+          <!-- <div class="concenter">
             <div class="title">
               <span>联系人列表</span>
             </div>
@@ -170,23 +81,27 @@
                 >
                   <div :key="col">
                     <a-input
-                      v-if="record.editable"
+                      v-if="record.editable && col != 'typ'"
                       style="margin: -5px 0"
                       :value="text"
                       @change="
                         (e) => handleChange(e.target.value, record.id, col)
                       "
                     />
-
                     <a-select
                       placeholder="请选择"
                       style="display: block"
-                      v-else-if="record.typ"
-                      :value="text"
-                      @change="onChangeSelect($event, record.key, col)"
+                      v-else-if="record.editable && col == 'typ'"
+                      v-model="record.typ"
+                      @change="
+                        (e) => handleChange(e.target.value, record.id, col)
+                      "
                     >
-                      <a-select-option value="lucy">Lucy</a-select-option>
-                      <a-select-option value="jack">Jack</a-select-option>
+                      <a-select-option
+                        v-for="list in contact_typ"
+                        :key="list.id"
+                        >{{ list.lbl }}</a-select-option
+                      >
                     </a-select>
                     <template v-else>
                       {{ text }}
@@ -217,171 +132,13 @@
                 </template>
               </a-table>
             </div>
-          </div>
+          </div> -->
         </a-tab-pane>
         <a-tab-pane key="4" tab="项目文件">
-          <a-form class="top">
-            <a-row :gutter="24">
-              <a-col :span="8">
-                <a-form-item label="文件名称">
-                  <a-input placeholder="请输入" />
-                </a-form-item>
-              </a-col>
-            </a-row>
-            <div class="top_button">
-              <a-button type="primary" style="margin-right: 8px">查询</a-button>
-              <a-button>重置</a-button>
-            </div>
-          </a-form>
-          <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
-          <div style="padding: 24px">
-            <div class="concent-title">
-              <span>项目文件</span>
-              <a-upload
-                name="avatar"
-                :multiple="true"
-                :show-upload-list="false"
-                :customRequest="customRequest"
-                style="float: right"
-              >
-                <a-button type="primary">上传文件</a-button>
-              </a-upload>
-            </div>
-            <a-empty
-              :style="{ display: proj_doculist == false ? 'block' : 'none' }"
-            />
-            <a-table
-              :style="{ display: proj_doculist == false ? 'none' : 'block' }"
-              :columns="proj_docu"
-              :data-source="proj_doculist"
-              :rowKey="(record) => record.id"
-              :rowClassName="
-                (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
-              "
-            >
-              <template slot="operation" slot-scope="text, record">
-                <!-- 无权限不能操作 -->
-                <div
-                  class="editable-row-operations"
-                  v-if="record.is_allow == 'f'"
-                >
-                  <a :disabled="record.is_allow !== ''">下载</a>
-                  <a-divider type="vertical" />
-                  <a :disabled="record.is_allow !== ''">重命名</a>
-                  <a-divider type="vertical" />
-                  <a :disabled="record.is_allow !== ''">删除</a>
-                </div>
-                <!-- 有权限可操作 -->
-                <div
-                  class="editable-row-operations"
-                  v-if="record.is_allow == 't'"
-                >
-                  <a
-                    :disabled="record.is_allow == ''"
-                    @click="handlerProjdown(record.id, record.nm)"
-                    >下载</a
-                  >
-                  <a-divider type="vertical" />
-                  <a-popconfirm
-                    placement="topLeft"
-                    ok-text="确定"
-                    cancel-text="取消"
-                    @confirm="handlerProjrenm(record.id, record.nm)"
-                  >
-                    <a-icon slot="icon" />
-                    <template
-                      slot="title"
-                      style="position: relative; top: 0; left: 0"
-                    >
-                      <p>重命名</p>
-                      <a-input
-                        v-model="record.nm"
-                        style="margin-top: 10px"
-                      ></a-input>
-                    </template>
-                    <a :disabled="record.is_allow == ''">重命名</a>
-                  </a-popconfirm>
-                  <a-divider type="vertical" />
-                  <a-popconfirm
-                    placement="topRight"
-                    ok-text="确定"
-                    cancel-text="取消"
-                    @confirm="handlerProjdelete(record.id)"
-                  >
-                    <template slot="title">
-                      <p>请确认是否要删除该文件？</p>
-                    </template>
-                    <a :disabled="record.is_allow == ''">删除</a>
-                  </a-popconfirm>
-                </div>
-              </template>
-            </a-table>
-          </div>
+          <DocumentInfo :proj_doculist="proj_doculist" />
         </a-tab-pane>
         <a-tab-pane key="5" tab="操作记录">
-          <div class="concenter">
-            <a-form v-bind="formItemLayout" class="top">
-              <a-row :gutter="24">
-                <a-col :span="8">
-                  <a-form-item label="操作人">
-                    <a-input
-                      v-model="operForm.oper_act"
-                      placeholder="请输入名称"
-                    ></a-input>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                  <a-form-item label="日期">
-                    <a-range-picker
-                      v-model="operForm.oper_date"
-                      @change="onChange"
-                    />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="8" :style="{ textAlign: 'right' }">
-                  <a-button
-                    type="primary"
-                    style="margin-right: 8px"
-                    @click="handlerOperquery"
-                    >查询</a-button
-                  >
-                  <a-button @change="handlerOperreset">重置</a-button>
-                </a-col>
-              </a-row>
-            </a-form>
-          </div>
-          <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
-          <div>
-            <div class="oper_title">
-              <span>操作记录</span>
-            </div>
-            <div style="padding: 24px">
-              <a-empty
-                :style="{ display: oper_recolist == false ? 'block' : 'none' }"
-              />
-              <a-table
-                class="oper_table"
-                :columns="oper_reco"
-                :data-source="oper_recolist"
-                :pagination="paginationOper"
-                :rowKey="(record) => record.id"
-                :rowClassName="
-                  (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
-                "
-                :style="{ display: oper_recolist == false ? 'none' : 'block' }"
-              >
-                <template slot="operation" slot-scope="text, record">
-                  <div>
-                    <span
-                      style="color: #1890ff; font-size: 14px"
-                      @click="() => handlerJump(record.id, record.status)"
-                      >详情</span
-                    >
-                  </div>
-                </template>
-              </a-table>
-            </div>
-          </div>
+          <OperationInfo :oper_recolist="oper_recolist" />
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -391,132 +148,26 @@
 <script>
 import { Modal } from "ant-design-vue";
 import { message } from "ant-design-vue";
+import ProjectBasicInfo from "../../../components/ProjectDetail/BasicInfo";
+import DepartInfo from "../../../components/ProjectDetail/DepartInfo";
+import ContactInfo from "../../../components/ProjectDetail/ContactInfo";
+import OperationInfo from "../../../components/ProjectDetail/OperationInfo";
+import DocumentInfo from "../../../components/ProjectDetail/DocumentInfo";
 export default {
   name: "apppro",
+  components: {
+    ProjectBasicInfo,
+    DepartInfo,
+    ContactInfo,
+    OperationInfo,
+    DocumentInfo,
+  },
   data() {
-    const columns = [
-      {
-        title: "项目ID",
-        dataIndex: "code",
-      },
-      {
-        title: "项目状态",
-        dataIndex: "proj_sta",
-      },
-      {
-        title: "项目分工",
-        dataIndex: "cmt",
-      },
-      {
-        title: "负责部门",
-        dataIndex: "dept_nm",
-      },
-      {
-        title: "是否主设",
-        dataIndex: "is_main",
-        key: "is_main",
-        scopedSlots: { customRender: "tags" },
-      },
-      {
-        title: "操作人",
-        dataIndex: "oper_nm",
-        key: "oper_nm",
-      },
-      {
-        title: "创建时间",
-        dataIndex: "updated",
-        key: "updated",
-      },
-    ];
-    const contacts = [
-      {
-        title: "姓名",
-        dataIndex: "nm",
-        scopedSlots: { customRender: "nm" },
-      },
-      {
-        title: "手机号",
-        dataIndex: "mob",
-        scopedSlots: { customRender: "mob" },
-      },
-      {
-        title: "类型",
-        dataIndex: "typ",
-        scopedSlots: { customRender: "typ" },
-      },
-      {
-        title: "公司",
-        dataIndex: "comp_nm",
-        scopedSlots: { customRender: "comp_nm" },
-      },
-      {
-        title: "部门",
-        dataIndex: "dept_nm",
-        scopedSlots: { customRender: "dept_nm" },
-      },
-      {
-        title: "职位",
-        dataIndex: "job",
-        scopedSlots: { customRender: "job" },
-      },
-      {
-        title: "操作人",
-        dataIndex: "oper_nm",
-      },
-      {
-        title: "创建时间",
-        dataIndex: "updated",
-      },
-      {
-        title: "操作",
-        dataIndex: "operation",
-        scopedSlots: { customRender: "operation" },
-        fixed: "right",
-        width: 120,
-      },
-    ];
-    const proj_docu = [
-      {
-        title: "文件名称",
-        dataIndex: "nm",
-      },
-      {
-        title: "创建者",
-        dataIndex: "oper_nm",
-      },
-      {
-        title: "创建时间",
-        dataIndex: "updated",
-      },
-      {
-        title: "操作",
-        dataIndex: "operation",
-        scopedSlots: { customRender: "operation" },
-      },
-    ];
-    const oper_reco = [
-      {
-        title: "创建时间",
-        dataIndex: "nm",
-      },
-      {
-        title: "操作人姓名",
-        dataIndex: "oper_nm",
-      },
-      {
-        title: "操作类型",
-        dataIndex: "updated",
-      },
-      {
-        title: "操作内容",
-        dataIndex: "operation",
-        scopedSlots: { customRender: "operation" },
-      },
-    ];
     return {
       param: "",
-      viewList: {},
+      projectBasicInfo: {},
       badges: "",
+      msg: "",
       types: "",
       ghosts: "",
       styles: "margin-right:16px",
@@ -534,21 +185,17 @@ export default {
         },
       },
       // 项目部门
-      columns,
       prodepa: "",
-      // 联系人列表
-      contacts,
+      // 联系人列
+      // contacts,
+      proj_id: this.params,
       contactsList: [],
       editingKey: "",
-      // 分页
-      pagination: {
-        pageSize: 20,
-      },
+      contact_typ: [],
       // 项目文件
-      proj_docu,
       proj_doculist: "",
       // 操作记录
-      oper_reco,
+      // oper_reco,
       oper_recolist: "",
       operForm: {
         oper_act: "",
@@ -584,14 +231,15 @@ export default {
         })
         .then((res) => {
           let result = res.data;
-          this.viewList = result.data.data.project_info[0];
-          console.log(this.viewList);
-          if (this.viewList.status == 2000) {
+          this.projectBasicInfo = result.data.data.project_info[0];
+          if (this.projectBasicInfo.status == 2000) {
             this.badges = "processing";
+            this.msg = "已立项";
             this.styles = "margin-right: 16px";
             this.styless = "display: none";
-          } else if (this.viewList.status == 1211) {
+          } else if (this.projectBasicInfo.status == 1211) {
             this.badges = "error";
+            this.msg = "已中止";
             this.styless = "margin-left: 16px";
             this.styles = "display: none";
           }
@@ -756,7 +404,7 @@ export default {
           console.log(err);
         });
     },
-    // 联系人列表
+    // 联系人
     getContacts() {
       this.$api
         .get(this.baseURL + "project/proj_contact", {
@@ -770,92 +418,6 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.contactsList = result.datarows;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    // 编辑联系人
-    handleChange(value, id, column) {
-      const newData = [...this.contactsList];
-      const target = newData.filter((item) => id === item.id)[0];
-      if (target) {
-        target[column] = value;
-        this.contactsList = newData;
-      }
-    },
-    // 编辑
-    handlerEdit(id) {
-      const newData = [...this.contactsList];
-      const target = newData.filter((item) => id === item.id)[0];
-      this.editingKey = id;
-      if (target) {
-        target.editable = true;
-        this.contactsList = newData;
-      }
-    },
-    // 保存
-    handlerSave(id) {
-      const newData = [...this.contactsList];
-      const target = newData.filter((item) => id === item.id)[0];
-      var qs = require("qs");
-      let params = {
-        proj_id: "10137",
-        proj_contact_id: id,
-        typ: "53",
-        nm: target.nm,
-        comp_nm: target.comp_nm,
-        dept_nm: target.dept_nm,
-        job: target.job,
-        mob: target.mob,
-      };
-      this.$api
-        .post(this.baseURL + "project/edit_contact", qs.stringify(params), {
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          this.getContacts();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      if (target) {
-        delete target.editable;
-      }
-      this.editingKey = "";
-    },
-    // 取消
-    handlerClear(id) {
-      const newData = [...this.contactsList];
-      const target = newData.filter((item) => id === item.id)[0];
-      this.editingKey = "";
-      if (target) {
-        delete target.editable;
-      }
-      this.getContacts();
-    },
-    // 删除联系人
-    handlerDelete(id) {
-      console.log(id);
-      this.$api
-        .get(this.baseURL + "project/del_contact", {
-          params: {
-            proj_contact_id: id,
-          },
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
-        })
-        .then((res) => {
-          if (res.data.code) {
-            message.success("联系人删除成功");
-            this.getContacts();
-          } else {
-            message.error(res.data.data.errmsg);
-          }
         })
         .catch((err) => {
           console.log(err);
@@ -946,6 +508,7 @@ export default {
         .then((res) => {
           if (res.data.code) {
             message.success("重命名成功");
+            this.getProjdoculist();
           } else {
             message.error("重命名失败");
           }
@@ -953,6 +516,9 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    handlerProjClean() {
+      this.getProjdoculist();
     },
     // 删除
     handlerProjdelete(id) {
@@ -991,33 +557,6 @@ export default {
       //   .catch((err) => {
       //     console.log(err);
       //   });
-    },
-    // 操作记录查询
-    handlerOperquery() {
-      // this.$api
-      //   .get(this.baseURL + "", {
-      //     params: {},
-      //     headers: {
-      //       Authorization: localStorage.getItem("Authorization"),
-      //     },
-      //   })
-      //   .then((res) => {
-      //     let result = res.data;
-      //     console.log(result);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-    },
-    // 操作记录重置
-    handlerOperreset() {
-      // this.operForm.oper_act = "";
-      // this.operForm.oper_date = "";
-      // this.getOper();
-    },
-    onChange(date, datestring) {
-      console.log(date);
-      this.operForm.oper_date = datestring;
     },
   },
   mounted() {

@@ -206,10 +206,7 @@
             <a-range-picker
               v-model="newproForm.proj_cycle"
               style="width: 70%"
-              :v-decorator="[
-                '项目周期',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-decorator="['项目周期', rangeConfig]"
               @change="onChange"
             >
               <a-icon slot="suffixIcon" type="calendar" />
@@ -428,6 +425,9 @@ export default {
   data() {
     return {
       form: this.$form.createForm(this, { name: "coordinated" }),
+      rangeConfig: {
+        rules: [{ type: "array", required: true, message: "该项为必填项" }],
+      },
       // 项目类型
       project_typeFrom: [],
       // 建筑类型

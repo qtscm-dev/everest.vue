@@ -185,10 +185,7 @@
             <a-range-picker
               v-model="viewForm.proj_cycle"
               style="width: 70%"
-              :v-decorator="[
-                '项目周期',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-decorator="['项目周期', rangeConfig]"
               @change="sonChange"
             >
               <a-icon slot="suffixIcon" type="calendar" />
@@ -350,8 +347,10 @@ export default {
   name: "toapppro",
   data() {
     return {
-      msg: "ddd",
       form: this.$form.createForm(this, { name: "advanced_search" }),
+      rangeConfig: {
+        rules: [{ type: "array", required: true, message: "该项为必填项" }],
+      },
       // 建设地点
       options: [
         {
@@ -617,7 +616,9 @@ export default {
     },
     // 删除竞争单位
     handlerDelete(index) {
-      this.plus.splice(index, 1);
+      if (this.plus.length > 1) {
+        this.plus.splice(index, 1);
+      }
     },
     // 项目周期
     sonChange(date, dateString) {

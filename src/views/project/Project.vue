@@ -92,7 +92,7 @@
             已立项&nbsp;&nbsp;&nbsp;{{ dataLength.approvedLength }}
           </a-radio-button>
           <a-radio-button class="radio-but" value="c" @click="handlerWithdrawn">
-            已撤回&nbsp;&nbsp;&nbsp;{{ dataLength.withdrawnLength }}
+            已中止&nbsp;&nbsp;&nbsp;{{ dataLength.withdrawnLength }}
           </a-radio-button>
           <a-radio-button class="radio-but" value="d" @click="handlerAll">
             全部&nbsp;&nbsp;&nbsp;{{ dataLength.allLength }}
