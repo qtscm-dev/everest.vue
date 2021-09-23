@@ -155,8 +155,6 @@ export default {
     },
     // 保存
     handlerSave(id) {
-      console.log(id);
-      console.log(this.param);
       const newData = [...this.contactsList];
       const target = newData.filter((item) => id === item.id)[0];
       var qs = require("qs");
@@ -180,10 +178,9 @@ export default {
           if (res.data.code) {
             message.success("保存成功");
             this.reload();
-            this.getContacts();
           } else {
-            console.log(res);
             message.error("保存失败");
+            this.reload();
           }
         })
         .catch((err) => {
@@ -202,11 +199,10 @@ export default {
       if (target) {
         delete target.editable;
       }
-      this.getContacts();
+      this.reload();
     },
     // 删除联系人
     handlerDelete(id) {
-      console.log(id);
       this.$api
         .get(this.baseURL + "project/del_contact", {
           params: {
@@ -219,7 +215,7 @@ export default {
         .then((res) => {
           if (res.data.code) {
             message.success("联系人删除成功");
-            this.getContacts();
+            this.reload();
           } else {
             message.error(res.data.data.errmsg);
           }

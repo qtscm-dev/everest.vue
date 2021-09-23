@@ -26,16 +26,7 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :span="6">
-          <a-form-item label="选择日期">
-            <a-range-picker
-              v-model="conditionForm.proj_cycle"
-              v-decorator="['range-picker']"
-              @change="onChange"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="6" :style="{ textAlign: 'right' }">
+        <a-col :span="12" :style="{ textAlign: 'right' }">
           <a-button type="primary" @click="handlerSubmit"> 查询 </a-button>
           <a-button :style="{ marginLeft: '8px' }" @click="hanslerReset">
             重置
@@ -57,17 +48,7 @@
           </a-form-item>
         </a-col>
         <a-col :span="6">
-          <a-form-item label="工程地x点">
-            <a-cascader placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="6">
-          <a-form-item label="建设单位">
-            <a-input v-model="conditionForm.client_nm" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="6">
-          <a-form-item label="工程地x点">
+          <a-form-item label="工程地点">
             <a-cascader placeholder="请输入" />
           </a-form-item>
         </a-col>
@@ -80,46 +61,47 @@
           >新建项目</a-button
         >
       </div>
-      <div ref="havedata">
-        <a-empty />
-      </div>
-      <div ref="emptys">
-        <a-radio-group class="pro_radio" v-model="value">
-          <a-radio-button class="radio-but" value="a" @click="projectList">
-            待立项&nbsp;&nbsp;&nbsp;{{ dataLength.listLength }}
-          </a-radio-button>
-          <a-radio-button class="radio-but" value="b" @click="handlerApproved">
-            已立项&nbsp;&nbsp;&nbsp;{{ dataLength.approvedLength }}
-          </a-radio-button>
-          <a-radio-button class="radio-but" value="c" @click="handlerWithdrawn">
-            已中止&nbsp;&nbsp;&nbsp;{{ dataLength.withdrawnLength }}
-          </a-radio-button>
-          <a-radio-button class="radio-but" value="d" @click="handlerAll">
-            全部&nbsp;&nbsp;&nbsp;{{ dataLength.allLength }}
-          </a-radio-button>
-        </a-radio-group>
-        <a-table
-          :columns="columns"
-          :data-source="projeList"
-          :pagination="pagination"
-          :scroll="{ x: 1500 }"
-          :rowKey="(record) => record.id"
-          size="middle"
-          :rowClassName="
-            (record, index) => (index % 2 === 1 ? 'table-proj' : null)
-          "
-        >
-          <template slot="operation" slot-scope="text, record">
-            <div>
-              <a
-                style="font-size: 14px"
-                @click="() => handlerJump(record.id, record.status)"
-                >详情</a
-              >
-            </div>
-          </template>
-        </a-table>
-      </div>
+      <a-empty :style="{ display: projeList == false ? 'block' : 'none' }" />
+      <a-radio-group
+        class="pro_radio"
+        v-model="value"
+        :style="{ display: projeList == false ? 'none' : 'block' }"
+      >
+        <a-radio-button class="radio-but" value="a" @click="projectList">
+          待立项&nbsp;&nbsp;&nbsp;{{ dataLength.listLength }}
+        </a-radio-button>
+        <a-radio-button class="radio-but" value="b" @click="handlerApproved">
+          已立项&nbsp;&nbsp;&nbsp;{{ dataLength.approvedLength }}
+        </a-radio-button>
+        <a-radio-button class="radio-but" value="c" @click="handlerWithdrawn">
+          已中止&nbsp;&nbsp;&nbsp;{{ dataLength.withdrawnLength }}
+        </a-radio-button>
+        <a-radio-button class="radio-but" value="d" @click="handlerAll">
+          全部&nbsp;&nbsp;&nbsp;{{ dataLength.allLength }}
+        </a-radio-button>
+      </a-radio-group>
+      <a-table
+        :style="{ display: projeList == false ? 'none' : 'block' }"
+        :columns="columns"
+        :data-source="projeList"
+        :pagination="pagination"
+        :scroll="{ x: 1500 }"
+        :rowKey="(record) => record.id"
+        size="middle"
+        :rowClassName="
+          (record, index) => (index % 2 === 1 ? 'table-proj' : null)
+        "
+      >
+        <template slot="operation" slot-scope="text, record">
+          <div>
+            <a
+              style="font-size: 14px"
+              @click="() => handlerJump(record.id, record.status)"
+              >详情</a
+            >
+          </div>
+        </template>
+      </a-table>
     </div>
   </div>
 </template>
@@ -132,63 +114,56 @@ export default {
       {
         title: "项目ID",
         dataIndex: "code",
-        key: "code",
       },
       {
         title: "项目名称",
         dataIndex: "nm",
-        key: "nm",
       },
       {
         title: "建设单位",
         dataIndex: "client_nm",
-        key: "client_nm",
         ellipsis: true,
       },
       {
         title: "幕墙面积",
         dataIndex: "wall_area",
-        key: "wall_area",
       },
       {
         title: "建筑类型",
         dataIndex: "build_lbl",
-        key: "build_lbl",
         ellipsis: true,
       },
       {
         title: "项目类型",
         dataIndex: "project_lbl",
-        key: "project_lbl",
       },
       {
         title: "设计内容",
         dataIndex: "major_lbl",
-        key: "major_lbl",
         ellipsis: true,
       },
       {
         title: "项目周期",
         dataIndex: "pro_cycle",
-        key: "pro_cycle",
+        width: 200,
         ellipsis: true,
       },
       {
         title: "项目地点",
         dataIndex: "bulid_addr",
-        key: "bulid_addr",
+        width: 220,
         ellipsis: true,
       },
       {
         title: "创建时间",
         dataIndex: "created",
-        key: "created",
+        width: 150,
         ellipsis: true,
       },
       {
         title: "更新时间",
         dataIndex: "updated",
-        key: "updated",
+        width: 150,
         ellipsis: true,
       },
       {
@@ -242,6 +217,7 @@ export default {
         onChange: (current, pageSize) => {
           this.getProject(this.pagination.proj, current, pageSize);
         },
+        showQuickJumper: (current, pageSize) => (this.pageSize = pageSize),
       },
       // 数据长度
       dataLength: {

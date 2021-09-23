@@ -468,6 +468,59 @@ export default {
   },
   methods: {
     waring() {
+      let a = this.newproForm.agent_constr;
+      let b = this.newproForm.build_addr;
+      let c = this.newproForm.build_area;
+      let d = this.newproForm.build_height;
+      let e = this.newproForm.build_type_id;
+      let f = this.newproForm.build_unit;
+      let g = this.newproForm.cmt;
+      let h = this.newproForm.code;
+      let i = this.newproForm.competitor;
+      let j = this.newproForm.contract_no;
+      let k = this.newproForm.design_type_id;
+      let l = this.newproForm.dw_area;
+      let m = this.newproForm.main_major_id;
+      let n = this.newproForm.nm;
+      let o = this.newproForm.parent_company;
+      let p = this.newproForm.proc_code;
+      let q = this.newproForm.proj_cycle;
+      let r = this.newproForm.proj_type_id;
+      let s = this.newproForm.quote;
+      let t = this.newproForm.wall_area;
+      let u = this.newproForm.wall_height;
+      if (
+        a == "" &&
+        b == "" &&
+        c == "" &&
+        d == "" &&
+        e == "" &&
+        f == "" &&
+        g == "" &&
+        h == "" &&
+        i == "" &&
+        j == "" &&
+        k == "" &&
+        l == "" &&
+        m == "" &&
+        n == "" &&
+        o == "" &&
+        p == "" &&
+        q == "" &&
+        r == "" &&
+        s.nm == "" &&
+        s.rmb == "" &&
+        t == "" &&
+        u == ""
+      ) {
+        this.$router.push({ name: "project" });
+        // console.log("dd");
+      } else {
+        this.handlerModel();
+      }
+    },
+    // 保存后返回列表页
+    handlerModel() {
       let that = this;
       Modal.confirm({
         title: "返回",

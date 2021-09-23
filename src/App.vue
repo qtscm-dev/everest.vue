@@ -1,6 +1,6 @@
 <template>
   <a-config-provider id="app" :locale="locale">
-    <router-view v-if="isRouterAlive" />
+    <router-view v-if="isReloadData" />
   </a-config-provider>
 </template>
 
@@ -19,14 +19,14 @@ export default {
   data() {
     return {
       locale: zhCN,
-      isRouterAlive: true,
+      isReloadData: true,
     };
   },
   methods: {
     reload() {
-      this.isRouterAlive = false;
-      this.$$nextTick(function () {
-        this.isRouterAlive = true;
+      this.isReloadData = false;
+      this.$nextTick(function () {
+        this.isReloadData = true;
       });
     },
   },

@@ -4,7 +4,7 @@
       <span>项目部门</span>
     </div>
     <div class="content">
-      <a-empty :style="{ display: contactsList == false ? 'block' : 'none' }" />
+      <a-empty :style="{ display: prodepa == false ? 'block' : 'none' }" />
       <a-table
         :columns="columns"
         :data-source="prodepa"
@@ -12,7 +12,7 @@
         :rowClassName="
           (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
         "
-        :style="{ display: contactsList == false ? 'none' : 'block' }"
+        :style="{ display: prodepa == false ? 'none' : 'block' }"
       >
         <span slot="tags" slot-scope="tags">
           <a-tag v-if="tags == 't'" color="blue"> 主设 </a-tag>

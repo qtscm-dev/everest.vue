@@ -47,98 +47,10 @@
           <ContactInfo
             :contactsList="contactsList"
             :contact_typ="contact_typ"
-            :proj_id="proj_id"
           />
-          <!-- <div class="concenter">
-            <div class="title">
-              <span>联系人列表</span>
-            </div>
-            <div class="content">
-              <a-empty
-                :style="{ display: contactsList == false ? 'block' : 'none' }"
-              />
-              <a-table
-                :columns="contacts"
-                :data-source="contactsList"
-                :scroll="{ x: 1500 }"
-                :rowKey="(record) => record.id"
-                :rowClassName="
-                  (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
-                "
-                :style="{ display: contactsList == false ? 'none' : 'block' }"
-              >
-                <template
-                  v-for="col in [
-                    'nm',
-                    'mob',
-                    'typ',
-                    'comp_nm',
-                    'dept_nm',
-                    'job',
-                  ]"
-                  :slot="col"
-                  slot-scope="text, record"
-                >
-                  <div :key="col">
-                    <a-input
-                      v-if="record.editable && col != 'typ'"
-                      style="margin: -5px 0"
-                      :value="text"
-                      @change="
-                        (e) => handleChange(e.target.value, record.id, col)
-                      "
-                    />
-                    <a-select
-                      placeholder="请选择"
-                      style="display: block"
-                      v-else-if="record.editable && col == 'typ'"
-                      v-model="record.typ"
-                      @change="
-                        (e) => handleChange(e.target.value, record.id, col)
-                      "
-                    >
-                      <a-select-option
-                        v-for="list in contact_typ"
-                        :key="list.id"
-                        >{{ list.lbl }}</a-select-option
-                      >
-                    </a-select>
-                    <template v-else>
-                      {{ text }}
-                    </template>
-                  </div>
-                </template>
-                <template slot="operation" slot-scope="text, record">
-                  <div class="editable-row-operations">
-                    <span v-if="record.editable">
-                      <a @click="() => handlerSave(record.id)">保存</a
-                      >&nbsp;&nbsp;&nbsp;
-                      <a @click="() => handlerClear(record.id)">取消</a>
-                    </span>
-                    <span v-else>
-                      <a
-                        :disabled="editingKey !== ''"
-                        @click="() => handlerEdit(record.id)"
-                        >编辑</a
-                      >
-                    </span>
-                    <a-divider type="vertical" />
-                    <a
-                      :disabled="editingKey !== ''"
-                      @click="() => handlerDelete(record.id)"
-                      >删除</a
-                    >
-                  </div>
-                </template>
-              </a-table>
-            </div>
-          </div> -->
         </a-tab-pane>
         <a-tab-pane key="4" tab="项目文件">
           <DocumentInfo :proj_doculist="proj_doculist" />
-        </a-tab-pane>
-        <a-tab-pane key="5" tab="操作记录">
-          <OperationInfo :oper_recolist="oper_recolist" />
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -151,7 +63,6 @@ import { message } from "ant-design-vue";
 import ProjectBasicInfo from "../../../components/ProjectDetail/BasicInfo";
 import DepartInfo from "../../../components/ProjectDetail/DepartInfo";
 import ContactInfo from "../../../components/ProjectDetail/ContactInfo";
-import OperationInfo from "../../../components/ProjectDetail/OperationInfo";
 import DocumentInfo from "../../../components/ProjectDetail/DocumentInfo";
 export default {
   name: "apppro",
@@ -159,7 +70,6 @@ export default {
     ProjectBasicInfo,
     DepartInfo,
     ContactInfo,
-    OperationInfo,
     DocumentInfo,
   },
   data() {
@@ -186,21 +96,11 @@ export default {
       },
       // 项目部门
       prodepa: "",
-      // 联系人列
-      // contacts,
-      proj_id: this.params,
+      // 联系人列表
       contactsList: [],
-      editingKey: "",
       contact_typ: [],
       // 项目文件
       proj_doculist: "",
-      // 操作记录
-      // oper_reco,
-      oper_recolist: "",
-      operForm: {
-        oper_act: "",
-        oper_date: "",
-      },
       // 分页
       paginationOper: {
         defaultPageSize: 20,
@@ -248,23 +148,35 @@ export default {
           console.log(err);
         });
     },
-    // 撤回立项
+    // 中止立项
     handlerWithpro() {
       let that = this;
-      const h = that.$createElement;
       Modal.confirm({
-        title: "撤回立项",
-        content: h("div", {}, [
-          h("p", "请输入“确定撤回”以校验是否误操作"),
-          h("br"),
-          h("a-input"),
-        ]),
+        title: "中止项目",
+        content: (
+          <div>
+            <a-form>
+              <a-form-item label="请输入“确定中止”以校验是否误操作">
+                <a-input class="withpro_inp" placeholder="确定中止" />
+              </a-form-item>
+              <a-textarea
+                class="withpro_text"
+                placeholder="请输入原因（选填）"
+              />
+            </a-form>
+          </div>
+        ),
         cancelText: "取消",
         okText: "确定",
         onOk() {
-          let inp = document.getElementsByClassName("ant-input")[0].value;
-          if (inp == "确定撤回") {
-            that.handlerWithpros();
+          let inp = document.getElementsByClassName("withpro_inp")[0].value;
+          let texta = document.getElementsByClassName("withpro_text")[0].value;
+          if (inp == "确定中止") {
+            if (texta == "") {
+              that.handlerWithpros();
+            } else {
+              that.handlerWithpros(texta);
+            }
           } else {
             that.handlerWagin();
           }
@@ -276,43 +188,60 @@ export default {
     },
     handlerWagin() {
       let that = this;
-      const h = that.$createElement;
-      Modal.confirm({
-        title: "撤回立项",
-        content: h("div", {}, [
-          h("p", '输入内容有误，请重新输入"确定撤回"以校验是否误操作'),
-          h("br"),
-          h("a-input"),
-        ]),
+      Modal.error({
+        title: "中止项目",
+        content: (
+          <div>
+            <a-input class="withpro_inpu" placeholder="确定中止" />
+            <span style="color: red; font-size: 12px">
+              输入内容有误，请重新输入“确定中止”以校验是否误操作
+            </span>
+            <br />
+            <br />
+            <a-textarea
+              class="withpro_texta"
+              placeholder="请输入原因（选填）"
+            />
+          </div>
+        ),
         cancelText: "取消",
         okText: "确定",
+        maskClosable: true,
         onOk() {
-          let inp = document.getElementsByClassName("ant-input")[0].value;
-          if (inp == "确定撤回") {
-            that.handlerWithpros();
+          let inp = document.getElementsByClassName("ant-inputu")[0].value;
+          let texta =
+            document.getElementsByClassName("ant-withpro_texta")[0].value;
+          if (inp == "确定中止") {
+            if (texta == "") {
+              that.handlerWithpros();
+            } else {
+              that.handlerWithpros(texta);
+            }
           } else {
             that.handlerWagin();
           }
           console.log(that);
         },
+        onCancel() {
+          Modal.destroy();
+        },
       });
     },
-    handlerWithpros() {
+    handlerWithpros(reas) {
       let that = this;
       that.$api
-        .get(that.baseURL + "project/revoke_proj/", {
+        .get(this.baseURL + "project/revoke_proj/", {
           params: {
-            project_id: that.viewList.id,
+            project_id: that.param,
+            reason: reas,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
         })
         .then((res) => {
-          let result = res.data;
-          console.log(that.viewList);
+          console.log(res);
           that.$router.push({ name: "project" });
-          console.log(result);
         })
         .catch((err) => {
           console.log(err);
@@ -321,18 +250,21 @@ export default {
     // 恢复项目
     handlerRecover() {
       let that = this;
-      const h = that.$createElement;
       Modal.confirm({
         title: "恢复项目",
-        content: h("div", {}, [
-          h("p", "请输入“恢复项目”以校验是否误操作"),
-          h("br"),
-          h("a-input"),
-        ]),
+        content: (
+          <div>
+            <a-form>
+              <a-form-item label="请输入“恢复项目”以校验是否误操作">
+                <a-input class="recover_inp" placeholder="恢复项目" />
+              </a-form-item>
+            </a-form>
+          </div>
+        ),
         cancelText: "取消",
         okText: "确定",
         onOk() {
-          let inp = document.getElementsByClassName("ant-input")[0].value;
+          let inp = document.getElementsByClassName("recover_inp")[0].value;
           if (inp == "恢复项目") {
             that.handlerRecovers();
           } else {
@@ -343,18 +275,20 @@ export default {
     },
     handlerRagin() {
       let that = this;
-      const h = that.$createElement;
       Modal.confirm({
         title: "恢复项目",
-        content: h("div", {}, [
-          h("p", '输入内容有误，请重新输入"恢复项目"以校验是否误操作'),
-          h("br"),
-          h("a-input"),
-        ]),
+        content: (
+          <div>
+            <a-input class="withpro_inp" placeholder="恢复项目" />
+            <span style="color: red; font-size: 12px">
+              输入内容有误，请重新输入“恢复项目”以校验是否误操作
+            </span>
+          </div>
+        ),
         cancelText: "取消",
         okText: "确定",
         onOk() {
-          let inp = document.getElementsByClassName("ant-input")[0].value;
+          let inp = document.getElementsByClassName("withpro_inp")[0].value;
           if (inp == "恢复项目") {
             that.handlerRecovers();
           } else {
@@ -369,17 +303,15 @@ export default {
       that.$api
         .get(that.baseURL + "project/recover_proj/", {
           params: {
-            project_id: that.viewList.id,
+            project_id: that.param,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
         })
         .then((res) => {
-          let result = res.data;
-          console.log(that.viewList);
+          console.log(res);
           that.$router.push({ name: "project" });
-          console.log(result);
         })
         .catch((err) => {
           console.log(err);
@@ -418,6 +350,7 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.contactsList = result.datarows;
+          this.contact_typ = result.contact_typ;
         })
         .catch((err) => {
           console.log(err);
@@ -465,98 +398,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    // 下载
-    handlerProjdown(id, nm) {
-      console.log(id);
-      const formData = new FormData();
-      formData.append("rsc_id", "10930");
-      this.$api({
-        method: "post",
-        url: this.baseURL + "project/down_file",
-        headers: { Authorization: localStorage.getItem("Authorization") },
-        data: formData,
-        responseType: "blob",
-      })
-        .then((res) => {
-          let url = window.URL.createObjectURL(new Blob([res.data]));
-          let link = document.createElement("a");
-          link.style.display = "none";
-          link.href = url;
-          link.setAttribute("download", nm);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    // 重命名
-    handlerProjrenm(id, nm) {
-      var qs = require("qs");
-      let params = {
-        rsc_id: id,
-        rename: nm,
-      };
-      this.$api
-        .post(this.baseURL + "project/rename", qs.stringify(params), {
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
-        })
-        .then((res) => {
-          if (res.data.code) {
-            message.success("重命名成功");
-            this.getProjdoculist();
-          } else {
-            message.error("重命名失败");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    handlerProjClean() {
-      this.getProjdoculist();
-    },
-    // 删除
-    handlerProjdelete(id) {
-      var qs = require("qs");
-      let params = {
-        rsc_id: id,
-      };
-      this.$api
-        .post(this.baseURL + "project/del_file", qs.stringify(params), {
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          this.getProjdoculist();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    // 操作记录
-    getOper() {
-      // this.$api
-      //   .get(this.baseURL + "", {
-      //     params: {},
-      //     headers: {
-      //       Authorization: localStorage.getItem("Authorization"),
-      //     },
-      //   })
-      //   .then((res) => {
-      //     let result = res.data;
-      //     // this.oper_recolist = result.datarows;
-      //     console.log(result);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
     },
   },
   mounted() {

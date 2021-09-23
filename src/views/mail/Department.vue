@@ -46,7 +46,7 @@
               </a-row>
             </a-form>
           </div>
-          <div class="he"></div>
+          <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
           <div class="tabs-item-content">
             <div style="height: 32px; line-height: 32px; margin-bottom: 24px">
               <span>部门列表</span>
@@ -59,6 +59,7 @@
               :data-source="departlist"
               size="middle"
               :scroll="{ x: 800 }"
+              :pagination="pagination"
               :rowKey="(record) => record.id"
               :rowClassName="
                 (record, index) => (index % 2 === 1 ? 'table-depa' : null)
@@ -70,11 +71,14 @@
                 <a @click="() => handleredit(record.id)"> 编辑 </a>
                 <a-divider type="vertical" />
                 <a-popconfirm
-                  title="请确认是否要删除该部门？"
+                  placement="topRight"
                   ok-text="确定"
                   cancel-text="取消"
                   @confirm="() => handlerDelete(record.id)"
                 >
+                  <template slot="title">
+                    <p>请确认是否要删除该部门？</p>
+                  </template>
                   <a class="ant-dropdown-link"> 删除</a>
                 </a-popconfirm>
               </template>
@@ -312,6 +316,16 @@ export default {
       },
       maskStyle: {
         background: "rgba(0,0,0,0.05)",
+      },
+      // 分页
+      pagination: {
+        defaultPageSize: 20,
+        showTotal: (total) => `共 ${total} 条数据`,
+        showSizeChanger: true,
+        size: "middle",
+        total: "",
+        proj: "",
+        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
       },
     };
   },

@@ -2,7 +2,17 @@
   <div>
     <a-form class="top">
       <a-row :gutter="24">
-        <a-col :span="8">
+        <a-col :span="6">
+          <a-form-item label="文件名称">
+            <a-input placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
+          <a-form-item label="文件名称">
+            <a-input placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6">
           <a-form-item label="文件名称">
             <a-input placeholder="请输入" />
           </a-form-item>
@@ -75,15 +85,14 @@
             </a-popconfirm>
             <a-divider type="vertical" />
             <a-popconfirm
-              placement="topRight"
               ok-text="确定"
               cancel-text="取消"
-              @confirm="handlerProjdelete(record.id)"
+              @confirm="() => handlerProjdelete(record.id)"
             >
               <template slot="title">
                 <p>请确认是否要删除该文件？</p>
               </template>
-              <a :disabled="record.is_allow == ''">删除</a>
+              <a class="ant-dropdown-link"> 删除</a>
             </a-popconfirm>
           </div>
         </template>
@@ -99,6 +108,7 @@ export default {
   props: {
     proj_doculist: {},
   },
+  inject: ["reload"],
   data() {
     const proj_docu = [
       {
@@ -122,6 +132,16 @@ export default {
     return {
       proj_docu,
       param: this.$router.currentRoute.params.id.slice(4),
+      // 分页
+      pagination: {
+        defaultPageSize: 20,
+        showTotal: (total) => `共 ${total} 条数据`,
+        showSizeChanger: true,
+        size: "middle",
+        total: "",
+        proj: "",
+        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+      },
     };
   },
   methods: {
@@ -140,10 +160,89 @@ export default {
           let result = res.data;
           if (result.code) {
             message.success(`${data.file.name} 上传成功.`);
+            this.reload();
           } else if (!result.code) {
             message.error(`${data.file.name} 上传失败.`);
           }
           this.getProjdoculist();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 下载
+    handlerProjdown(id, nm) {
+      console.log(id);
+      const formData = new FormData();
+      formData.append("rsc_id", "10930");
+      this.$api({
+        method: "post",
+        url: this.baseURL + "project/down_file",
+        headers: { Authorization: localStorage.getItem("Authorization") },
+        data: formData,
+        responseType: "blob",
+      })
+        .then((res) => {
+          let url = window.URL.createObjectURL(new Blob([res.data]));
+          let link = document.createElement("a");
+          link.style.display = "none";
+          link.href = url;
+          link.setAttribute("download", nm);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 重命名
+    handlerProjrenm(id, nm) {
+      var qs = require("qs");
+      let params = {
+        rsc_id: id,
+        rename: nm,
+      };
+      this.$api
+        .post(this.baseURL + "project/rename", qs.stringify(params), {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          if (res.data.code) {
+            message.success("重命名成功");
+            this.reload();
+          } else {
+            message.error("重命名失败");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    handlerProjClean() {
+      this.reload();
+    },
+    // 删除
+    handlerProjdelete(id) {
+      var qs = require("qs");
+      let params = {
+        rsc_id: id,
+      };
+      this.$api
+        .post(this.baseURL + "project/del_file", qs.stringify(params), {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          if (res.data.code) {
+            message.success("删除成功");
+            this.reload();
+          } else {
+            message.error("删除失败");
+          }
         })
         .catch((err) => {
           console.log(err);

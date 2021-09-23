@@ -57,7 +57,7 @@
               </a-row>
             </a-form>
           </div>
-          <div class="he"></div>
+          <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
           <div class="tabs-item-content">
             <div
               style="
@@ -76,21 +76,21 @@
               <a-radio-button
                 value="a"
                 @click="handlerTrue"
-                style="font-size: 14px"
+                style="width: 146px; font-size: 14px; text-align: center"
               >
                 已激活&nbsp;&nbsp;{{ listLenght.trueLenght }}
               </a-radio-button>
               <a-radio-button
                 value="b"
                 @click="handlerFalse"
-                style="font-size: 14px"
+                style="width: 146px; font-size: 14px; text-align: center"
               >
                 已禁用&nbsp;&nbsp;{{ listLenght.falseLenght }}
               </a-radio-button>
               <a-radio-button
                 value="c"
                 @click="handlerAll"
-                style="font-size: 14px"
+                style="width: 146px; font-size: 14px; text-align: center"
               >
                 全部&nbsp;&nbsp;{{ listLenght.allLenght }}
               </a-radio-button>
@@ -106,15 +106,7 @@
               "
             >
               <span slot="pic" slot-scope="text, record">
-                <img
-                  style="
-                    display: block;
-                    width: 30px;
-                    heigth: 30px;
-                    border-radius: 50%;
-                  "
-                  :src="record.avatar"
-                />
+                <a-avatar :src="record.avatar" />
               </span>
               <a-badge
                 v-if="text == '已激活'"
@@ -602,19 +594,16 @@ export default {
       {
         title: "头像",
         dataIndex: "avatar",
-        fixed: "left",
-        width: 60,
         scopedSlots: { customRender: "pic" },
       },
       {
         title: "姓名",
         dataIndex: "nm",
-        fixed: "left",
-        width: 60,
       },
       {
         title: "手机号码",
         dataIndex: "mob",
+        width: 120,
       },
       {
         title: "状态",
@@ -648,13 +637,16 @@ export default {
       {
         title: "创建时间",
         dataIndex: "created",
+        width: 150,
       },
       {
         title: "更新时间",
         dataIndex: "updated",
+        width: 150,
       },
       {
         title: "操作",
+        width: 200,
         fixed: "right",
         scopedSlots: { customRender: "operation" },
       },
@@ -674,20 +666,6 @@ export default {
         trueLenght: "",
         falseLenght: "",
         allLenght: "",
-      },
-      pagination: {
-        defaultPageSize: 20,
-        current: "2",
-        showTotal: (total) => `共 ${total} 条数据`,
-        showSizeChanger: true,
-        size: "middle",
-        total: "",
-        emp_sta: "",
-        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
-        onChange: (current, pageSize) => {
-          this.handlerInfo(this.pagination.emp_sta, current, pageSize);
-          console.log(this.pagination.emp_sta, current, pageSize);
-        },
       },
       // 状态默认
       value: "a",
@@ -789,6 +767,16 @@ export default {
           user_id: "",
         },
       ],
+      // 分页
+      pagination: {
+        defaultPageSize: 20,
+        showTotal: (total) => `共 ${total} 条数据`,
+        showSizeChanger: true,
+        size: "middle",
+        total: "",
+        proj: "",
+        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+      },
     };
   },
   methods: {
@@ -837,7 +825,6 @@ export default {
         return;
       }
       if (info.file.status === "done") {
-        // Get this url from response in real world.
         getBase64(info.file.originFileObj, (imageUrl) => {
           this.imageUrl = imageUrl;
           this.loading = false;
@@ -1128,10 +1115,6 @@ export default {
 .form-input {
   width: 264px;
   height: 32px;
-}
-.he {
-  width: 100%;
-  height: 24px;
 }
 .tabs-item-content {
   width: 99%;

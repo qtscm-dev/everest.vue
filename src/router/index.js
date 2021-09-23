@@ -64,7 +64,8 @@ const router = new VueRouter({
           path: "/index/project/project/apppro/:id",
           name: "apppro",
           component: () => import("../views/project/summaryInfo/Apppro.vue"),
-        },{
+        },
+        {
           path: "/index/project/project/toapppro/:id",
           name: "apppro",
           component: () => import("../views/project/summaryInfo/Toapppro.vue"),

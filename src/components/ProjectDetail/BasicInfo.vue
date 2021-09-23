@@ -3,19 +3,19 @@
     <div class="title">
       <span>基础信息</span>
     </div>
-    <a-descriptions class="content">
+    <a-descriptions class="content" :column="4">
       <a-descriptions-item label="项目编号">{{
         ProjectBasicInfo.code
       }}</a-descriptions-item>
       <a-descriptions-item label="项目名称">{{
         ProjectBasicInfo.nm
       }}</a-descriptions-item>
-      <a-descriptions-item label="项目状态">
-        <a-badge :status="badges" />{{ msg }}</a-descriptions-item
-      >
       <a-descriptions-item label="合同编号">{{
         ProjectBasicInfo.contract_no
       }}</a-descriptions-item>
+      <a-descriptions-item label="项目状态">
+        <a-badge :status="badges" />{{ msg }}</a-descriptions-item
+      >
       <a-descriptions-item label="流程编号">{{
         ProjectBasicInfo.proc_code
       }}</a-descriptions-item>
@@ -67,6 +67,9 @@
       <a-descriptions-item label="母公司">
         {{ ProjectBasicInfo.parent_company }}
       </a-descriptions-item>
+      <br />
+      <br />
+      <br />
       <a-descriptions-item label="备注">
         {{ ProjectBasicInfo.cmt }}
       </a-descriptions-item>
