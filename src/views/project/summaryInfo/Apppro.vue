@@ -32,7 +32,7 @@
           >恢复项目</a-button
         >
       </div>
-      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="4">
+      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="1">
         <a-tab-pane key="1" tab="概要信息">
           <ProjectBasicInfo
             :ProjectBasicInfo="projectBasicInfo"
