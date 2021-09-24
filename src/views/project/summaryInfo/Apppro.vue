@@ -32,7 +32,7 @@
           >恢复项目</a-button
         >
       </div>
-      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="1">
+      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="3">
         <a-tab-pane key="1" tab="概要信息">
           <ProjectBasicInfo
             :ProjectBasicInfo="projectBasicInfo"
@@ -59,7 +59,6 @@
 
 <script>
 import { Modal } from "ant-design-vue";
-import { message } from "ant-design-vue";
 import ProjectBasicInfo from "../../../components/ProjectDetail/BasicInfo";
 import DepartInfo from "../../../components/ProjectDetail/DepartInfo";
 import ContactInfo from "../../../components/ProjectDetail/ContactInfo";
@@ -101,19 +100,6 @@ export default {
       contact_typ: [],
       // 项目文件
       proj_doculist: "",
-      // 分页
-      paginationOper: {
-        defaultPageSize: 20,
-        showTotal: (total) => `共 ${total} 条数据`,
-        showSizeChanger: true,
-        size: "middle",
-        total: "",
-        proj: "",
-        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
-        // onChange: (current, pageSize) => {
-        //   this.getProject(this.pagination.proj, current, pageSize);
-        // },
-      },
     };
   },
   methods: {
@@ -370,30 +356,6 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.proj_doculist = result.datarows;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    // 项目上传
-    customRequest(data) {
-      const formData = new FormData();
-      formData.append("proj_id", this.param);
-      formData.append("avatar", data.file);
-      this.$api({
-        method: "post",
-        url: this.baseURL + "project/new_file",
-        headers: { Authorization: localStorage.getItem("Authorization") },
-        data: formData,
-      })
-        .then((res) => {
-          let result = res.data;
-          if (result.code) {
-            message.success(`${data.file.name} 上传成功.`);
-          } else if (!result.code) {
-            message.error(`${data.file.name} 上传失败.`);
-          }
-          this.getProjdoculist();
         })
         .catch((err) => {
           console.log(err);

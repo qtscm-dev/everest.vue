@@ -8,6 +8,7 @@
       <a-table
         :columns="contacts"
         :data-source="contactsList"
+        :pagination="pagination"
         :scroll="{ x: 1500 }"
         :rowKey="(record) => record.id"
         :rowClassName="
@@ -23,14 +24,15 @@
           <div :key="col">
             <a-input
               v-if="record.editable && col != 'typ'"
+              placeholder="请输入"
               style="margin: -5px 0"
               :value="text"
               @change="(e) => handleChange(e.target.value, record.id, col)"
             />
             <a-select
-              placeholder="请选择"
               style="display: block"
               v-else-if="record.editable && col == 'typ'"
+              placeholder="请选择"
               v-model="record.typ"
               @change="(e) => handleChange(e.target.value, record.id, col)"
             >
@@ -44,7 +46,7 @@
           </div>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <div class="editable-row-operations">
+          <div v-if="saveingKey == ''" class="editable-row-operations">
             <span v-if="record.editable">
               <a @click="() => handlerSave(record.id)">保存</a
               >&nbsp;&nbsp;&nbsp;
@@ -56,16 +58,38 @@
                 @click="() => handlerEdit(record.id)"
                 >编辑</a
               >
+              <a-divider type="vertical" />
+              <a
+                :disabled="editingKey !== ''"
+                @click="() => handlerDelete(record.id)"
+                >删除</a
+              >
             </span>
-            <a-divider type="vertical" />
-            <a
-              :disabled="editingKey !== ''"
-              @click="() => handlerDelete(record.id)"
-              >删除</a
-            >
+          </div>
+          <div v-else class="editable-row-operations">
+            <span v-if="record.editable">
+              <a @click="handlerNewcon">保存</a>&nbsp;&nbsp;&nbsp;
+              <a @click="() => handlerClear(record.id)">取消</a>
+            </span>
+            <span v-else>
+              <a
+                :disabled="editingKey !== ''"
+                @click="() => handlerEdit(record.id)"
+                >编辑</a
+              >
+              <a-divider type="vertical" />
+              <a
+                :disabled="editingKey !== ''"
+                @click="() => handlerDelete(record.id)"
+                >删除</a
+              >
+            </span>
           </div>
         </template>
       </a-table>
+      <a-button type="dashed" style="width: 100%" @click="handlerAdd">
+        <a-icon type="plus" /> 添加
+      </a-button>
     </div>
   </div>
 </template>
@@ -130,7 +154,20 @@ export default {
     return {
       contacts,
       editingKey: "",
+      saveingKey: "",
       param: this.$router.currentRoute.params.id.slice(4),
+      // 分页
+      pagination: false,
+      // {
+      // pagination: false,
+      // defaultPageSize: 20,
+      // showTotal: (total) => `共 ${total} 条数据`,
+      // showSizeChanger: true,
+      // size: "middle",
+      // total: "",
+      // proj: "",
+      // onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+      // },
     };
   },
   methods: {
@@ -152,6 +189,7 @@ export default {
         target.editable = true;
         this.contactsList = newData;
       }
+      console.log(this.contactsList);
     },
     // 保存
     handlerSave(id) {
@@ -219,6 +257,58 @@ export default {
           } else {
             message.error(res.data.data.errmsg);
           }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 新增联系人
+    handlerAdd() {
+      const leng = this.contactsList.length;
+      const list = this.contactsList;
+      const newData = {
+        nm: "",
+        mob: "",
+        typ: "",
+        comp_nm: "",
+        dept_nm: "",
+        job: "",
+        editable: true,
+      };
+      this.contactsList = [...list, newData];
+      this.contactsList.length = leng + 1;
+      this.saveingKey = true;
+      this.handlerEdit();
+    },
+    // 保存新增联系人
+    handlerNewcon() {
+      var qs = require("qs");
+      let leng = this.contactsList.length - 1;
+      let list = this.contactsList[leng];
+      let params = {
+        proj_id: this.param,
+        nm: list.nm,
+        mob: list.mob,
+        comp_nm: list.comp_nm,
+        typ: list.typ,
+        job: list.job,
+        dept_nm: list.dept_nm,
+      };
+      this.$api
+        .post(this.baseURL + "project/new_contact", qs.stringify(params), {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.code) {
+            message.success("保存成功");
+            this.reload();
+          } else {
+            message.error("保存失败");
+          }
+          this.reload();
         })
         .catch((err) => {
           console.log(err);

@@ -93,7 +93,6 @@ export default {
 .icon {
   width: auto;
   float: right;
-  /* padding: 0 24px; */
   text-align: center;
 }
 .icon-1 {

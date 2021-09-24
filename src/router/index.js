@@ -88,9 +88,9 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   let { title = "中南暮墙数字化中台" } = to.meta;
+  console.log(title);
   document.title = title;
   let Authorization = localStorage.getItem("Authorization");
-  // console.log(Authorization);
   if (to.name != "login") {
     if (!Authorization) {
       next({ name: Login });

@@ -8,6 +8,7 @@
       <a-table
         :columns="columns"
         :data-source="prodepa"
+        :pagination="pagination"
         :rowKey="(record) => record.id"
         :rowClassName="
           (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
@@ -92,12 +93,22 @@ export default {
         dataIndex: "oper_nm",
       },
       {
-        title: "创建时间",
-        dataIndex: "created",
+        title: "操作时间",
+        dataIndex: "updated",
       },
     ];
     return {
       columns,
+      // 分页
+      pagination: {
+        defaultPageSize: 20,
+        showTotal: (total) => `共 ${total} 条数据`,
+        showSizeChanger: true,
+        size: "middle",
+        total: "",
+        proj: "",
+        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+      },
     };
   },
 };

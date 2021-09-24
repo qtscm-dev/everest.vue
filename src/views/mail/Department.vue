@@ -68,7 +68,20 @@
               <template slot="operation" slot-scope="text, record">
                 <a @click="() => handlerInfo(record.id)">详情</a>
                 <a-divider type="vertical" />
-                <a @click="() => handleredit(record.id)"> 编辑 </a>
+                <a
+                  @click="
+                    () =>
+                      handleredit(
+                        record.id,
+                        record.nm,
+                        record.pid,
+                        record.pnm,
+                        record.o
+                      )
+                  "
+                >
+                  编辑
+                </a>
                 <a-divider type="vertical" />
                 <a-popconfirm
                   placement="topRight"
@@ -163,31 +176,24 @@
           </a-button> </template
         ><a-form
           :form="form"
-          :v-model="editForm"
           style="box-size: border-box; padding-left: 90px"
-          :label-col="labelCol"
-          :wrapper-col="wrapperCol"
+          v-bind="formItemLayout"
         >
           <a-form-item label="部门名称">
             <a-input
-              :initialValue="editForm.nm"
-              :defaultValue="editForm.nm"
-              v-model="editList.nm"
+              placeholder="请输入"
               v-decorator="['名称', { rules: [{ required: true }] }]"
             />
           </a-form-item>
           <a-form-item label="上级部门">
             <a-select
-              style="width: 236px"
-              :initialValue="editForm.nm"
-              :default-Value="editForm.pnm"
+              placeholder="请选择"
               v-model="editList.pnm"
               v-decorator="['上级部门', { rules: [{ required: true }] }]"
             >
               <a-select-option
-                v-for="(superiors, i) in superiorForm"
-                :key="i"
-                :value="superiors.id"
+                v-for="superiors in superiorForm"
+                :key="superiors.id"
               >
                 {{ superiors.nm }}
               </a-select-option>
@@ -196,8 +202,6 @@
           <a-form-item label="部门顺序">
             <a-input
               placeholder="请输入"
-              :initialValue="editForm.o"
-              :defaultValue="editForm.o"
               v-model="editList.o"
               v-decorator="[
                 '顺序',
@@ -275,13 +279,15 @@ export default {
       // 表单
       form: this.$form.createForm(this, { name: "coordinated" }),
       // 栅格布局
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 5 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 5 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 12 },
+        },
       },
       vi: false,
       // 列表信息
@@ -397,26 +403,37 @@ export default {
       this.visible = false;
     },
     // 编辑
-    handleredit(id) {
+    handleredit(id, nm, pid, pnm, o) {
       this.visibilie = true;
-      this.$api
-        .get(this.baseURL + "dept/edit_dept/", {
-          params: {
-            dept_id: id,
-          },
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
-        })
-        .then((res) => {
-          let result = res.data.data.data;
-          this.editForm = result.dept_info;
-          console.log(this.editForm);
-          return this.editForm;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.editList.id = id;
+      this.editList.nm = nm;
+      this.editList.pid = pid;
+      this.editList.pnm = pnm;
+      this.editList.o = o;
+      console.log(this.editList);
+      console.log(id);
+      console.log(nm);
+      console.log(pid);
+      console.log(pnm);
+      console.log(o);
+      // this.$api
+      //   .get(this.baseURL + "dept/edit_dept/", {
+      //     params: {
+      //       dept_id: id,
+      //     },
+      //     headers: {
+      //       Authorization: localStorage.getItem("Authorization"),
+      //     },
+      //   })
+      //   .then((res) => {
+      //     let result = res.data.data.data;
+      //     this.editForm = result.dept_info;
+      //     console.log(this.editForm);
+      //     return this.editForm;
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     },
     handlerDetemine(e) {
       var qs = require("qs");
@@ -484,6 +501,7 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.superiorForm = result.sup_dept;
+          console.log(this.superiorForm);
         })
         .catch((err) => {
           console.log(err);

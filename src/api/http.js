@@ -1,16 +1,18 @@
-import axios  from "axios";
+import axios from "axios";
 
-const instance =  axios.create({
-   baseURL:'https://dev.qtscm.net'
-})
+const instance = axios.create({
+  baseURL: "https://dev.qtscm.net",
+});
 
-
-instance.interceptors.request.use(function (config) {
-    const Authorization = localStorage.getItem('Authorization') || '';
+instance.interceptors.request.use(
+  function (config) {
+    const Authorization = localStorage.getItem("Authorization") || "";
     config.headers.Authorization = Authorization;
     return config;
-}, function (error) {
+  },
+  function (error) {
     return Promise.reject(error);
-})
+  }
+);
 
-export  default  instance;
+export default instance;
