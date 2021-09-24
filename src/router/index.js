@@ -53,11 +53,6 @@ const router = new VueRouter({
           name: "newproject",
           component: () => import("../views/project/Newproject.vue"),
         },
-        {
-          path: "/index/project/toappr",
-          name: "suminfo_toappr",
-          component: () => import("../views/project/Suminfo_toappr.vue"),
-        },
 
         // 概要信息--已立项
         {
@@ -71,12 +66,12 @@ const router = new VueRouter({
           component: () => import("../views/project/summaryInfo/Toapppro.vue"),
         },
 
-        // 指派中心
-        // {
-        //   path: "/index/assign/assign",
-        //   name: "assign",
-        //   component: () => import("../views/assign/Assign.vue")
-        // }
+        // 认领中心
+        {
+          path: "/index/claim/claimindex",
+          name: "claimIndex",
+          component: () => import("../views/Claim/claimIndex"),
+        },
       ],
     },
     {
@@ -88,7 +83,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   let { title = "中南暮墙数字化中台" } = to.meta;
-  console.log(title);
   document.title = title;
   let Authorization = localStorage.getItem("Authorization");
   if (to.name != "login") {

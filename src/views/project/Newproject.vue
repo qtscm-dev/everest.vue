@@ -415,13 +415,16 @@
         </a-col>
       </a-row>
     </a-form>
+    <Footer />
   </div>
 </template>
 
 <script>
 import { Modal } from "ant-design-vue";
+import Footer from "../../components/Footer/Footer";
 export default {
   name: "newproject",
+  components: { Footer },
   data() {
     return {
       form: this.$form.createForm(this, { name: "coordinated" }),

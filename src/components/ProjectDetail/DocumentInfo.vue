@@ -1,17 +1,7 @@
 <template>
   <div>
     <a-form class="top">
-      <a-row :gutter="24">
-        <a-col :span="6">
-          <a-form-item label="文件名称">
-            <a-input placeholder="请输入" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="6">
-          <a-form-item label="文件名称">
-            <a-input placeholder="请输入" />
-          </a-form-item>
-        </a-col>
+      <a-row>
         <a-col :span="6">
           <a-form-item label="文件名称">
             <a-input placeholder="请输入" />

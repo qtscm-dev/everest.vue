@@ -103,12 +103,15 @@
         </template>
       </a-table>
     </div>
+    <Footer />
   </div>
 </template>
 
 <script>
+import Footer from "../../components/Footer/Footer";
 export default {
   name: "project",
+  components: { Footer },
   data() {
     const columns = [
       {
@@ -372,7 +375,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .radio-but {
   width: 146px;
   text-align: center;
@@ -380,8 +383,6 @@ export default {
 .table-proj {
   background: #fafafa;
 }
-</style>
-<style scoped>
 .header {
   width: 100%;
   height: 80px;

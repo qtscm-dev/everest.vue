@@ -72,73 +72,78 @@
                 >新增员工</a-button
               >
             </div>
-            <a-radio-group style="margin-bottom: 24px" v-model="value">
-              <a-radio-button
-                value="a"
-                @click="handlerTrue"
-                style="width: 146px; font-size: 14px; text-align: center"
-              >
-                已激活&nbsp;&nbsp;{{ listLenght.trueLenght }}
-              </a-radio-button>
-              <a-radio-button
-                value="b"
-                @click="handlerFalse"
-                style="width: 146px; font-size: 14px; text-align: center"
-              >
-                已禁用&nbsp;&nbsp;{{ listLenght.falseLenght }}
-              </a-radio-button>
-              <a-radio-button
-                value="c"
-                @click="handlerAll"
-                style="width: 146px; font-size: 14px; text-align: center"
-              >
-                全部&nbsp;&nbsp;{{ listLenght.allLenght }}
-              </a-radio-button>
-            </a-radio-group>
-            <a-table
-              :columns="columns"
-              :data-source="employlist"
-              :scroll="{ x: 1500 }"
-              :pagination="pagination"
-              size="middle"
-              :rowClassName="
-                (record, index) => (index % 2 === 1 ? 'table-emplo' : null)
-              "
-            >
-              <span slot="pic" slot-scope="text, record">
-                <a-avatar :src="record.avatar" />
-              </span>
-              <a-badge
-                v-if="text == '已激活'"
-                slot="status"
-                slot-scope="text"
-                status="success"
-                :text="text"
-              />
-              <a-badge
-                v-else-if="text == '已禁用'"
-                slot="status"
-                slot-scope="text"
-                status="error"
-                :text="text"
-              />
-              <template slot="operation" slot-scope="text, record">
-                <a @click="() => handlerEmpl(record.id)">详情</a>
-                <a-divider type="vertical" />
-                <a @click="() => handlerEdit(record.id)"> 编辑 </a>
-                <a-divider type="vertical" />
-                <a-popconfirm
-                  title="请确认是否要删除该员工？"
-                  ok-text="确定"
-                  cancel-text="取消"
-                  @confirm="() => handlerDelete(record.id)"
+            <a-empty
+              :style="{ display: employlist == false ? 'block' : 'none' }"
+            />
+            <div :style="{ display: employlist == false ? 'none' : 'block' }">
+              <a-radio-group style="margin-bottom: 24px" v-model="value">
+                <a-radio-button
+                  value="a"
+                  @click="handlerTrue"
+                  style="width: 146px; font-size: 14px; text-align: center"
                 >
-                  <a class="ant-dropdown-link"> 删除</a>
-                </a-popconfirm>
-                <a-divider type="vertical" />
-                <a class="ant-dropdown-link"> 重置</a>
-              </template>
-            </a-table>
+                  已激活&nbsp;&nbsp;{{ listLenght.trueLenght }}
+                </a-radio-button>
+                <a-radio-button
+                  value="b"
+                  @click="handlerFalse"
+                  style="width: 146px; font-size: 14px; text-align: center"
+                >
+                  已禁用&nbsp;&nbsp;{{ listLenght.falseLenght }}
+                </a-radio-button>
+                <a-radio-button
+                  value="c"
+                  @click="handlerAll"
+                  style="width: 146px; font-size: 14px; text-align: center"
+                >
+                  全部&nbsp;&nbsp;{{ listLenght.allLenght }}
+                </a-radio-button>
+              </a-radio-group>
+              <a-table
+                :columns="columns"
+                :data-source="employlist"
+                :scroll="{ x: 1500 }"
+                :pagination="pagination"
+                size="middle"
+                :rowClassName="
+                  (record, index) => (index % 2 === 1 ? 'table-emplo' : null)
+                "
+              >
+                <span slot="pic" slot-scope="text, record">
+                  <a-avatar :src="record.avatar" />
+                </span>
+                <a-badge
+                  v-if="text == '已激活'"
+                  slot="status"
+                  slot-scope="text"
+                  status="success"
+                  :text="text"
+                />
+                <a-badge
+                  v-else-if="text == '已禁用'"
+                  slot="status"
+                  slot-scope="text"
+                  status="error"
+                  :text="text"
+                />
+                <template slot="operation" slot-scope="text, record">
+                  <a @click="() => handlerEmpl(record.id)">详情</a>
+                  <a-divider type="vertical" />
+                  <a @click="() => handlerEdit(record.id)"> 编辑 </a>
+                  <a-divider type="vertical" />
+                  <a-popconfirm
+                    title="请确认是否要删除该员工？"
+                    ok-text="确定"
+                    cancel-text="取消"
+                    @confirm="() => handlerDelete(record.id)"
+                  >
+                    <a class="ant-dropdown-link"> 删除</a>
+                  </a-popconfirm>
+                  <a-divider type="vertical" />
+                  <a class="ant-dropdown-link"> 重置</a>
+                </template>
+              </a-table>
+            </div>
           </div>
         </a-tab-pane>
       </a-tabs>
@@ -574,6 +579,7 @@
           </a-form-item>
         </a-modal>
       </a-form>
+      <Footer />
     </div>
   </div>
 </template>
@@ -582,6 +588,7 @@
 import imgSrc1 from "../../../public/portrait/woman.jpg";
 import imgSrc2 from "../../../public/portrait/man.jpg";
 import { Modal } from "ant-design-vue";
+import Footer from "../../components/Footer/Footer";
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
@@ -589,6 +596,7 @@ function getBase64(img, callback) {
 }
 export default {
   name: "employee",
+  components: { Footer },
   data() {
     const columns = [
       {

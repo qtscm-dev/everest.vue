@@ -338,13 +338,16 @@
         </a-col>
       </a-row>
     </a-form>
+    <Footer />
   </div>
 </template>
 
 <script>
 import { Modal } from "ant-design-vue";
+import Footer from "../../../components/Footer/Footer";
 export default {
   name: "toapppro",
+  components: { Footer },
   data() {
     return {
       form: this.$form.createForm(this, { name: "advanced_search" }),

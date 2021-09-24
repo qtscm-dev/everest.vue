@@ -87,9 +87,11 @@
           </div>
         </template>
       </a-table>
-      <a-button type="dashed" style="width: 100%" @click="handlerAdd">
-        <a-icon type="plus" /> 添加
-      </a-button>
+      <div :style="{ display: contactsList == false ? 'none' : 'block' }">
+        <a-button type="dashed" style="width: 100%" @click="handlerAdd">
+          <a-icon type="plus" /> 添加
+        </a-button>
+      </div>
     </div>
   </div>
 </template>

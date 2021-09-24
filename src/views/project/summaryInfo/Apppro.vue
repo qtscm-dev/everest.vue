@@ -15,7 +15,7 @@
         <a-button :style="styles" type="danger" ghost @click="handlerWithpro"
           >中止立项</a-button
         >
-        <a-dropdown :placement="placement">
+        <a-dropdown placement="bottomRight">
           <a-button>返回</a-button>
           <a-menu slot="overlay">
             <a-menu-item>
@@ -32,7 +32,7 @@
           >恢复项目</a-button
         >
       </div>
-      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="3">
+      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="1">
         <a-tab-pane key="1" tab="概要信息">
           <ProjectBasicInfo
             :ProjectBasicInfo="projectBasicInfo"
@@ -53,6 +53,7 @@
           <DocumentInfo :proj_doculist="proj_doculist" />
         </a-tab-pane>
       </a-tabs>
+      <Footer class="footent" />
     </div>
   </div>
 </template>
@@ -63,6 +64,7 @@ import ProjectBasicInfo from "../../../components/ProjectDetail/BasicInfo";
 import DepartInfo from "../../../components/ProjectDetail/DepartInfo";
 import ContactInfo from "../../../components/ProjectDetail/ContactInfo";
 import DocumentInfo from "../../../components/ProjectDetail/DocumentInfo";
+import Footer from "../../../components/Footer/Footer";
 export default {
   name: "apppro",
   components: {
@@ -70,19 +72,13 @@ export default {
     DepartInfo,
     ContactInfo,
     DocumentInfo,
+    Footer,
   },
   data() {
     return {
       param: "",
-      projectBasicInfo: {},
-      badges: "",
-      msg: "",
-      types: "",
-      ghosts: "",
       styles: "margin-right:16px",
       styless: "margin-left:16px",
-      proj: "",
-      placement: "bottomRight",
       formItemLayout: {
         labelCol: {
           xs: { span: 24 },
@@ -93,6 +89,10 @@ export default {
           sm: { span: 16 },
         },
       },
+      // 概要信息
+      projectBasicInfo: {},
+      badges: "",
+      msg: "",
       // 项目部门
       prodepa: "",
       // 联系人列表

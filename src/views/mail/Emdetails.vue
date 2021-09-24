@@ -82,14 +82,17 @@
         </a-descriptions>
       </div>
     </div>
+    <Footer />
   </div>
 </template>
 
 <script>
 import imgSrc1 from "../../../public/portrait/defaultman.jpeg";
 import imgSrc2 from "../../../public/portrait/defaultwoman.png";
+import Footer from "../../components/Footer/Footer";
 export default {
   name: "emdetails",
+  components: { Footer },
   data() {
     return {
       imgSrc: "",

@@ -10,11 +10,7 @@
       <a-tabs class="tabs" default-active-key="1">
         <a-tab-pane class="tabs-item" key="1" tab="内部系统">
           <div class="tabs-item-top">
-            <a-form
-              :model="departForm"
-              :label-col="labelCol"
-              :wrapper-col="wrapperCol"
-            >
+            <a-form :model="departForm" v-bind="formItemLayout">
               <a-row>
                 <a-col :span="8">
                   <a-form-item
@@ -54,9 +50,13 @@
                 >新增部门</a-button
               >
             </div>
+            <a-empty
+              :style="{ display: departlist == false ? 'block' : 'none' }"
+            />
             <a-table
               :columns="columns"
               :data-source="departlist"
+              :style="{ display: departlist == false ? 'none' : 'block' }"
               size="middle"
               :scroll="{ x: 800 }"
               :pagination="pagination"
@@ -99,6 +99,7 @@
           </div>
         </a-tab-pane>
       </a-tabs>
+      <Footer />
       <!-- 新增部门 -->
       <a-form
         :form="form"
@@ -224,8 +225,10 @@
 
 <script>
 import { Modal } from "ant-design-vue";
+import Footer from "../../components/Footer/Footer";
 export default {
   name: "department",
+  components: { Footer },
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: "normal_login" });
   },
@@ -403,37 +406,26 @@ export default {
       this.visible = false;
     },
     // 编辑
-    handleredit(id, nm, pid, pnm, o) {
+    handleredit(id) {
       this.visibilie = true;
-      this.editList.id = id;
-      this.editList.nm = nm;
-      this.editList.pid = pid;
-      this.editList.pnm = pnm;
-      this.editList.o = o;
-      console.log(this.editList);
-      console.log(id);
-      console.log(nm);
-      console.log(pid);
-      console.log(pnm);
-      console.log(o);
-      // this.$api
-      //   .get(this.baseURL + "dept/edit_dept/", {
-      //     params: {
-      //       dept_id: id,
-      //     },
-      //     headers: {
-      //       Authorization: localStorage.getItem("Authorization"),
-      //     },
-      //   })
-      //   .then((res) => {
-      //     let result = res.data.data.data;
-      //     this.editForm = result.dept_info;
-      //     console.log(this.editForm);
-      //     return this.editForm;
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
+      this.$api
+        .get(this.baseURL + "dept/edit_dept/", {
+          params: {
+            dept_id: id,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          this.editForm = result.dept_info;
+          console.log(this.editForm);
+          return this.editForm;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     handlerDetemine(e) {
       var qs = require("qs");
