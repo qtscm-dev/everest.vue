@@ -76,7 +76,7 @@ export default {
   },
   data() {
     return {
-      param: "",
+      param: this.$router.currentRoute.params.id.slice(4),
       styles: "margin-right:16px",
       styless: "margin-left:16px",
       formItemLayout: {
@@ -105,7 +105,6 @@ export default {
   methods: {
     // 参数获取
     parameter() {
-      this.param = this.$router.currentRoute.params.id.slice(4);
       this.$api
         .get(this.baseURL + "project/project_detail/", {
           params: {

@@ -6,8 +6,24 @@
         <a-breadcrumb-item
           ><a href="javascript;">认领中心</a></a-breadcrumb-item
         >
+        <a-breadcrumb-item><a href="javascript;">收藏夹</a></a-breadcrumb-item>
       </a-breadcrumb>
-      <h3>认领中心</h3>
+      <h3>
+        项目列表
+        <a-dropdown placement="bottomRight">
+          <a-button>返回</a-button>
+          <a-menu slot="overlay">
+            <a-menu-item>
+              <router-link :to="{ name: 'claimIndex' }">返回列表页</router-link>
+            </a-menu-item>
+            <a-menu-item>
+              <router-link href="javascript:;" :to="{ name: 'index' }"
+                >返回工作台</router-link
+              >
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
+      </h3>
     </div>
     <div class="formQuery">
       <a-form class="formlist" v-bind="formItemLayout" v-model="projForm">
@@ -15,19 +31,22 @@
           <a-col :span="6">
             <a-form-item label="项目">
               <a-input
-                placeholder="请输入项目ID/名称"
                 v-model="projForm.search"
+                placeholder="请输入项目ID/名称"
               />
             </a-form-item>
           </a-col>
           <a-col :span="6">
             <a-form-item label="日期">
-              <a-range-picker v-model="projForm.proj_cycle" />
+              <a-range-picker
+                v-model="projForm.proj_cycle"
+                @change="onChange"
+              />
             </a-form-item>
           </a-col>
           <a-col :span="6">
             <a-form-item label="部门">
-              <a-select placeholder="请选择" v-model="projForm.proj_nm" />
+              <a-select placeholder="请选择" />
             </a-form-item>
           </a-col>
           <a-col :span="6" :style="{ textAlign: 'right' }">
@@ -48,41 +67,21 @@
         <a-row :style="{ display: 4 < count ? 'none' : 'block' }">
           <a-col :span="6">
             <a-form-item label="工程地点">
-              <a-cascader placeholder="请选择" v-model="projForm.proj_addr" />
+              <a-cascader placeholder="请选择" />
             </a-form-item>
           </a-col>
         </a-row>
       </a-form>
     </div>
-    <div class="pro">
-      <div class="protitle">
-        <span>项目列表</span>
-        <router-link :to="{ name: 'Favordatail' }">
-          <a-badge :count="countleng" style="float: right" :offset="[-5, 25]"
-            ><img
-              src="../../../public/favor/favorimg.png"
-              alt="收藏夹" /></a-badge
-        ></router-link>
+    <div class="favor">
+      <div class="tatil">
+        <span>收藏夹</span>
       </div>
-      <a-empty :style="{ display: prolist == false ? 'block' : 'none' }" />
-      <div
-        class="protable"
-        :style="{ display: prolist == false ? 'none' : 'block' }"
-      >
-        <a-radio-group class="tableradiolist" v-model="value">
-          <a-radio-button class="tableradio" value="a" @click="handlerUnclai">
-            待认领&nbsp;&nbsp;{{ aleng }}
-          </a-radio-button>
-          <a-radio-button class="tableradio" value="b" @click="handlerClai">
-            已认领&nbsp;&nbsp;{{ bleng }}
-          </a-radio-button>
-          <a-radio-button class="tableradio" value="c" @click="handlerRevoke">
-            已撤回&nbsp;&nbsp;{{ cleng }}
-          </a-radio-button>
-          <a-radio-button class="tableradio" value="d" @click="handlerWholer">
-            全部&nbsp;&nbsp;{{ dleng }}
-          </a-radio-button>
-        </a-radio-group>
+      <div class="favortable">
+        <div style="margin-bottom: 20px; font-size: 14px; color: #000">
+          项目列表
+        </div>
+        <a-empty :style="{ display: prolist == false ? 'block' : 'none' }" />
         <a-table
           :columns="columns"
           :data-source="prolist"
@@ -93,7 +92,31 @@
           :rowClassName="
             (record, index) => (index % 2 === 1 ? 'table-proj' : null)
           "
+          :style="{ display: prolist == false ? 'none' : 'block' }"
         >
+          <!-- 状态 -->
+          <a-badge
+            v-if="text == '2100'"
+            slot="status"
+            slot-scope="text"
+            status="default"
+            text="待认领"
+          />
+          <a-badge
+            v-else-if="text == '3000'"
+            slot="status"
+            slot-scope="text"
+            status="success"
+            text="已认领"
+          />
+          <a-badge
+            v-else-if="text == '2111'"
+            slot="status"
+            slot-scope="text"
+            status="error"
+            text="已撤回"
+          />
+          <!-- 操作 -->
           <template slot="operation" slot-scope="text, record">
             <div>
               <a
@@ -101,27 +124,40 @@
                 @click="() => handlerDetails(record.id, record.status)"
                 >详情</a
               >
+              <a-divider type="vertical" />
+              <a
+                style="font-size: 14px"
+                @click="() => handlerUnfavor(record.id, record.code)"
+                >取消收藏</a
+              >
             </div>
-          </template></a-table
-        >
+          </template>
+        </a-table>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { message } from "ant-design-vue";
 export default {
-  name: "claimIndex",
+  name: "Favordatail",
   computed: {
     count() {
       return this.expand ? 5 : 3;
     },
   },
+  inject: ["reload"],
   data() {
     const columns = [
       {
         title: "项目",
         dataIndex: "code",
+      },
+      {
+        title: "状态",
+        dataIndex: "status",
+        scopedSlots: { customRender: "status" },
       },
       {
         title: "建设单位",
@@ -141,10 +177,6 @@ export default {
         dataIndex: "project_lbl",
       },
       {
-        title: "部门",
-        dataIndex: "dept_nm",
-      },
-      {
         title: "设计内容",
         dataIndex: "major_lbl",
         ellipsis: true,
@@ -160,7 +192,12 @@ export default {
         width: 250,
       },
       {
-        title: "操作时间",
+        title: "创建时间",
+        dataIndex: "created",
+        width: 150,
+      },
+      {
+        title: "更新时间",
         dataIndex: "updated",
         width: 150,
       },
@@ -169,7 +206,7 @@ export default {
         dataIndex: "operation",
         scopedSlots: { customRender: "operation" },
         fixed: "right",
-        width: 60,
+        width: 120,
       },
     ];
     return {
@@ -186,20 +223,11 @@ export default {
       },
       // 展开收起
       expand: false,
-      // 收藏夹
-      countleng: "",
-      // 查询
+      //   查询
       projForm: {
         search: "",
         proj_cycle: [],
       },
-      // 单选框
-      value: "a",
-      // 数据长度
-      aleng: "",
-      bleng: "",
-      cleng: "",
-      dleng: "",
       // 项目列表
       columns,
       prolist: [],
@@ -230,7 +258,7 @@ export default {
         run.innerHTML = "收起";
       }
     },
-    // 收藏夹
+    // 项目列表
     getProject() {
       this.$api
         .get(this.baseURL + "claim/collect/", {
@@ -240,59 +268,36 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
-          this.countleng = result.datarows.length;
+          this.prolist = result.datarows;
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    // 项目列表
-    getProtable(sta) {
+    // 取消收藏
+    handlerUnfavor(id, code) {
+      let qs = require("qs");
+      let params = {
+        sub_id: id,
+      };
       this.$api
-        .get(this.baseURL + "claim/claim_list", {
-          params: {
-            status: sta,
-          },
+        .post(this.baseURL + "claim/cancel_collect/", qs.stringify(params), {
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
         })
         .then((res) => {
-          let result = res.data.data.data;
-          this.prolist = result.datarows;
-          this.aleng = result.count_nm.unclaimed_num;
-          this.bleng = result.count_nm.claimed_num;
-          this.cleng = result.count_nm.revoke_num;
-          this.dleng = result.count_nm.whole_num;
-          this.pagination.total = result.pagination.total_items;
+          if (res.data.code) {
+            message.success(code + "取消收藏成功");
+            this.reload();
+          } else {
+            message.success(code + "取消收藏失败");
+          }
+          console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    // 待认领
-    handlerUnclai() {
-      this.getProtable("2100");
-    },
-    // 已认领
-    handlerClai() {
-      this.getProtable("3000");
-    },
-    // 已撤回
-    handlerRevoke() {
-      this.getProtable("2111");
-    },
-    // 全部
-    handlerWholer() {
-      this.getProtable("all");
-    },
-    // 详情
-    handlerDetails(id, sta) {
-      if (sta == 2100) {
-        this.$router.push("/index/claim/claimindex/todatail/:id=" + id);
-      } else {
-        this.$router.push("/index/claim/claimindex/todatail/:id=" + id);
-      }
     },
     // 查询
     onChange(date, dateString) {
@@ -311,8 +316,10 @@ export default {
           },
         })
         .then((res) => {
-          let result = res.data.data.data;
+          let result = res;
+          console.log(result);
           this.prolist = result.datarows;
+          console.log(this.prolist);
         })
         .catch((err) => {
           console.log(err);
@@ -322,11 +329,10 @@ export default {
     handlerReset() {
       this.projForm.search = "";
       this.projForm.proj_cycle = "";
-      this.getProtable();
+      this.getProject();
     },
   },
   mounted() {
-    this.getProtable();
     this.getProject();
   },
 };
@@ -344,6 +350,8 @@ export default {
   font-size: 20px;
   font-weight: bold;
   margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 .formQuery {
   width: 97%;
@@ -353,26 +361,24 @@ export default {
   margin: 24px auto;
   background: #fff;
 }
-.pro {
+.favor {
   width: 97%;
   height: auto;
-  margin: 0 auto 24px;
-  padding: 24px;
-  box-sizing: border-box;
+  margin: 24px auto;
   background: #fff;
 }
-.pro > .protitle {
+.favor > .tatil {
+  height: 56px;
   font-size: 16px;
-  line-height: 34px;
+  line-height: 56px;
   color: #000;
+  padding: 0 24px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #e8e8e8;
 }
-.tableradiolist {
-  margin-top: 18px;
-  margin-bottom: 24px;
-}
-.tableradio {
-  width: 146px;
-  text-align: center;
+.favortable {
+  padding: 24px;
+  box-sizing: border-box;
 }
 .table-proj {
   background: #fafafa;
