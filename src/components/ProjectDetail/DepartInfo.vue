@@ -15,9 +15,11 @@
         "
         :style="{ display: prodepa == false ? 'none' : 'block' }"
       >
+        <!-- 是否主设 -->
         <span slot="tags" slot-scope="tags">
           <a-tag v-if="tags == 't'" color="blue"> 主设 </a-tag>
         </span>
+        <!-- 状态 -->
         <a-badge
           v-if="text == '2111'"
           slot="status"
@@ -62,7 +64,10 @@
 export default {
   name: "DepartInfo",
   props: {
-    prodepa: {},
+    prodepa: {
+      prodepa: "",
+    },
+    // pagination:{},
   },
   data() {
     const columns = [

@@ -57,7 +57,6 @@
               </a-row>
             </a-form>
           </div>
-          <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
           <div class="tabs-item-content">
             <div
               style="
@@ -110,23 +109,26 @@
                   (record, index) => (index % 2 === 1 ? 'table-emplo' : null)
                 "
               >
+                <!-- 头像 -->
                 <span slot="pic" slot-scope="text, record">
                   <a-avatar :src="record.avatar" />
                 </span>
+                <!-- 状态 -->
                 <a-badge
                   v-if="text == '已激活'"
                   slot="status"
                   slot-scope="text"
                   status="success"
-                  :text="text"
+                  text="已激活"
                 />
                 <a-badge
                   v-else-if="text == '已禁用'"
                   slot="status"
                   slot-scope="text"
                   status="error"
-                  :text="text"
+                  text="已禁用"
                 />
+                <!-- 操作 -->
                 <template slot="operation" slot-scope="text, record">
                   <a @click="() => handlerEmpl(record.id)">详情</a>
                   <a-divider type="vertical" />
@@ -149,17 +151,11 @@
         </a-tab-pane>
       </a-tabs>
       <!-- 新增员工 -->
-      <a-form
-        :form="form"
-        :model="editList"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
+      <a-form :form="form" :model="editList" v-bind="formItemLayout">
         <a-modal
           v-model="visibles1"
           title="新增员工"
           @ok="handleOk"
-          :wrapper-col="wrapperCol"
           :destroyOnClose="true"
         >
           <a-form-item label="上传图像：">
@@ -180,7 +176,7 @@
                 alt="avatar"
               />
               <div v-else>
-                <a-icon :type="loading ? 'loading' : 'plus'" />
+                <a-icon type="plus" />
                 <div class="ant-upload-text">Upload</div>
               </div>
             </a-upload>
@@ -200,7 +196,6 @@
           <a-form-item label="手机号码">
             <a-input
               v-model="editList.mob"
-              type="text"
               maxLength="11"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
               placeholder="请输入"
@@ -215,7 +210,6 @@
           <a-form-item label="账号">
             <a-input
               v-model="editList.login_nm"
-              type="text"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
               placeholder="请输入"
               v-decorator="[
@@ -340,7 +334,6 @@
             <a-cascader
               v-model="editList.address"
               expand-trigger="hover"
-              :options="options"
               style="width: 275.33px; margin-bottom: 24px"
               placeholder="请选择地址，如“xx省xx市xx区”"
             ></a-cascader>
@@ -355,16 +348,10 @@
         </a-modal>
       </a-form>
       <!-- 编辑员工 -->
-      <a-form
-        :form="form"
-        :model="editList"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
+      <a-form :form="form" :model="editList" v-bind="formItemLayout">
         <a-modal
           v-model="visibles2"
           title="编辑员工"
-          :wrapper-col="wrapperCol"
           @ok="handlereDete"
           :destroyOnClose="true"
         >
@@ -386,7 +373,7 @@
                 alt="avatar"
               />
               <div v-else>
-                <a-icon :type="loading ? 'loading' : 'plus'" />
+                <a-icon type="plus" />
                 <div class="ant-upload-text">Upload</div>
               </div>
             </a-upload>
@@ -410,7 +397,6 @@
               :initialValue="staff_info.mob"
               :defaultValue="staff_info.mob"
               v-model="staff_list.mob"
-              type="text"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
               placeholder="请输入"
               v-decorator="[
@@ -426,7 +412,6 @@
               :initialValue="staff_info.login_nm"
               :defaultValue="staff_info.login_nm"
               v-model="staff_list.login_nm"
-              type="text"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
               placeholder="请输入"
               v-decorator="[
@@ -566,7 +551,6 @@
               :defaultValue="staff_info.address"
               v-model="staff_list.address"
               expand-trigger="hover"
-              :options="options"
               style="width: 275.33px; margin-bottom: 24px"
               placeholder="请选择地址，如“xx省xx市xx区”"
             ></a-cascader>
@@ -661,10 +645,21 @@ export default {
       },
     ];
     return {
-      loading: false,
+      // 表单
+      form: this.$form.createForm(this, { name: "coordinated" }),
+      // 栅格布局
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 8 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 12 },
+        },
+      },
       visibles1: false,
       visibles2: false,
-      form: this.$form.createForm(this, { name: "coordinated" }),
       headers: {
         Authorization: localStorage.getItem("Authorization"),
       },
@@ -678,50 +673,6 @@ export default {
       },
       // 状态默认
       value: "a",
-      // 栅格
-      labelCol: {
-        xs: { span: 12 },
-        sm: { span: 7 },
-      },
-      wrapperCol: {
-        xs: { span: 12 },
-        sm: { span: 14 },
-      },
-      // 地址
-      options: [
-        {
-          value: "浙江省",
-          label: "浙江省",
-          children: [
-            {
-              value: "杭州市",
-              label: "杭州市",
-              children: [
-                {
-                  value: "西湖区",
-                  label: "西湖区",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "江苏省",
-          label: "江苏省",
-          children: [
-            {
-              value: "南京市",
-              label: "南京市",
-              children: [
-                {
-                  value: "中华门",
-                  label: "中华门",
-                },
-              ],
-            },
-          ],
-        },
-      ],
       // 头像地址
       imgUrl: this.baseURL + "project/upload_file/",
       imageUrl: "",
@@ -755,9 +706,6 @@ export default {
       },
       // 参数
       id: "",
-      emUrl: "",
-      // 状态
-      text: "",
       // 编辑员工
       staff_info: "",
       staff_list: [
@@ -784,9 +732,13 @@ export default {
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
         size: "middle",
-        total: "",
+        total: 0,
         proj: "",
         onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+        onChange: (current, pageSize) => {
+          this.handlerInfo(this.pagination.proj, current, pageSize);
+        },
+        showQuickJumper: true,
       },
     };
   },
@@ -833,13 +785,11 @@ export default {
     // 文件上传
     handleChange(info) {
       if (info.file.status === "uploading") {
-        this.loading = true;
         return;
       }
       if (info.file.status === "done") {
         getBase64(info.file.originFileObj, (imageUrl) => {
           this.imageUrl = imageUrl;
-          this.loading = false;
         });
       }
     },
@@ -863,7 +813,6 @@ export default {
       e.preventDefault();
       this.form.validateFields((err) => {
         var qs = require("qs");
-        this.loading = true;
         if (!err) {
           this.$api
             .post(this.baseURL + "dept/new_mbr/", qs.stringify(this.editList), {
@@ -880,7 +829,6 @@ export default {
               console.log(err);
             });
           this.visibles1 = false;
-          this.loading = false;
           this.handlerInfo("t");
         }
       });
@@ -919,6 +867,8 @@ export default {
           this.listLenght.trueLenght = result.count_num.active_num;
           this.listLenght.falseLenght = result.count_num.disabled_num;
           this.listLenght.allLenght = result.count_num.total_num;
+          this.pagination.total = result.pagination.total_items;
+          this.pagination.proj = stat;
           for (let i = 0; i < this.employlist.length; i++) {
             if (this.employlist[i].avatar !== null) {
               let emel = this.employlist[i].avatar;
@@ -1117,7 +1067,7 @@ export default {
   width: 99%;
   height: auto;
   padding: 0 24px;
-  margin: 8px auto 0;
+  margin: 8px auto 24px;
   background: #fff;
 }
 .tabs-item-top .form-button {

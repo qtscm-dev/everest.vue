@@ -42,7 +42,7 @@
           >
         </span>
       </h3>
-      <a-tabs :tabBarGutter="0" default-active-key="2">
+      <a-tabs :tabBarGutter="0" default-active-key="1" ref="hides">
         <a-tab-pane key="1" tab="概要信息">
           <BasicInfo
             class="basic"
@@ -51,12 +51,18 @@
             :msg="msg"
           />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="项目部门">
+        <a-tab-pane key="2" tab="项目部门" class="hidess" :disabled="disabled">
           <DepartInfo :prodepa="prodepa" />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="联系人"> Content of Tab Pane 3 </a-tab-pane>
-        <a-tab-pane key="4" tab="项目文件"> Content of Tab Pane 3 </a-tab-pane>
-        <a-tab-pane key="5" tab="操作记录"> Content of Tab Pane 3 </a-tab-pane>
+        <a-tab-pane key="3" tab="联系人">
+          <ContactInfo
+            :contactsList="contactsList"
+            :contact_typ="contact_typ"
+          />
+        </a-tab-pane>
+        <a-tab-pane key="4" tab="项目文件">
+          <DocumentInfo :proj_doculist="proj_doculist" />
+        </a-tab-pane>
       </a-tabs>
     </div>
   </div>
@@ -66,9 +72,11 @@
 import { Modal, message } from "ant-design-vue";
 import BasicInfo from "../../../components/ProjectDetail/BasicInfo";
 import DepartInfo from "../../../components/ProjectDetail/DepartInfo";
+import ContactInfo from "../../../components/ProjectDetail/ContactInfo";
+import DocumentInfo from "../../../components/ProjectDetail/DocumentInfo";
 export default {
   name: "Todatail",
-  components: { BasicInfo, DepartInfo },
+  components: { BasicInfo, DepartInfo, ContactInfo, DocumentInfo },
   inject: ["reload"],
   data() {
     return {
@@ -77,12 +85,19 @@ export default {
       styles: "",
       stylez: "",
       stylep: "",
+      // 状态
+      disabled: "",
       // 概要信息
       ProjectBasicInfo: {},
-      badges: {},
+      badges: "",
       msg: "",
       // 项目部门
       prodepa: "",
+      // 联系人
+      contactsList: [],
+      contact_typ: [],
+      // 项目文件
+      proj_doculist: "",
     };
   },
   methods: {
@@ -105,18 +120,21 @@ export default {
             this.msg = "待认领";
             this.styles = "display: none";
             this.stylep = "margin-left: 16px";
+            this.disabled = "disabled";
           } else if (this.ProjectBasicInfo.sub_status == "3000") {
             this.badges = "success";
             this.msg = "已认领";
             this.styles = "margin-right: 16px";
             this.stylez = "display: none";
             this.stylep = "display: none";
+            this.disabled = "disabled";
           } else if (this.ProjectBasicInfo.sub_status == "2111") {
             this.badges = "error";
             this.msg = "已撤回";
             this.styles = "margin-right: 16px";
             this.stylez = "display: none";
             this.stylep = "display: none";
+            this.disabled = "disabled";
           }
         })
         .catch((err) => {

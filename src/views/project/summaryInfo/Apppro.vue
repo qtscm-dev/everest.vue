@@ -366,7 +366,6 @@ export default {
     this.getProdepa();
     this.getContacts();
     this.getProjdoculist();
-    this.getOper();
   },
 };
 </script>

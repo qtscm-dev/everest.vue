@@ -58,11 +58,10 @@
       <div class="protitle">
         <span>项目列表</span>
         <router-link :to="{ name: 'Favordatail' }">
-          <a-badge :count="countleng" style="float: right" :offset="[-5, 25]"
-            ><img
-              src="../../../public/favor/favorimg.png"
-              alt="收藏夹" /></a-badge
-        ></router-link>
+          <a-badge :count="countleng" style="float: right" :offset="[-5, 25]">
+            <img src="../../../public/favor/favorimg.png" alt="收藏夹" />
+          </a-badge>
+        </router-link>
       </div>
       <a-empty :style="{ display: prolist == false ? 'block' : 'none' }" />
       <div
@@ -125,8 +124,8 @@
                 >详情</a
               >
             </div>
-          </template></a-table
-        >
+          </template>
+        </a-table>
       </div>
     </div>
   </div>
@@ -145,6 +144,7 @@ export default {
       {
         title: "项目",
         dataIndex: "code",
+        width: 150,
       },
       {
         title: "状态",
@@ -239,13 +239,13 @@ export default {
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
         size: "middle",
-        total: "",
+        total: 0,
         proj: "",
         onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
-        // onChange: (current, pageSize) => {
-        //   this.getProject(this.pagination.proj, current, pageSize);
-        // },
-        // showQuickJumper: (current, pageSize) => (this.pageSize = pageSize),
+        onChange: (current, pageSize) => {
+          this.getProtable(this.pagination.proj, current, pageSize);
+        },
+        showQuickJumper: true,
       },
     };
   },
@@ -277,11 +277,13 @@ export default {
         });
     },
     // 项目列表
-    getProtable(sta) {
+    getProtable(sta, page, perpage) {
       this.$api
         .get(this.baseURL + "claim/claim_list", {
           params: {
             status: sta,
+            page: page,
+            perpage: perpage,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
@@ -295,6 +297,7 @@ export default {
           this.cleng = result.count_nm.revoke_num;
           this.dleng = result.count_nm.whole_num;
           this.pagination.total = result.pagination.total_items;
+          this.pagination.proj = sta;
         })
         .catch((err) => {
           console.log(err);
@@ -357,7 +360,7 @@ export default {
     },
   },
   mounted() {
-    this.getProtable();
+    this.handlerUnclai();
     this.getProject();
   },
 };
@@ -404,8 +407,5 @@ export default {
 .tableradio {
   width: 146px;
   text-align: center;
-}
-.table-proj {
-  background: #fafafa;
 }
 </style>

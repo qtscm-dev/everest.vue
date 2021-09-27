@@ -14,8 +14,21 @@
         ProjectBasicInfo.contract_no
       }}</a-descriptions-item>
       <a-descriptions-item label="项目状态">
-        <a-badge :status="badges" />{{ msg }}</a-descriptions-item
-      >
+        <!-- <a-badge status="default" :text="msg" /> -->
+        <a-badge v-if="ProjectBasicInfo.status == 2100" status="default">
+          {{ msg }}</a-badge
+        >
+        <a-badge
+          v-else-if="ProjectBasicInfo.status == 3000"
+          status="success"
+          text="已认领"
+        />
+        <a-badge
+          v-else-if="ProjectBasicInfo.status == 2111"
+          status="default"
+          text="已中止"
+        />
+      </a-descriptions-item>
       <a-descriptions-item label="流程编号">{{
         ProjectBasicInfo.proc_code
       }}</a-descriptions-item>
@@ -78,7 +91,7 @@
 </template>
 <script>
 export default {
-  name: "ProjectBasicInfo",
+  name: "BasicInfo",
   props: {
     ProjectBasicInfo: {},
     badges: {},

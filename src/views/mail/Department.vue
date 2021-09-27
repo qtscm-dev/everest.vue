@@ -42,7 +42,6 @@
               </a-row>
             </a-form>
           </div>
-          <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
           <div class="tabs-item-content">
             <div style="height: 32px; line-height: 32px; margin-bottom: 24px">
               <span>部门列表</span>
@@ -59,7 +58,7 @@
               :style="{ display: departlist == false ? 'none' : 'block' }"
               size="middle"
               :scroll="{ x: 800 }"
-              :pagination="pagination"
+              :pagination="paginationOpt"
               :rowKey="(record) => record.id"
               :rowClassName="
                 (record, index) => (index % 2 === 1 ? 'table-depa' : null)
@@ -291,7 +290,6 @@ export default {
           sm: { span: 12 },
         },
       },
-      vi: false,
       // 列表信息
       columns,
       departlist: [],
@@ -301,7 +299,6 @@ export default {
         pid: "",
         o: "",
       },
-      loading: false,
       visible: false,
       visibilie: false,
       // 上级部门
@@ -311,7 +308,6 @@ export default {
         nm: "",
       },
       // 详情
-      viewUrl: "",
       id: "",
       // 编辑部门
       editForm: "",
@@ -322,18 +318,18 @@ export default {
         pid: "",
         o: "",
       },
-      maskStyle: {
-        background: "rgba(0,0,0,0.05)",
-      },
       // 分页
-      pagination: {
+      paginationOpt: {
+        total: 0,
         defaultPageSize: 20,
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
         size: "middle",
-        total: "",
-        proj: "",
         onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+        onChange: (current, pageSize) => {
+          this.departmentList(current, pageSize);
+        },
+        showQuickJumper: true,
       },
     };
   },
@@ -368,7 +364,6 @@ export default {
     },
     handleOk(e) {
       e.preventDefault();
-      this.loading = true;
       var qs = require("qs");
       this.form.validateFields((err) => {
         if (!err) {
@@ -497,16 +492,21 @@ export default {
         });
     },
     // 部门列表展示
-    departmentList() {
+    departmentList(page, perpage) {
       this.$api
         .get(this.baseURL + "dept/dept/", {
+          params: {
+            page: page,
+            perpage: perpage,
+          },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
         })
         .then((res) => {
-          let result = res.data;
-          this.departlist = result.data.data.datarows;
+          let result = res.data.data.data;
+          this.departlist = result.datarows;
+          this.paginationOpt.total = result.pagination.total_items;
         })
         .catch((err) => {
           console.log(err);
@@ -558,7 +558,7 @@ export default {
   width: 99%;
   height: auto;
   padding: 0 24px;
-  margin: 8px auto 0;
+  margin: 8px auto 24px;
   background: #fff;
 }
 .tabs-item-top .form-button {

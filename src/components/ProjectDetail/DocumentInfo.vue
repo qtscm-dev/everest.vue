@@ -13,7 +13,6 @@
         <a-button>重置</a-button>
       </div>
     </a-form>
-    <div style="height: 24px"></div>
     <div style="padding: 24px; background: #fff">
       <div class="concent-title">
         <span>项目文件</span>
@@ -255,6 +254,7 @@ export default {
 <style>
 .top {
   padding: 24px;
+  margin-bottom: 24px;
   position: relative;
   background: #fff;
 }

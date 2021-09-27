@@ -242,13 +242,13 @@ export default {
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
         size: "middle",
-        total: "",
+        total: 0,
         proj: "",
         onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
         onChange: (current, pageSize) => {
           this.getProject(this.pagination.proj, current, pageSize);
         },
-        showQuickJumper: (current, pageSize) => (this.pageSize = pageSize),
+        showQuickJumper: true,
       },
       // 数据长度
       dataLength: {
@@ -376,13 +376,15 @@ export default {
 };
 </script>
 
+<style>
+.table-proj {
+  background: #fafafa;
+}
+</style>
 <style scoped>
 .radio-but {
   width: 146px;
   text-align: center;
-}
-.table-proj {
-  background: #fafafa;
 }
 .header {
   width: 100%;
