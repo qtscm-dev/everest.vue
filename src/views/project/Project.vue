@@ -8,7 +8,7 @@
       <span>立项中心</span>
     </div>
     <a-form v-bind="formItemLayout" class="ant-advanced-search-form">
-      <a-row style="margin-bottom: 20px">
+      <a-row>
         <a-col :span="6">
           <a-form-item label="编号名称">
             <a-input
@@ -26,7 +26,12 @@
             />
           </a-form-item>
         </a-col>
-        <a-col :span="12" :style="{ textAlign: 'right' }">
+        <a-col :span="6">
+          <a-form-item label="建设单位">
+            <a-input v-model="conditionForm.client_nm" placeholder="请输入" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="6" :style="{ textAlign: 'right' }">
           <a-button type="primary" @click="handlerSubmit"> 查询 </a-button>
           <a-button :style="{ marginLeft: '8px' }" @click="hanslerReset">
             重置
@@ -42,11 +47,6 @@
         </a-col>
       </a-row>
       <a-row :style="{ display: 3 < count ? 'none' : 'block' }">
-        <a-col :span="6">
-          <a-form-item label="建设单位">
-            <a-input v-model="conditionForm.client_nm" placeholder="请输入" />
-          </a-form-item>
-        </a-col>
         <a-col :span="6">
           <a-form-item label="工程地点">
             <a-cascader placeholder="请输入" />
@@ -92,6 +92,27 @@
           (record, index) => (index % 2 === 1 ? 'table-proj' : null)
         "
       >
+        <a-badge
+          v-if="text == '1000'"
+          slot="status"
+          slot-scope="text"
+          status="default"
+          text="待立项"
+        />
+        <a-badge
+          v-else-if="text == '2000'"
+          slot="status"
+          slot-scope="text"
+          status="success"
+          text="已立项"
+        />
+        <a-badge
+          v-else-if="text == '1211'"
+          slot="status"
+          slot-scope="text"
+          status="success"
+          text="已中止"
+        />
         <template slot="operation" slot-scope="text, record">
           <div>
             <a
@@ -121,6 +142,11 @@ export default {
       {
         title: "项目名称",
         dataIndex: "nm",
+      },
+      {
+        title: "状态",
+        dataIndex: "status",
+        scopedSlots: { customRender: "status" },
       },
       {
         title: "建设单位",
@@ -195,6 +221,8 @@ export default {
       rowClassName: "",
       // 单选框
       value: "a",
+      // 状态
+      statu: "",
       // 条件查询
       conditionForm: {
         proj_cycle: [],
@@ -242,6 +270,7 @@ export default {
       this.$api
         .get(this.baseURL + "project/project/", {
           params: {
+            status: this.statu,
             search: this.conditionForm.search,
             proj_cycle: this.conditionForm.proj_cycle,
             client_nm: this.conditionForm.client_nm,
@@ -251,11 +280,8 @@ export default {
           },
         })
         .then((res) => {
-          console.log(this.conditionForm.proj_cycle);
           let result = res.data.data.data;
-          console.log(this.projectList);
           this.projeList = result.datarows;
-          console.log(this.projectList);
         })
         .catch((err) => {
           console.log(err);
@@ -270,7 +296,7 @@ export default {
       this.conditionForm.proj_cycle = [];
       this.conditionForm.search = "";
       this.conditionForm.client_nm = "";
-      this.projectList();
+      this.projectList(this.statu);
     },
     // 新建项目
     handlerNewpro() {
@@ -279,18 +305,22 @@ export default {
     // 待立项
     projectList() {
       this.getProject("1000");
+      this.statu = "1000";
     },
     // 已立项
     handlerApproved() {
       this.getProject("2000");
+      this.statu = "2000";
     },
-    // 已撤回
+    // 已中止
     handlerWithdrawn() {
       this.getProject("1211");
+      this.statu = "1211";
     },
     // 全部
     handlerAll() {
       this.getProject("all");
+      this.statu = "all";
     },
     // 项目列表
     getProject(sta, pages, perpage) {
@@ -339,38 +369,9 @@ export default {
         this.$router.push("/index/project/project/apppro/:id=" + id);
       }
     },
-    // 空状态
-    getEmptys() {
-      let emptys = this.$refs.emptys;
-      let havedata = this.$refs.havedata;
-      this.$api
-        .get(this.baseURL + "project/project/", {
-          params: {
-            status: "all",
-          },
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
-        })
-        .then((res) => {
-          let result = res.data.data.data;
-          let title = result.pagination.total_items;
-          if (title != null) {
-            havedata.style.display = "none";
-            emptys.style.display = "block";
-          } else {
-            havedata.style.display = "block";
-            emptys.style.display = "none";
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
   },
   mounted() {
     this.projectList();
-    this.getEmptys();
   },
 };
 </script>

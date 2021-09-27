@@ -320,4 +320,19 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.concenter {
+  width: 100%;
+  height: auto;
+}
+.concenter .title {
+  line-height: 56px;
+  padding: 0 24px;
+  font-size: 16px;
+  color: #000;
+}
+.concenter .content {
+  box-sizing: border-box;
+  padding: 0 24px 24px;
+}
+</style>

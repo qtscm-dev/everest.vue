@@ -371,7 +371,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .table-apppro {
   background: #fafafa;
 }
@@ -395,67 +395,5 @@ export default {
   width: 100%;
   padding: 0 24px;
   box-sizing: border-box;
-}
-.ant-tabs-tabpane {
-  background: #fff;
-  box-sizing: border-box;
-}
-.ant-popover-message-title {
-  padding-left: 0;
-}
-.concenter {
-  width: 100%;
-  height: auto;
-}
-.concenter .title {
-  line-height: 56px;
-  padding: 0 24px;
-  border-bottom: 1px solid #e8e8e8;
-  font-size: 16px;
-  color: #000;
-}
-.concenter .content {
-  box-sizing: border-box;
-  padding: 24px;
-}
-.top {
-  padding: 24px;
-  position: relative;
-}
-.top .ant-form-item {
-  display: flex;
-}
-.top.ant-form-item-control-wrapper {
-  flex: 1;
-}
-.ant-row .ant-form-item {
-  margin-bottom: 0;
-}
-.top > .top_button {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-}
-.con_table {
-  margin-top: 24px;
-}
-.concent-title {
-  width: 100%;
-  height: 32px;
-  margin-bottom: 24px;
-  line-height: 32px;
-  font-size: 16px;
-  color: #000;
-}
-.oper_title {
-  padding: 12px 24px;
-  padding-left: 24px;
-  padding-right: 24px;
-  font-size: 16px;
-  color: #000;
-  border-bottom: 1px solid #e8e8e8;
-}
-.oper_table {
-  padding: 24px;
 }
 </style>

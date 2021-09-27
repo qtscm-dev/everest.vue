@@ -6,7 +6,6 @@
         <a-breadcrumb-item
           ><a href="javascript;">认领中心</a></a-breadcrumb-item
         >
-        <a-breadcrumb-item><a href="javascript;">收藏夹</a></a-breadcrumb-item>
       </a-breadcrumb>
       <h3>
         项目列表
@@ -76,11 +75,19 @@
     <div class="favor">
       <div class="tatil">
         <span>收藏夹</span>
+        <router-link :to="{ name: 'claimIndex' }">
+          <a-icon
+            type="arrow-left"
+            style="
+              width: 32px;
+              height: 32px;
+              margin-top: 24px;
+              float: right;
+              color: #1890ff;
+            "
+        /></router-link>
       </div>
       <div class="favortable">
-        <div style="margin-bottom: 20px; font-size: 14px; color: #000">
-          项目列表
-        </div>
         <a-empty :style="{ display: prolist == false ? 'block' : 'none' }" />
         <a-table
           :columns="columns"
@@ -330,6 +337,14 @@ export default {
       this.projForm.search = "";
       this.projForm.proj_cycle = "";
       this.getProject();
+    },
+    // 详情
+    handlerDetails(id, sta) {
+      if (sta == 2100) {
+        this.$router.push("/index/claim/claimindex/favtodatail/:id=" + id);
+      } else {
+        this.$router.push("/index/claim/claimindex/todatail/:id=" + id);
+      }
     },
   },
   mounted() {

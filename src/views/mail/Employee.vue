@@ -105,6 +105,7 @@
                 :scroll="{ x: 1500 }"
                 :pagination="pagination"
                 size="middle"
+                :rowKey="(record) => record.id"
                 :rowClassName="
                   (record, index) => (index % 2 === 1 ? 'table-emplo' : null)
                 "
@@ -745,6 +746,8 @@ export default {
       dept_list: [],
       job_list: [],
       role_list: [],
+      // 状态
+      statu: "",
       // 查询条件
       queryForm: {
         nm: "",
@@ -788,16 +791,17 @@ export default {
     };
   },
   methods: {
-    handleChangee(value) {
-      console.log(`Selected: ${value}`);
-    },
     // 条件查询
     handlersubmit() {
       this.$api
         .get(this.baseURL + "dept/mbr/", {
           params: {
+            status: this.statu,
             nm: this.queryForm.nm,
             dept_nm: this.queryForm.dept_nm,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
           },
         })
         .then((res) => {
@@ -824,7 +828,7 @@ export default {
     handlerReset() {
       this.queryForm.nm = "";
       this.queryForm.dept_nm = "";
-      this.handlerTrue();
+      this.handlerTrue(this.statu);
     },
     // 文件上传
     handleChange(info) {
@@ -884,14 +888,17 @@ export default {
     // 获取全部员工信息
     handlerAll() {
       this.handlerInfo("all");
+      this.statu = "all";
     },
     // 获取已激活员工信息
     handlerTrue() {
       this.handlerInfo("t");
+      this.statu = "t";
     },
     // 获取已禁用员工信息
     handlerFalse() {
       this.handlerInfo("f");
+      this.statu = "f";
     },
     // 获取员工信息
     handlerInfo(stat, page, perpage) {

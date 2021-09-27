@@ -82,6 +82,11 @@ const router = new VueRouter({
           name: "Favordatail",
           component: () => import("../views/Claim/datail/Favordatail"),
         },
+        {
+          path: "/index/claim/claimindex/favtodatail/:id",
+          name: "Favtodatail",
+          component: () => import("../views/Claim/datail/Favtodatail"),
+        },
       ],
     },
     {

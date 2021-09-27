@@ -1,12 +1,18 @@
 <template>
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-      <div
-        class="logo"
-        style="width: 100%; padding: 18px; box-sizing: border-box"
-      >
-        <img src="../../../public/favicon.png" />
-        <span>中南幕墙</span>
+      <div class="logo">
+        <img
+          src="../../../public/favicon.png"
+          style="float: left; margin: 0 auto"
+        />
+        <span
+          :style="[
+            { display: collapsed ? 'none' : 'block' },
+            { float: 'left' },
+          ]"
+          >中南幕墙</span
+        >
       </div>
       <SiderMenu />
     </a-layout-sider>
@@ -115,5 +121,10 @@ export default {
   font-size: 20px;
   color: #fff;
   text-align: center;
+}
+.logo {
+  width: 100%;
+  padding: 18px 24px;
+  box-sizing: border-box;
 }
 </style>

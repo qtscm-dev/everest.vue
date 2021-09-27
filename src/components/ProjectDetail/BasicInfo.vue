@@ -93,6 +93,7 @@ export default {
 .concenter {
   width: 100%;
   height: auto;
+  background: #fff;
 }
 .concenter .title {
   line-height: 56px;

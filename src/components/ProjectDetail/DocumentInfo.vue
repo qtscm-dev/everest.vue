@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-form class="top">
+    <a-form class="top" v-bind="formItemLayout">
       <a-row>
         <a-col :span="6">
           <a-form-item label="文件名称">
@@ -13,8 +13,8 @@
         <a-button>重置</a-button>
       </div>
     </a-form>
-    <div style="width: 100%; height: 24px; background: #f4f4f4"></div>
-    <div style="padding: 24px">
+    <div style="height: 24px"></div>
+    <div style="padding: 24px; background: #fff">
       <div class="concent-title">
         <span>项目文件</span>
         <a-upload
@@ -120,6 +120,16 @@ export default {
       },
     ];
     return {
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 10 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 14 },
+        },
+      },
       proj_docu,
       param: this.$router.currentRoute.params.id.slice(4),
       // 分页
@@ -242,4 +252,26 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.top {
+  padding: 24px;
+  position: relative;
+  background: #fff;
+}
+.top > .top_button {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+.concent-title {
+  width: 100%;
+  height: 32px;
+  margin-bottom: 24px;
+  line-height: 32px;
+  font-size: 16px;
+  color: #000;
+}
+.table-apppro {
+  background: #fafafa;
+}
+</style>

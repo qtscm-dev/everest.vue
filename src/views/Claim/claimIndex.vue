@@ -94,6 +94,29 @@
             (record, index) => (index % 2 === 1 ? 'table-proj' : null)
           "
         >
+          <!-- 状态 -->
+          <a-badge
+            v-if="text == '2100'"
+            slot="status"
+            slot-scope="text"
+            status="default"
+            text="待认领"
+          />
+          <a-badge
+            v-else-if="text == '3000'"
+            slot="status"
+            slot-scope="text"
+            status="success"
+            text="已认领"
+          />
+          <a-badge
+            v-else-if="text == '2111'"
+            slot="status"
+            slot-scope="text"
+            status="error"
+            text="已撤回"
+          />
+          <!-- 操作 -->
           <template slot="operation" slot-scope="text, record">
             <div>
               <a
@@ -122,6 +145,11 @@ export default {
       {
         title: "项目",
         dataIndex: "code",
+      },
+      {
+        title: "状态",
+        dataIndex: "status",
+        scopedSlots: { customRender: "status" },
       },
       {
         title: "建设单位",
@@ -200,6 +228,8 @@ export default {
       bleng: "",
       cleng: "",
       dleng: "",
+      // 状态
+      satau: "",
       // 项目列表
       columns,
       prolist: [],
@@ -273,26 +303,26 @@ export default {
     // 待认领
     handlerUnclai() {
       this.getProtable("2100");
+      this.statu = "2100";
     },
     // 已认领
     handlerClai() {
       this.getProtable("3000");
+      this.statu = "3000";
     },
     // 已撤回
     handlerRevoke() {
       this.getProtable("2111");
+      this.statu = "2111";
     },
     // 全部
     handlerWholer() {
       this.getProtable("all");
+      this.statu = "all";
     },
     // 详情
-    handlerDetails(id, sta) {
-      if (sta == 2100) {
-        this.$router.push("/index/claim/claimindex/todatail/:id=" + id);
-      } else {
-        this.$router.push("/index/claim/claimindex/todatail/:id=" + id);
-      }
+    handlerDetails(id) {
+      this.$router.push("/index/claim/claimindex/todatail/:id=" + id);
     },
     // 查询
     onChange(date, dateString) {
@@ -303,6 +333,7 @@ export default {
       this.$api
         .get(this.baseURL + "claim/claim_list", {
           params: {
+            status: this.statu,
             search: this.projForm.search,
             proj_cycle: this.projForm.proj_cycle,
           },
@@ -322,7 +353,7 @@ export default {
     handlerReset() {
       this.projForm.search = "";
       this.projForm.proj_cycle = "";
-      this.getProtable();
+      this.getProtable(this.statu);
     },
   },
   mounted() {

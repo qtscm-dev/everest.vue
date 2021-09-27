@@ -105,8 +105,7 @@
         :form="form"
         :model="depaForm"
         style="box-size: border-box; padding-left: 90px"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
+        v-bind="formItemLayout"
       >
         <a-modal
           v-model="visible"
@@ -285,7 +284,7 @@ export default {
       formItemLayout: {
         labelCol: {
           xs: { span: 24 },
-          sm: { span: 5 },
+          sm: { span: 8 },
         },
         wrapperCol: {
           xs: { span: 24 },
@@ -353,7 +352,6 @@ export default {
         .then((res) => {
           let result = res.data;
           this.departlist = result.data.data.datarows;
-          return result;
         })
         .catch((err) => {
           console.log(err);
@@ -493,7 +491,6 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.superiorForm = result.sup_dept;
-          console.log(this.superiorForm);
         })
         .catch((err) => {
           console.log(err);

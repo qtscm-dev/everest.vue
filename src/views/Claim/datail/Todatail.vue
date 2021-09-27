@@ -4,11 +4,11 @@
       <a-breadcrumb>
         <a-breadcrumb-item><a href="javascript;">首页</a></a-breadcrumb-item>
         <a-breadcrumb-item
-          ><a href="javascript;">认领中心</a></a-breadcrumb-item
+          ><a href="javascript;">项目管理</a></a-breadcrumb-item
         >
       </a-breadcrumb>
       <h3>
-        认领中心
+        项目管理
         <span>
           <a-button
             type="danger"
@@ -33,10 +33,8 @@
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
-            <a-badge :count="count">
-              <a-button :style="stylez" @click="handlerFavoir"
-                >加入收藏夹</a-button
-              ></a-badge
+            <a-button :style="stylez" @click="handlerFavoir"
+              >加入收藏夹</a-button
             ></a-button-group
           >
           <a-button type="primary" :style="stylep" @click="handlerDatail"
@@ -44,7 +42,7 @@
           >
         </span>
       </h3>
-      <a-tabs :tabBarGutter="0" default-active-key="1">
+      <a-tabs :tabBarGutter="0" default-active-key="2">
         <a-tab-pane key="1" tab="概要信息">
           <BasicInfo
             class="basic"
@@ -53,7 +51,9 @@
             :msg="msg"
           />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="项目部门"> Content of Tab Pane 2 </a-tab-pane>
+        <a-tab-pane key="2" tab="项目部门">
+          <DepartInfo :prodepa="prodepa" />
+        </a-tab-pane>
         <a-tab-pane key="3" tab="联系人"> Content of Tab Pane 3 </a-tab-pane>
         <a-tab-pane key="4" tab="项目文件"> Content of Tab Pane 3 </a-tab-pane>
         <a-tab-pane key="5" tab="操作记录"> Content of Tab Pane 3 </a-tab-pane>
@@ -65,9 +65,10 @@
 <script>
 import { Modal, message } from "ant-design-vue";
 import BasicInfo from "../../../components/ProjectDetail/BasicInfo";
+import DepartInfo from "../../../components/ProjectDetail/DepartInfo";
 export default {
   name: "Todatail",
-  components: { BasicInfo },
+  components: { BasicInfo, DepartInfo },
   inject: ["reload"],
   data() {
     return {
@@ -80,8 +81,8 @@ export default {
       ProjectBasicInfo: {},
       badges: {},
       msg: "",
-      // 收藏夹
-      count: "",
+      // 项目部门
+      prodepa: "",
     };
   },
   methods: {
@@ -214,9 +215,18 @@ export default {
           console.log(err);
         });
     },
+    // 项目部门
+    handlerDepart() {
+      this.$api.get(this.baseURL + "", {
+        params: {},
+        headers: {},
+      });
+    },
   },
   mounted() {
+    // 概要信息
     this.handlerBasic();
+    // 项目部门
   },
 };
 </script>
