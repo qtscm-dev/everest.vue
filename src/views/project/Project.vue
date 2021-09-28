@@ -361,8 +361,6 @@ export default {
     },
     // 查看详情
     handlerJump(id, status) {
-      console.log(id);
-      console.log(status);
       if (status == 1000) {
         this.$router.push("/index/project/project/toapppro/:id=" + id);
       } else if (status == 2000) {

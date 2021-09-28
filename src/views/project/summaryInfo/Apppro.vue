@@ -36,8 +36,7 @@
         <a-tab-pane key="1" tab="概要信息">
           <ProjectBasicInfo
             :ProjectBasicInfo="projectBasicInfo"
-            :badges="badges"
-            :msg="msg"
+            :status="status"
           />
         </a-tab-pane>
         <a-tab-pane key="2" tab="项目部门" force-render>
@@ -50,7 +49,10 @@
           />
         </a-tab-pane>
         <a-tab-pane key="4" tab="项目文件">
-          <DocumentInfo :proj_doculist="proj_doculist" />
+          <DocumentInfo
+            :proj_doculist="proj_doculist"
+            :pagination="pagination"
+          />
         </a-tab-pane>
       </a-tabs>
       <Footer class="footent" />
@@ -91,8 +93,10 @@ export default {
       },
       // 概要信息
       projectBasicInfo: {},
-      badges: "",
-      msg: "",
+      status: {
+        badges: "",
+        msg: "",
+      },
       // 项目部门
       prodepa: "",
       // 联系人列表
@@ -100,6 +104,20 @@ export default {
       contact_typ: [],
       // 项目文件
       proj_doculist: "",
+      // 分页
+      pagination: {
+        defaultPageSize: 20,
+        showTotal: (total) => `共 ${total} 条数据`,
+        showSizeChanger: true,
+        size: "middle",
+        total: 0,
+        proj: "",
+        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+        // onChange: (current, pageSize) => {
+        //   this.getProject(this.pagination.proj, current, pageSize);
+        // },
+        showQuickJumper: true,
+      },
     };
   },
   methods: {
@@ -118,13 +136,13 @@ export default {
           let result = res.data;
           this.projectBasicInfo = result.data.data.project_info[0];
           if (this.projectBasicInfo.status == 2000) {
-            this.badges = "processing";
-            this.msg = "已立项";
+            this.status.badge = "processing";
+            this.status.msg = "已立项";
             this.styles = "margin-right: 16px";
             this.styless = "display: none";
           } else if (this.projectBasicInfo.status == 1211) {
-            this.badges = "error";
-            this.msg = "已中止";
+            this.status.badge = "error";
+            this.status.msg = "已中止";
             this.styless = "margin-left: 16px";
             this.styles = "display: none";
           }
@@ -355,6 +373,7 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.proj_doculist = result.datarows;
+          this.pagination.total = result.pagination.total_items;
         })
         .catch((err) => {
           console.log(err);

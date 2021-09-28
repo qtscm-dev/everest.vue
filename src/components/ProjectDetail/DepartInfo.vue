@@ -64,10 +64,7 @@
 export default {
   name: "DepartInfo",
   props: {
-    prodepa: {
-      prodepa: "",
-    },
-    // pagination:{},
+    prodepa: {},
   },
   data() {
     const columns = [
@@ -110,7 +107,7 @@ export default {
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
         size: "middle",
-        total: "",
+        total: 0,
         proj: "",
         onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
       },

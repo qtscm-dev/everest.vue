@@ -47,8 +47,7 @@
           <BasicInfo
             class="basic"
             :ProjectBasicInfo="ProjectBasicInfo"
-            :badges="badges"
-            :msg="msg"
+            :status="status"
           />
         </a-tab-pane>
         <a-tab-pane key="2" tab="项目部门" class="hidess" :disabled="disabled">
@@ -89,8 +88,10 @@ export default {
       disabled: "",
       // 概要信息
       ProjectBasicInfo: {},
-      badges: "",
-      msg: "",
+      status: {
+        badges: "",
+        msg: "",
+      },
       // 项目部门
       prodepa: "",
       // 联系人
@@ -116,25 +117,25 @@ export default {
           let result = res.data.data.data;
           this.ProjectBasicInfo = result.sub_info[0];
           if (this.ProjectBasicInfo.sub_status == "2100") {
-            this.badges = "default";
-            this.msg = "待认领";
+            this.status.badge = "default";
+            this.status.msg = "待认领";
             this.styles = "display: none";
             this.stylep = "margin-left: 16px";
             this.disabled = "disabled";
           } else if (this.ProjectBasicInfo.sub_status == "3000") {
-            this.badges = "success";
-            this.msg = "已认领";
+            this.status.badge = "success";
+            this.status.msg = "已认领";
             this.styles = "margin-right: 16px";
             this.stylez = "display: none";
             this.stylep = "display: none";
-            this.disabled = "disabled";
+            this.disabled = "";
           } else if (this.ProjectBasicInfo.sub_status == "2111") {
-            this.badges = "error";
-            this.msg = "已撤回";
+            this.status.badge = "error";
+            this.status.msg = "已撤回";
             this.styles = "margin-right: 16px";
             this.stylez = "display: none";
             this.stylep = "display: none";
-            this.disabled = "disabled";
+            this.disabled = "";
           }
         })
         .catch((err) => {

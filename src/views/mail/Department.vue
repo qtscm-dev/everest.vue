@@ -58,7 +58,7 @@
               :style="{ display: departlist == false ? 'none' : 'block' }"
               size="middle"
               :scroll="{ x: 800 }"
-              :pagination="paginationOpt"
+              :pagination="pagination"
               :rowKey="(record) => record.id"
               :rowClassName="
                 (record, index) => (index % 2 === 1 ? 'table-depa' : null)
@@ -67,20 +67,7 @@
               <template slot="operation" slot-scope="text, record">
                 <a @click="() => handlerInfo(record.id)">详情</a>
                 <a-divider type="vertical" />
-                <a
-                  @click="
-                    () =>
-                      handleredit(
-                        record.id,
-                        record.nm,
-                        record.pid,
-                        record.pnm,
-                        record.o
-                      )
-                  "
-                >
-                  编辑
-                </a>
+                <a @click="() => handleredit(record.id)"> 编辑 </a>
                 <a-divider type="vertical" />
                 <a-popconfirm
                   placement="topRight"
@@ -319,7 +306,7 @@ export default {
         o: "",
       },
       // 分页
-      paginationOpt: {
+      pagination: {
         total: 0,
         defaultPageSize: 20,
         showTotal: (total) => `共 ${total} 条数据`,

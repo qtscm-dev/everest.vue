@@ -159,17 +159,16 @@ export default {
       saveingKey: "",
       param: this.$router.currentRoute.params.id.slice(4),
       // 分页
-      pagination: false,
-      // {
-      // pagination: false,
-      // defaultPageSize: 20,
-      // showTotal: (total) => `共 ${total} 条数据`,
-      // showSizeChanger: true,
-      // size: "middle",
-      // total: "",
-      // proj: "",
-      // onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
-      // },
+      pagination: {
+        pagination: false,
+        defaultPageSize: 20,
+        showTotal: (total) => `共 ${total} 条数据`,
+        showSizeChanger: true,
+        size: "middle",
+        total: 0,
+        proj: "",
+        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
+      },
     };
   },
   methods: {
@@ -191,7 +190,6 @@ export default {
         target.editable = true;
         this.contactsList = newData;
       }
-      console.log(this.contactsList);
     },
     // 保存
     handlerSave(id) {

@@ -33,6 +33,7 @@
         :style="{ display: proj_doculist == false ? 'none' : 'block' }"
         :columns="proj_docu"
         :data-source="proj_doculist"
+        :pagination="pagination"
         :rowKey="(record) => record.id"
         :rowClassName="
           (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
@@ -96,6 +97,7 @@ export default {
   name: "DocumentInfo",
   props: {
     proj_doculist: {},
+    pagination: {},
   },
   inject: ["reload"],
   data() {
@@ -131,16 +133,6 @@ export default {
       },
       proj_docu,
       param: this.$router.currentRoute.params.id.slice(4),
-      // 分页
-      pagination: {
-        defaultPageSize: 20,
-        showTotal: (total) => `共 ${total} 条数据`,
-        showSizeChanger: true,
-        size: "middle",
-        total: "",
-        proj: "",
-        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
-      },
     };
   },
   methods: {
