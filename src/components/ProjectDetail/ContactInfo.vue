@@ -16,6 +16,7 @@
         "
         :style="{ display: contactsList == false ? 'none' : 'block' }"
       >
+        <!-- 编辑 -->
         <template
           v-for="col in ['nm', 'mob', 'typ', 'comp_nm', 'dept_nm', 'job']"
           :slot="col"
@@ -25,12 +26,10 @@
             <a-input
               v-if="record.editable && col != 'typ'"
               placeholder="请输入"
-              style="margin: -5px 0"
               :value="text"
               @change="(e) => handleChange(e.target.value, record.id, col)"
             />
             <a-select
-              style="display: block"
               v-else-if="record.editable && col == 'typ'"
               placeholder="请选择"
               v-model="record.typ"
@@ -45,6 +44,7 @@
             </template>
           </div>
         </template>
+        <!-- 操作 -->
         <template slot="operation" slot-scope="text, record">
           <div v-if="saveingKey == ''" class="editable-row-operations">
             <span v-if="record.editable">
@@ -101,7 +101,7 @@ import { message } from "ant-design-vue";
 export default {
   name: "ContactInfo",
   props: {
-    contactsList: {},
+    contactsList: [],
     contact_typ: [],
   },
   inject: ["reload"],

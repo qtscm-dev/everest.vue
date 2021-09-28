@@ -47,7 +47,12 @@
             >新增员工</a-button
           >
         </div>
-        <a-radio-group style="margin-bottom: 24px" v-model="value">
+        <a-empty :style="{ display: empList == false ? 'block' : 'none' }" />
+        <a-radio-group
+          style="margin-bottom: 24px"
+          v-model="value"
+          :style="{ display: empList == false ? 'none' : 'block' }"
+        >
           <a-radio-button
             value="a"
             @click="handlerTrue"
@@ -71,7 +76,12 @@
           :data-source="empList"
           :scroll="{ x: 1500 }"
           :pagination="pagination"
+          :rowKey="(record) => record.id"
           size="middle"
+          :rowClassName="
+            (record, index) => (index % 2 === 1 ? 'table-proj' : null)
+          "
+          :style="{ display: empList == false ? 'none' : 'block' }"
         >
           <span slot="pic" slot-scope="text, record">
             <img
@@ -84,19 +94,22 @@
               :src="record.avatar"
             />
           </span>
+          <!-- 状态 -->
           <a-badge
             v-if="text == '已激活'"
             slot="status"
             slot-scope="text"
             status="success"
-            :text="text"
+            text="已激活"
+            style="font-weight: initial"
           />
           <a-badge
             v-else-if="text == '已禁用'"
             slot="status"
             slot-scope="text"
             status="error"
-            :text="text"
+            text="已禁用"
+            style="font-weight: initial"
           />
           <template slot="operation" slot-scope="text, record">
             <span
@@ -134,17 +147,11 @@
           </template>
         </a-table>
         <!-- 新增员工 -->
-        <a-form
-          :form="form"
-          :model="editList"
-          :label-col="labelCol"
-          :wrapper-col="wrapperCol"
-        >
+        <a-form :form="form" :model="editList" v-bind="formItemLayout">
           <a-modal
             v-model="visibles1"
             title="新增员工"
             @ok="handleOk"
-            :wrapper-col="wrapperCol"
             :destroyOnClose="true"
           >
             <a-form-item label="上传图像：">
@@ -159,7 +166,7 @@
               >
                 <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
                 <div v-else>
-                  <a-icon :type="loading ? 'loading' : 'plus'" />
+                  <a-icon type="plus" />
                   <div class="ant-upload-text">Upload</div>
                 </div>
               </a-upload>
@@ -319,7 +326,6 @@
               <a-cascader
                 v-model="editList.address"
                 expand-trigger="hover"
-                :options="options"
                 style="width: 275.33px; margin-bottom: 24px"
                 placeholder="请选择地址，如“xx省xx市xx区”"
               ></a-cascader>
@@ -334,16 +340,10 @@
           </a-modal>
         </a-form>
         <!-- 编辑员工 -->
-        <a-form
-          :form="form"
-          :model="staff_info"
-          :label-col="labelCol"
-          :wrapper-col="wrapperCol"
-        >
+        <a-form :form="form" :model="staff_info" v-bind="formItemLayout">
           <a-modal
             v-model="visibles2"
             title="编辑员工"
-            :wrapper-col="wrapperCol"
             @ok="handlereDete"
             :destroyOnClose="true"
           >
@@ -359,7 +359,7 @@
               >
                 <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
                 <div v-else>
-                  <a-icon :type="loading ? 'loading' : 'plus'" />
+                  <a-icon type="plus" />
                   <div class="ant-upload-text">Upload</div>
                 </div>
               </a-upload>
@@ -561,7 +561,7 @@
 <script>
 import imgUrl1 from "../../../public/portrait/woman.jpg";
 import imgUrl2 from "../../../public/portrait/man.jpg";
-import { Modal } from "ant-design-vue";
+import { Modal, message } from "ant-design-vue";
 import Footer from "../../components/Footer/Footer";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -580,7 +580,6 @@ export default {
         title: "头像",
         dataIndex: "avatar",
         key: "avatar",
-        fixed: "left",
         width: 70,
         scopedSlots: { customRender: "pic" },
       },
@@ -588,8 +587,7 @@ export default {
         title: "姓名",
         dataIndex: "nm",
         key: "nm",
-        fixed: "left",
-        width: 70,
+        width: 90,
       },
       {
         title: "手机号码",
@@ -600,6 +598,9 @@ export default {
         title: "状态",
         dataIndex: "status",
         scopedSlots: { customRender: "status" },
+        sorter: (a, b) => {
+          return a.status > b.status ? 1 : -1;
+        },
       },
       {
         title: "性别",
@@ -622,14 +623,12 @@ export default {
         key: "is_leader",
       },
       {
-        title: "创建时间",
-        dataIndex: "created",
-        key: "created",
-      },
-      {
-        title: "更新时间",
+        title: "操作时间",
         dataIndex: "updated",
         key: "updated",
+        sorter: (a, b) => {
+          return a.updated > b.updated ? 1 : -1;
+        },
       },
       {
         title: "操作",
@@ -640,19 +639,21 @@ export default {
     ];
     return {
       // 参数
-      param: "",
+      param: this.$router.currentRoute.params.id.slice(4),
+      // 表格
       form: this.$form.createForm(this, { name: "coordinated" }),
-      labelCol: {
-        xs: { span: 12 },
-        sm: { span: 7 },
-      },
-      wrapperCol: {
-        xs: { span: 12 },
-        sm: { span: 14 },
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 8 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 12 },
+        },
       },
       visibles1: false,
       visibles2: false,
-      loading: false,
       value: "a",
       // 部门详情
       depart: "",
@@ -666,6 +667,7 @@ export default {
       dept_list: "",
       imgUrl: this.baseURL + "project/upload_file/",
       imageUrl: "",
+      // 数据长度
       listLenght: {
         trueLenght: "",
         falseLenght: "",
@@ -689,12 +691,10 @@ export default {
           role_id: "",
         },
       ],
-      // 跳转路径
-      viewUrl: "",
       // 分页
       pagination: {
         defaultPageSize: 20,
-        current: "2",
+        total: 0,
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
         size: "middle",
@@ -704,9 +704,6 @@ export default {
   },
   methods: {
     // 获取信息
-    parameter() {
-      this.param = this.$router.currentRoute.params.id.slice(4);
-    },
     getInfo(id, stat) {
       this.$api
         .get(this.baseURL + "dept/dept_detail/", {
@@ -721,10 +718,15 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.depart = result.dept_info;
-          this.empList = result.staff_list;
+          if (!result.staff_list) {
+            this.empList = "";
+          } else {
+            this.empList = result.staff_list;
+          }
           this.listLenght.trueLenght = result.count_num.active_num;
           this.listLenght.falseLenght = result.count_num.disabled_num;
           this.listLenght.allLenght = result.count_num.total_num;
+          this.pagination.total = result.pagination.total_items;
           for (let i = 0; i < this.empList.length; i++) {
             if (this.empList[i].avatar == null) {
               if (this.empList[i].sex == "女") {
@@ -732,9 +734,10 @@ export default {
               } else {
                 this.empList[i].avatar = imgUrl2;
               }
+            } else {
+              this.empList[i].avatar = this.baseURL + this.empList[i].avatar;
             }
           }
-          console.log(result);
         })
         .catch((err) => {
           console.log(err);
@@ -760,7 +763,6 @@ export default {
       e.preventDefault();
       this.form.validateFields((err) => {
         var qs = require("qs");
-        this.loading = true;
         if (!err) {
           this.$api
             .post(this.baseURL + "dept/new_mbr/", qs.stringify(this.editList), {
@@ -777,7 +779,6 @@ export default {
               console.log(err);
             });
           this.visibles1 = false;
-          this.loading = false;
           this.handlerInfo("t");
         }
       });
@@ -881,27 +882,27 @@ export default {
     // 文件上传
     handleChange(info) {
       if (info.file.status === "uploading") {
-        this.loading = true;
-        return;
+        message.error("上传失败");
       }
       if (info.file.status === "done") {
         let result = info.file.response.data;
         console.log(result);
         getBase64(info.file.originFileObj, (imageUrl) => {
           this.imageUrl = imageUrl;
-          this.loading = false;
+          message.success("上传成功");
         });
       }
     },
     beforeUpload(file) {
+      console.log(file.type);
       const isJpgOrPng =
         file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {
-        this.$message.error("You can only upload JPG file!");
+        message.error("You can only upload JPG file!");
       }
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
-        this.$message.error("Image must smaller than 2MB!");
+        message.error("Image must smaller than 2MB!");
       }
       return isJpgOrPng && isLt2M;
     },
@@ -933,12 +934,16 @@ export default {
     },
   },
   mounted() {
-    this.parameter();
     this.handlerTrue();
   },
 };
 </script>
 
+<style>
+.table-proj {
+  background: #fafafa;
+}
+</style>
 <style scoped>
 .header {
   width: 100%;

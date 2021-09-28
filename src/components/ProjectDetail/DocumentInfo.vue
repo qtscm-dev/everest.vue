@@ -4,13 +4,15 @@
       <a-row>
         <a-col :span="6">
           <a-form-item label="文件名称">
-            <a-input placeholder="请输入" />
+            <a-input placeholder="请输入" v-model="QueryForm.nm" />
           </a-form-item>
         </a-col>
       </a-row>
       <div class="top_button">
-        <a-button type="primary" style="margin-right: 8px">查询</a-button>
-        <a-button>重置</a-button>
+        <a-button type="primary" style="margin-right: 8px" @click="handlerQuery"
+          >查询</a-button
+        >
+        <a-button @click="handlerReset">重置</a-button>
       </div>
     </a-form>
     <div style="padding: 24px; background: #fff">
@@ -97,7 +99,6 @@ export default {
   name: "DocumentInfo",
   props: {
     proj_doculist: {},
-    pagination: {},
   },
   inject: ["reload"],
   data() {
@@ -133,6 +134,11 @@ export default {
       },
       proj_docu,
       param: this.$router.currentRoute.params.id.slice(4),
+      pagination: false,
+      // 查询
+      QueryForm: {
+        nm: "",
+      },
     };
   },
   methods: {
@@ -238,6 +244,32 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    // 查询
+    handlerQuery() {
+      console.log(this.QueryForm.nm);
+      this.$api
+        .get(this.baseURL + "project/proj_file", {
+          params: {
+            proj_id: this.param,
+            file_nm: this.QueryForm.nm,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          console.log(result);
+          this.proj_doculist = result.datarows;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 重置
+    handlerReset() {
+      this.reload();
     },
   },
 };

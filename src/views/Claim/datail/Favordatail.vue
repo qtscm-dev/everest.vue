@@ -76,15 +76,9 @@
       <div class="tatil">
         <span>收藏夹</span>
         <router-link :to="{ name: 'claimIndex' }">
-          <a-icon
-            type="arrow-left"
-            style="
-              width: 32px;
-              height: 32px;
-              margin-top: 24px;
-              float: right;
-              color: #1890ff;
-            "
+          <img
+            src="../../../../public/favor/revokeimg.png"
+            style="width: 24px; margin-top: 16px; float: right"
         /></router-link>
       </div>
       <div class="favortable">
@@ -244,13 +238,12 @@ export default {
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
         size: "middle",
-        total: "",
-        proj: "",
+        total: 0,
         onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
-        // onChange: (current, pageSize) => {
-        //   this.getProject(this.pagination.proj, current, pageSize);
-        // },
-        // showQuickJumper: (current, pageSize) => (this.pageSize = pageSize),
+        onChange: (current, pageSize) => {
+          this.getProject(current, pageSize);
+        },
+        showQuickJumper: true,
       },
     };
   },
@@ -266,9 +259,13 @@ export default {
       }
     },
     // 项目列表
-    getProject() {
+    getProject(page, perpage) {
       this.$api
         .get(this.baseURL + "claim/collect/", {
+          params: {
+            page: page,
+            perpage: perpage,
+          },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
@@ -276,6 +273,7 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.prolist = result.datarows;
+          this.pagination.total = result.pagination.total_items;
         })
         .catch((err) => {
           console.log(err);
@@ -339,12 +337,8 @@ export default {
       this.getProject();
     },
     // 详情
-    handlerDetails(id, sta) {
-      if (sta == 2100) {
-        this.$router.push("/index/claim/claimindex/favtodatail/:id=" + id);
-      } else {
-        this.$router.push("/index/claim/claimindex/todatail/:id=" + id);
-      }
+    handlerDetails(id) {
+      this.$router.push("/index/claim/claimindex/favtodatail/:id=" + id);
     },
   },
   mounted() {
@@ -383,13 +377,12 @@ export default {
   background: #fff;
 }
 .favor > .tatil {
-  height: 56px;
+  height: 32px;
   font-size: 16px;
   line-height: 56px;
   color: #000;
   padding: 0 24px;
   box-sizing: border-box;
-  border-bottom: 1px solid #e8e8e8;
 }
 .favortable {
   padding: 24px;

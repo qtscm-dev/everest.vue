@@ -32,7 +32,7 @@
           >恢复项目</a-button
         >
       </div>
-      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="1">
+      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="3">
         <a-tab-pane key="1" tab="概要信息">
           <ProjectBasicInfo
             :ProjectBasicInfo="projectBasicInfo"
@@ -49,10 +49,7 @@
           />
         </a-tab-pane>
         <a-tab-pane key="4" tab="项目文件">
-          <DocumentInfo
-            :proj_doculist="proj_doculist"
-            :pagination="pagination"
-          />
+          <DocumentInfo :proj_doculist="proj_doculist" />
         </a-tab-pane>
       </a-tabs>
       <Footer class="footent" />
@@ -98,12 +95,12 @@ export default {
         msg: "",
       },
       // 项目部门
-      prodepa: "",
+      prodepa: [],
       // 联系人列表
       contactsList: [],
       contact_typ: [],
       // 项目文件
-      proj_doculist: "",
+      proj_doculist: [],
       // 分页
       pagination: {
         defaultPageSize: 20,
@@ -333,7 +330,9 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
-          this.prodepa = result.datarows;
+          if (result.datarows) {
+            this.prodepa = result.datarows;
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -352,7 +351,9 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
-          this.contactsList = result.datarows;
+          if (result.datarows) {
+            this.contactsList = result.datarows;
+          }
           this.contact_typ = result.contact_typ;
         })
         .catch((err) => {
@@ -372,7 +373,9 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
-          this.proj_doculist = result.datarows;
+          if (result.datarows) {
+            this.proj_doculist = result.datarows;
+          }
           this.pagination.total = result.pagination.total_items;
         })
         .catch((err) => {

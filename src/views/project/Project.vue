@@ -110,7 +110,7 @@
           v-else-if="text == '1211'"
           slot="status"
           slot-scope="text"
-          status="success"
+          status="error"
           text="已中止"
         />
         <template slot="operation" slot-scope="text, record">
@@ -147,6 +147,9 @@ export default {
         title: "状态",
         dataIndex: "status",
         scopedSlots: { customRender: "status" },
+        sorter: (a, b) => {
+          return a.status > b.status ? 1 : -1;
+        },
       },
       {
         title: "建设单位",
@@ -184,16 +187,12 @@ export default {
         ellipsis: true,
       },
       {
-        title: "创建时间",
-        dataIndex: "created",
-        width: 150,
-        ellipsis: true,
-      },
-      {
-        title: "更新时间",
+        title: "操作时间",
         dataIndex: "updated",
         width: 150,
-        ellipsis: true,
+        sorter: (a, b) => {
+          return a.updated > b.updated ? 1 : -1;
+        },
       },
       {
         title: "操作",
@@ -237,6 +236,7 @@ export default {
       // 详情
       viewUrl: "",
       // 分页
+      currt: 1,
       pagination: {
         defaultPageSize: 20,
         showTotal: (total) => `共 ${total} 条数据`,
@@ -246,6 +246,8 @@ export default {
         proj: "",
         onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
         onChange: (current, pageSize) => {
+          this.currt = current;
+          console.log(this.currt);
           this.getProject(this.pagination.proj, current, pageSize);
         },
         showQuickJumper: true,
@@ -304,22 +306,22 @@ export default {
     },
     // 待立项
     projectList() {
-      this.getProject("1000");
+      this.getProject("1000", this.currt);
       this.statu = "1000";
     },
     // 已立项
     handlerApproved() {
-      this.getProject("2000");
+      this.getProject("2000", this.currt);
       this.statu = "2000";
     },
     // 已中止
     handlerWithdrawn() {
-      this.getProject("1211");
+      this.getProject("1211", this.currt);
       this.statu = "1211";
     },
     // 全部
     handlerAll() {
-      this.getProject("all");
+      this.getProject("all", this.currt);
       this.statu = "all";
     },
     // 项目列表
@@ -337,7 +339,11 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
-          this.projeList = result.datarows;
+          if (!result.datarows) {
+            this.projeList = "";
+          } else {
+            this.projeList = result.datarows;
+          }
           this.dataLength.listLength = result.count_num.not_approved_num;
           this.dataLength.approvedLength = result.count_num.approved_num;
           this.dataLength.withdrawnLength = result.count_num.revoke_num;
@@ -363,7 +369,7 @@ export default {
     handlerJump(id, status) {
       if (status == 1000) {
         this.$router.push("/index/project/project/toapppro/:id=" + id);
-      } else if (status == 2000) {
+      } else {
         this.$router.push("/index/project/project/apppro/:id=" + id);
       }
     },

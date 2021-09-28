@@ -254,6 +254,9 @@ export default {
         dataIndex: "updated",
         key: "updated",
         width: 180,
+        sorter: (a, b) => {
+          return a.updated > b.updated ? 1 : -1;
+        },
       },
       {
         title: "操作",
@@ -493,7 +496,7 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.departlist = result.datarows;
-          this.paginationOpt.total = result.pagination.total_items;
+          this.pagination.total = result.pagination.total_items;
         })
         .catch((err) => {
           console.log(err);
@@ -501,7 +504,6 @@ export default {
     },
     // 详情
     handlerInfo(id) {
-      console.log(id);
       this.$router.push("/index/department/dedetails/:id=" + id);
     },
   },

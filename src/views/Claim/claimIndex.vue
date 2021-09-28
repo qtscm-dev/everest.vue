@@ -92,6 +92,7 @@
           :rowClassName="
             (record, index) => (index % 2 === 1 ? 'table-proj' : null)
           "
+          @change="handlerSort"
         >
           <!-- 状态 -->
           <a-badge
@@ -132,6 +133,9 @@
 </template>
 
 <script>
+function handlerSort(pagination, filters, sorter) {
+  console.log("params", pagination, filters, sorter);
+}
 export default {
   name: "claimIndex",
   computed: {
@@ -145,11 +149,15 @@ export default {
         title: "项目",
         dataIndex: "code",
         width: 150,
+        ellipsis: true,
       },
       {
         title: "状态",
         dataIndex: "status",
         scopedSlots: { customRender: "status" },
+        sorter: (a, b) => {
+          return a.status > b.status ? 1 : -1;
+        },
       },
       {
         title: "建设单位",
@@ -191,6 +199,9 @@ export default {
         title: "操作时间",
         dataIndex: "updated",
         width: 150,
+        sorter: (a, b) => {
+          return a.updated > b.updated ? 1 : -1;
+        },
       },
       {
         title: "操作",
@@ -292,6 +303,9 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.prolist = result.datarows;
+          for (let i = 0; i < this.prolist.length; i++) {
+            this.prolist[i].wall_area = this.prolist[i].wall_area + "平方米";
+          }
           this.aleng = result.count_nm.unclaimed_num;
           this.bleng = result.count_nm.claimed_num;
           this.cleng = result.count_nm.revoke_num;
@@ -358,6 +372,7 @@ export default {
       this.projForm.proj_cycle = "";
       this.getProtable(this.statu);
     },
+    handlerSort,
   },
   mounted() {
     this.handlerUnclai();

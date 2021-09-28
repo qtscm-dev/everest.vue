@@ -50,7 +50,7 @@
             :status="status"
           />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="项目部门" class="hidess" :disabled="disabled">
+        <a-tab-pane key="2" tab="项目部门" class="hidess">
           <DepartInfo :prodepa="prodepa" />
         </a-tab-pane>
         <a-tab-pane key="3" tab="联系人">
@@ -93,12 +93,12 @@ export default {
         msg: "",
       },
       // 项目部门
-      prodepa: "",
+      prodepa: [],
       // 联系人
       contactsList: [],
       contact_typ: [],
       // 项目文件
-      proj_doculist: "",
+      proj_doculist: [],
     };
   },
   methods: {
@@ -236,16 +236,78 @@ export default {
     },
     // 项目部门
     handlerDepart() {
-      this.$api.get(this.baseURL + "", {
-        params: {},
-        headers: {},
-      });
+      this.$api
+        .get(this.baseURL + "project/proj_dept", {
+          params: {
+            proj_id: this.id,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          if (result.datarows) {
+            this.prodepa = result.datarows;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 联系人
+    getContacts() {
+      this.$api
+        .get(this.baseURL + "project/proj_contact", {
+          params: {
+            proj_id: this.id,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          if (result.datarows) {
+            this.contactsList = result.datarows;
+          }
+          this.contact_typ = result.contact_typ;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 项目文件
+    getProjdoculist() {
+      this.$api
+        .get(this.baseURL + "project/proj_file", {
+          params: {
+            proj_id: this.id,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          if (result.datarows) {
+            this.proj_doculist = result.datarows;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   mounted() {
     // 概要信息
     this.handlerBasic();
     // 项目部门
+    this.handlerDepart();
+    // 联系人
+    this.getContacts();
+    // 项目文件
+    this.getProjdoculist();
   },
 };
 </script>
