@@ -558,7 +558,7 @@ export default {
           },
           { validator: GloTips, trigger: "change" },
         ],
-        main_major_id: [
+        main_major_idss: [
           {
             required: true,
             message: "该项为必填项",
