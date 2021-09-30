@@ -12,32 +12,20 @@
       <div class="top">
         <div class="top-1">基本信息</div>
         <div class="top-2">
-          <a-row>
-            <a-col
-              style="margin-bottom: 12px; margin-top: 12px; color: #000"
-              :span="8"
-            >
-              部门名称：<span style="opacity: 0.7">{{ depart.nm }}</span>
-            </a-col>
-            <a-col
-              style="margin-bottom: 12px; margin-top: 12px; color: #000"
-              :span="8"
-            >
-              部门等级：<span style="opacity: 0.7">{{ depart.lvl }}</span>
-            </a-col>
-            <a-col
-              style="margin-bottom: 12px; margin-top: 12px; color: #000"
-              :span="8"
-            >
-              部门顺序：<span style="opacity: 0.7">{{ depart.o }}</span>
-            </a-col>
-            <a-col
-              style="margin-bottom: 12px; margin-top: 12px; color: #000"
-              :span="8"
-            >
-              上级部门：<span style="opacity: 0.7">{{ depart.pnm }}</span>
-            </a-col>
-          </a-row>
+          <a-descriptions :column="{ xs: 2, sm: 3, md: 4 }">
+            <a-descriptions-item label="部门名称">
+              {{ depart.nm }}
+            </a-descriptions-item>
+            <a-descriptions-item label="部门等级">
+              {{ depart.lvl }}
+            </a-descriptions-item>
+            <a-descriptions-item label="部门顺序">
+              {{ depart.o }}
+            </a-descriptions-item>
+            <a-descriptions-item label="上级部门">
+              {{ depart.pnm }}
+            </a-descriptions-item>
+          </a-descriptions>
         </div>
       </div>
       <div class="concent">
@@ -47,12 +35,7 @@
             >新增员工</a-button
           >
         </div>
-        <a-empty :style="{ display: empList == false ? 'block' : 'none' }" />
-        <a-radio-group
-          style="margin-bottom: 24px"
-          v-model="value"
-          :style="{ display: empList == false ? 'none' : 'block' }"
-        >
+        <a-radio-group style="margin-bottom: 24px" v-model="value">
           <a-radio-button
             value="a"
             @click="handlerTrue"
@@ -71,6 +54,19 @@
             全部&nbsp;&nbsp;{{ listLenght.allLenght }}
           </a-radio-button>
         </a-radio-group>
+        <a-empty
+          image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+          :image-style="{
+            height: '60px',
+          }"
+          :style="[
+            { display: empList == false ? 'block' : 'none' },
+            { margin: '24px' },
+          ]"
+        >
+          <span slot="description"> 暂无数据 </span>
+          <a-button type="primary" @click="handlerNewem"> 现在创建 </a-button>
+        </a-empty>
         <a-table
           :columns="columns"
           :data-source="empList"
@@ -968,25 +964,24 @@ export default {
   padding: 24px;
 }
 .conter .top {
-  width: 99.5%;
-  height: 196px;
+  height: auto;
   margin: 0 auto;
+  padding: 0;
   background: #fff;
 }
 .conter .top .top-1 {
   width: 100%;
-  height: 55px;
+  height: 57px;
+  padding-left: 24px;
   border-bottom: 1px solid #e8e8e8;
   line-height: 55px;
-  font-weight: bold;
-  padding-left: 24px;
   color: #000;
   font-size: 16px;
 }
 .conter .top .top-2 {
   width: 100%;
-  height: 140px;
   padding: 24px;
+  font-size: 14px;
 }
 .conter .concent {
   width: 99.5%;

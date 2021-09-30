@@ -193,12 +193,7 @@ export default {
         width: 250,
       },
       {
-        title: "创建时间",
-        dataIndex: "created",
-        width: 150,
-      },
-      {
-        title: "更新时间",
+        title: "操作时间",
         dataIndex: "updated",
         width: 150,
       },

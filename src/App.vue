@@ -54,4 +54,13 @@ export default {
 .ant-table-footer {
   background: #fff;
 }
+.ant-select-selection:hover {
+  cursor: pointer;
+}
+.ant-form-item-with-help {
+  height: 78.89px;
+}
+.ant-col-8 {
+  height: 102.9px;
+}
 </style>

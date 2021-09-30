@@ -9,16 +9,18 @@
         >
           <a-tabs default-active-key="1">
             <a-tab-pane key="1" tab="账号密码登录">
-              <a-form :form="form" class="user" :model="loginForm">
-                <a-form-item class="account" prop="username">
+              <a-form-model
+                :form="form"
+                class="user"
+                :rules="rules"
+                :model="loginForm"
+              >
+                <a-form-model-item class="account" prop="username">
                   <a-input
                     size="large"
                     placeholder="账号"
+                    prop="username"
                     v-model="loginForm.username"
-                    v-decorator="[
-                      'userName',
-                      { rules: [{ required: true, message: '该项不能为空' }] },
-                    ]"
                   >
                     <a-icon
                       slot="prefix"
@@ -26,17 +28,13 @@
                       style="color: rgba(0, 0, 0, 0.25)"
                     />
                   </a-input>
-                </a-form-item>
-                <a-form-item class="account" prop="password">
+                </a-form-model-item>
+                <a-form-model-item class="account" prop="password">
                   <a-input-password
                     size="large"
                     type="password"
                     placeholder="密码"
                     v-model="loginForm.password"
-                    v-decorator="[
-                      'password',
-                      { rules: [{ required: true, message: '该项不能为空' }] },
-                    ]"
                   >
                     <a-icon
                       slot="prefix"
@@ -44,19 +42,20 @@
                       style="color: rgba(0, 0, 0, 0.25)"
                     />
                   </a-input-password>
-                </a-form-item>
-                <a-form-item class="remenber">
+                </a-form-model-item>
+                <a-form-model-item class="remenber">
                   <a-checkbox class="remenber-1">自动登录</a-checkbox>
                   <a href="">忘记密码</a>
-                </a-form-item>
-              </a-form>
+                </a-form-model-item>
+              </a-form-model>
             </a-tab-pane>
             <a-tab-pane key="2" tab="手机号登录">
-              <a-form class="phone">
-                <a-form-item class="account">
+              <a-form-model class="phone">
+                <a-form-model-item class="account">
                   <a-input
                     size="large"
                     maxLength="11"
+                    minLength="11"
                     onkeyup="this.value=this.value.replace(/\D/g,'')"
                     placeholder="手机号"
                   >
@@ -66,8 +65,8 @@
                       style="color: rgba(0, 0, 0, 0.25)"
                     />
                   </a-input>
-                </a-form-item>
-                <a-form-item class="account">
+                </a-form-model-item>
+                <a-form-model-item class="account">
                   <a-input
                     size="large"
                     style="width: 70%; float: left"
@@ -80,9 +79,9 @@
                     />
                   </a-input>
                   <a-button type="primary" class="code">获取验证码</a-button>
-                </a-form-item>
+                </a-form-model-item>
                 <div class="remenber"></div>
-              </a-form>
+              </a-form-model>
             </a-tab-pane>
           </a-tabs>
           <div class="login-in">
@@ -121,6 +120,18 @@ export default {
       loginForm: {
         username: "",
         password: "",
+      },
+      rules: {
+        username: {
+          required: true,
+          message: "Please input Activity name",
+          trigger: "blur",
+        },
+        password: {
+          required: true,
+          message: "Please input Activity name",
+          trigger: "blur",
+        },
       },
       form: this.$form.createForm(this, { name: "coordinated" }),
     };

@@ -24,13 +24,24 @@
             </a-menu-item>
           </a-menu>
         </a-dropdown>
-        <a-button type="primary" @click="handlerNewpro">提交项目</a-button>
+        <a-button type="primary" @click="handlerNewpro('newproForm')"
+          >提交项目</a-button
+        >
       </div>
     </div>
-    <a-form-model :form="form" :newnewproForm="newproForm" class="concentor">
+    <a-form-model
+      ref="newproForm"
+      :rules="rules"
+      :model="newproForm"
+      class="concentor"
+    >
       <a-row>
         <a-col :span="8">
-          <a-form-model-item label="项目编号" style="position: relative">
+          <a-form-model-item
+            label="项目编号"
+            prop="code"
+            style="position: relative"
+          >
             <a-input
               style="width: 70%"
               v-model="newproForm.code"
@@ -50,49 +61,37 @@
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="项目名称">
+          <a-form-model-item label="项目名称" prop="nm">
             <a-input
               style="width: 70%"
-              v-decorator="[
-                newproForm.nm,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-model="newproForm.nm"
               placeholder="请输入"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="合同编号">
+          <a-form-model-item label="合同编号" prop="contract_no">
             <a-input
               style="width: 70%"
-              v-decorator="[
-                newproForm.contract_no,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-model="newproForm.contract_no"
               placeholder="请输入"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="流程编号">
+          <a-form-model-item label="流程编号" prop="proc_code">
             <a-input
               style="width: 70%"
-              v-decorator="[
-                newproForm.proc_code,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-model="newproForm.proc_code"
               placeholder="请输入"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="项目类型">
+          <a-form-model-item label="项目类型" prop="proj_type_id">
             <a-select
               style="width: 70%"
-              v-decorator="[
-                newproForm.proj_type_id,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-model="newproForm.proj_type_id"
               placeholder="请选择"
             >
               <a-select-option
@@ -106,92 +105,74 @@
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="建设单位">
+          <a-form-model-item label="建设单位" prop="build_unit">
             <a-input
               style="width: 70%"
-              v-decorator="[
-                newproForm.build_unit,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-model="newproForm.build_unit"
               placeholder="请输入"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="建筑面积">
+          <a-form-model-item label="建筑面积" prop="build_area">
             <a-input
               style="width: 70%"
+              v-model="newproForm.build_area"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
-              v-decorator="[
-                newproForm.build_area,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
               placeholder="请输入"
               suffix="平米"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="幕墙面积">
+          <a-form-model-item label="幕墙面积" prop="wall_area">
             <a-input
               style="width: 70%"
+              v-model="newproForm.wall_area"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
-              v-decorator="[
-                newproForm.wall_area,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
               placeholder="请输入"
               suffix="平米"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="门窗面积">
+          <a-form-model-item label="门窗面积" prop="dw_area">
             <a-input
               style="width: 70%"
+              v-model="newproForm.dw_area"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
-              v-decorator="[
-                newproForm.dw_area,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
               placeholder="请输入"
               suffix="平米"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="建筑高度">
+          <a-form-model-item label="建筑高度" prop="build_height">
             <a-input
               style="width: 70%"
+              v-model="newproForm.build_height"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
-              v-decorator="[
-                newproForm.build_height,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
               placeholder="请输入"
               suffix="米"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="幕墙高度">
+          <a-form-model-item label="幕墙高度" prop="wall_height">
             <a-input
               style="width: 70%"
+              v-model="newproForm.wall_height"
               onkeyup="this.value=this.value.replace(/\D/g,'')"
-              v-decorator="[
-                newproForm.wall_height,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
               placeholder="请输入"
               suffix="米"
             ></a-input>
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="项目周期">
+          <a-form-model-item label="项目周期" prop="proj_cycle">
             <a-range-picker
               style="width: 70%"
-              v-decorator="[newproForm.proj_cycle, rangeConfig]"
+              v-model="newproForm.proj_cycle"
               @change="onChange"
             >
               <a-icon slot="suffixIcon" type="calendar" />
@@ -199,16 +180,51 @@
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="建筑类型">
+          <a-form-model-item label="建筑类型" prop="build_type_id">
             <a-select
               mode="multiple"
+              class="sele"
               style="width: 70%"
+              v-model="newproForm.build_type_id"
+              :showArrow="true"
               placeholder="请选择(可多选)"
-              v-decorator="[
-                newproForm.build_type_id,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
             >
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e) => e.preventDefault()"
+                  @click="addItem"
+                >
+                  <a-icon type="plus" /> 添加数据
+                </div>
+                <a-modal
+                  v-model="visibl"
+                  title="添加数据"
+                  :allowClear="true"
+                  :destroyOnClose="true"
+                  on-ok="handleOk"
+                >
+                  <template slot="footer">
+                    <a-button key="back" @click="handlerAddClear">
+                      取消
+                    </a-button>
+                    <a-button
+                      key="submit"
+                      type="primary"
+                      @click="handlerAddNum"
+                    >
+                      确定
+                    </a-button>
+                  </template>
+                  <a-input
+                    v-model="lbl"
+                    placeholder="请输入"
+                    style="margin: 24px auto"
+                  />
+                </a-modal>
+              </div>
               <a-select-option
                 v-for="builds in build_typeForm"
                 :key="builds.id"
@@ -219,16 +235,49 @@
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="设计类型">
+          <a-form-model-item label="设计类型" prop="design_type_id">
             <a-select
               mode="multiple"
               style="width: 70%"
               placeholder="请选择(可多选)"
-              v-decorator="[
-                newproForm.design_type_id,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-model="newproForm.design_type_id"
             >
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e) => e.preventDefault()"
+                  @click="addItem"
+                >
+                  <a-icon type="plus" /> 添加数据
+                </div>
+                <a-modal
+                  v-model="visibl"
+                  title="添加数据"
+                  :allowClear="true"
+                  :destroyOnClose="true"
+                  on-ok="handleOk"
+                >
+                  <template slot="footer">
+                    <a-button key="back" @click="handlerAddClear">
+                      取消
+                    </a-button>
+                    <a-button
+                      key="submit"
+                      type="primary"
+                      @click="handlerAddNum"
+                    >
+                      确定
+                    </a-button>
+                  </template>
+                  <a-input
+                    v-model="lbl"
+                    placeholder="请输入"
+                    style="margin: 24px auto"
+                  />
+                </a-modal>
+              </div>
               <a-select-option v-for="works in work_typeForm" :key="works.id">
                 {{ works.lbl }}
               </a-select-option>
@@ -236,14 +285,11 @@
           </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-model-item label="主设专业">
+          <a-form-model-item label="主设专业" prop="main_major_id">
             <a-select
               style="width: 70%"
               placeholder="请选择"
-              v-decorator="[
-                newproForm.main_major_id,
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
+              v-model="newproForm.main_major_id"
             >
               <a-select-option
                 v-for="(works, i) in work_typeForm"
@@ -256,7 +302,7 @@
           </a-form-model-item>
         </a-col>
         <a-col :span="24">
-          <a-form-model-item label="建设地点">
+          <a-form-model-item label="建设地点" prop="build_addr">
             <a-input-group>
               <a-cascader
                 style="width: 23.5%; margin-right: 15px; float: left"
@@ -264,13 +310,7 @@
                 expand-trigger="hover"
                 placeholder="请选择"
                 v-model="newproForm.build_addr[0]"
-                v-decorator="[
-                  '建设',
-                  {
-                    initialValue: [options],
-                    rules: [{ required: true, message: '该项为必填项' }],
-                  },
-                ]"
+                labelInValue="true"
               />
               <a-input
                 style="width: 65.5%"
@@ -294,22 +334,9 @@
               v-for="(item, i) in plus"
               :key="i"
               :label="i === 0 ? '竞争单位' : ''"
+              prop="competitor"
             >
-              <a-input
-                placeholder="请输入"
-                v-decorator="[
-                  newproForm.competitor[i],
-                  {
-                    rules: [
-                      {
-                        required: true,
-                        whitespace: true,
-                        message: '该项为必填项',
-                      },
-                    ],
-                  },
-                ]"
-              />
+              <a-input placeholder="请输入" v-model="newproForm.competitor" />
             </a-form-model-item>
             <div style="position: absolute; top: 39px; left: 45%">
               <a-icon
@@ -338,41 +365,19 @@
           </div>
         </a-col>
         <a-col :span="24">
-          <a-form-model-item label="设计报价">
+          <a-form-model-item label="设计报价" prop="quote">
             <a-input-group>
               <a-input
                 style="width: 23.5%; margin-right: 15px"
                 placeholder="请输入"
-                v-decorator="[
-                  newproForm.quote.nm,
-                  {
-                    rules: [
-                      {
-                        required: true,
-                        whitespace: true,
-                        message: '该项为必填项',
-                      },
-                    ],
-                  },
-                ]"
+                v-model="newproForm.quote.nm"
               />
               <a-input
                 style="width: 20.5%"
                 addon-before="￥"
                 suffix="RMB"
                 placeholder="0"
-                v-decorator="[
-                  newproForm.quote.rmb,
-                  {
-                    rules: [
-                      {
-                        required: true,
-                        whitespace: true,
-                        message: '该项为必填项',
-                      },
-                    ],
-                  },
-                ]"
+                v-model="newproForm.quote.rmb"
               />
             </a-input-group>
           </a-form-model-item>
@@ -411,17 +416,172 @@
 </template>
 
 <script>
-import { Modal } from "ant-design-vue";
+import { Modal, message } from "ant-design-vue";
 import options from "../../address/add";
 import Footer from "../../components/Footer/Footer";
 export default {
   name: "newproject",
-  components: { Footer },
+  components: {
+    Footer,
+    VNodes: {
+      functional: true,
+      render: (h, ctx) => ctx.props.vnodes,
+    },
+  },
   data() {
+    let GloTips = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("该项不能为空"));
+      } else {
+        callback();
+      }
+    };
     return {
-      form: this.$form.createForm(this, { name: "coordinated" }),
-      rangeConfig: {
-        rules: [{ type: "array", required: true, message: "该项为必填项" }],
+      rules: {
+        code: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "blur",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        proj_cycle: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        nm: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        contract_no: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        proc_code: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        proj_type_id: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_unit: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        competitor: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_area: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        wall_area: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        dw_area: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_height: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        wall_height: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_type_id: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        design_type_id: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        main_major_id: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_addr: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        quote: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
       },
       // 项目类型
       project_typeFrom: [],
@@ -461,6 +621,11 @@ export default {
       ],
       // 建设地点
       options: options,
+      // 新增建筑类型
+      visibl: false,
+      pid: "",
+      lbl: "",
+      lbl_nm: [],
     };
   },
   methods: {
@@ -566,39 +731,37 @@ export default {
           this.project_typeFrom = result.project_type;
           this.build_typeForm = result.build_type;
           this.work_typeForm = result.work_type;
+          for (let i = 0; i < this.build_typeForm.length; i++) {
+            this.pid = this.build_typeForm[i].pid;
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
     // 提交项目
-    handlerNewpro(e) {
-      e.preventDefault();
-      console.log(this.form);
-      // console.log(this.form.setFieldsValue);
-      console.log(this.newproForm);
-      console.log(this.newproForm.build_addr);
-      // this.form.validateFields((err) => {
-      //   if (!err) {
-      //     var qs = require("qs");
-      //     this.$api
-      //       .post(
-      //         this.baseURL + "project/new_project/",
-      //         qs.stringify(this.newproForm),
-      //         {
-      //           headers: {
-      //             Authorization: localStorage.getItem("Authorization"),
-      //           },
-      //         }
-      //       )
-      //       .then((res) => {
-      //         console.log(res);
-      //       })
-      //       .catch((err) => {
-      //         console.log(err);
-      //       });
-      //   }
-      // });
+    handlerNewpro(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          var qs = require("qs");
+          this.$api
+            .post(
+              this.baseURL + "project/new_project/",
+              qs.stringify(this.newproForm),
+              {
+                headers: {
+                  Authorization: localStorage.getItem("Authorization"),
+                },
+              }
+            )
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
     },
     //项目周期
     onChange(date, dateString) {
@@ -638,6 +801,41 @@ export default {
           console.log(err);
         });
     },
+    // 新增增建筑类型
+    addItem() {
+      this.visibl = true;
+    },
+    handlerAddNum() {
+      var qs = require("qs");
+      let params = {
+        lbl: this.lbl,
+        pid: this.pid,
+      };
+      this.$api
+        .post(this.baseURL + "project/new_csd/", qs.stringify(params), {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          if (res.data.code) {
+            message.success("数据添加成功");
+            this.lbl = "";
+            this.newproForm.build_type_id.push(res.data.data.data.n_id);
+            this.getProject();
+          } else {
+            message.error(res.data.data.errmsg);
+          }
+          this.visibl = false;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    handlerAddClear() {
+      this.lbl = "";
+      this.visibl = false;
+    },
   },
   mounted() {
     this.getProject();
@@ -646,6 +844,9 @@ export default {
 </script>
 
 <style scoped>
+.sele:hover {
+  cursor: pointer;
+}
 .header {
   width: 100%;
   height: 90px;

@@ -45,7 +45,13 @@
           <div class="tabs-item-content">
             <div style="height: 32px; line-height: 32px; margin-bottom: 24px">
               <span>部门列表</span>
-              <a-button style="float: right" type="primary" @click="handlerNew"
+              <a-button
+                :style="[
+                  { display: departlist == false ? 'none' : 'block' },
+                  { float: 'right' },
+                ]"
+                type="primary"
+                @click="handlerNew"
                 >新增部门</a-button
               >
             </div>
@@ -57,11 +63,8 @@
               :style="{ display: departlist == false ? 'block' : 'none' }"
             >
               <span slot="description"> 暂无数据 </span>
-              <a-button type="primary"> 现在创建 </a-button>
+              <a-button type="primary" @click="handlerNew"> 现在创建 </a-button>
             </a-empty>
-            <!-- <a-empty
-              
-            /> -->
             <a-table
               :columns="columns"
               :data-source="departlist"

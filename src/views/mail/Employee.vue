@@ -67,86 +67,101 @@
               "
             >
               <span>员工列表</span>
-              <a-button style="float: right" type="primary" @click="handlerNew"
+              <a-button
+                :style="[
+                  { display: employlist == false ? 'none' : 'block' },
+                  { float: 'right' },
+                ]"
+                type="primary"
+                @click="handlerNew"
                 >新增员工</a-button
               >
             </div>
-            <a-empty
-              :style="{ display: employlist == false ? 'block' : 'none' }"
-            />
-            <div :style="{ display: employlist == false ? 'none' : 'block' }">
-              <a-radio-group style="margin-bottom: 24px" v-model="value">
-                <a-radio-button
-                  value="a"
-                  @click="handlerTrue"
-                  style="width: 146px; font-size: 14px; text-align: center"
-                >
-                  已激活&nbsp;&nbsp;{{ listLenght.trueLenght }}
-                </a-radio-button>
-                <a-radio-button
-                  value="b"
-                  @click="handlerFalse"
-                  style="width: 146px; font-size: 14px; text-align: center"
-                >
-                  已禁用&nbsp;&nbsp;{{ listLenght.falseLenght }}
-                </a-radio-button>
-                <a-radio-button
-                  value="c"
-                  @click="handlerAll"
-                  style="width: 146px; font-size: 14px; text-align: center"
-                >
-                  全部&nbsp;&nbsp;{{ listLenght.allLenght }}
-                </a-radio-button>
-              </a-radio-group>
-              <a-table
-                :columns="columns"
-                :data-source="employlist"
-                :scroll="{ x: 1500 }"
-                :pagination="pagination"
-                size="middle"
-                :rowKey="(record) => record.id"
-                :rowClassName="
-                  (record, index) => (index % 2 === 1 ? 'table-emplo' : null)
-                "
+            <a-radio-group style="margin-bottom: 24px" v-model="value">
+              <a-radio-button
+                value="a"
+                @click="handlerAll"
+                style="width: 146px; font-size: 14px; text-align: center"
               >
-                <!-- 头像 -->
-                <span slot="pic" slot-scope="text, record">
-                  <a-avatar :src="record.avatar" />
-                </span>
-                <!-- 状态 -->
-                <a-badge
-                  v-if="text == '已激活'"
-                  slot="status"
-                  slot-scope="text"
-                  status="success"
-                  text="已激活"
-                />
-                <a-badge
-                  v-else-if="text == '已禁用'"
-                  slot="status"
-                  slot-scope="text"
-                  status="error"
-                  text="已禁用"
-                />
-                <!-- 操作 -->
-                <template slot="operation" slot-scope="text, record">
-                  <a @click="() => handlerEmpl(record.id)">详情</a>
-                  <a-divider type="vertical" />
-                  <a @click="() => handlerEdit(record.id)"> 编辑 </a>
-                  <a-divider type="vertical" />
-                  <a-popconfirm
-                    title="请确认是否要删除该员工？"
-                    ok-text="确定"
-                    cancel-text="取消"
-                    @confirm="() => handlerDelete(record.id)"
-                  >
-                    <a class="ant-dropdown-link"> 删除</a>
-                  </a-popconfirm>
-                  <a-divider type="vertical" />
-                  <a class="ant-dropdown-link"> 重置</a>
-                </template>
-              </a-table>
-            </div>
+                全部&nbsp;&nbsp;{{ listLenght.allLenght }}
+              </a-radio-button>
+              <a-radio-button
+                value="b"
+                @click="handlerTrue"
+                style="width: 146px; font-size: 14px; text-align: center"
+              >
+                已激活&nbsp;&nbsp;{{ listLenght.trueLenght }}
+              </a-radio-button>
+              <a-radio-button
+                value="c"
+                @click="handlerFalse"
+                style="width: 146px; font-size: 14px; text-align: center"
+              >
+                已禁用&nbsp;&nbsp;{{ listLenght.falseLenght }}
+              </a-radio-button>
+            </a-radio-group>
+            <a-empty
+              image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+              :image-style="{
+                height: '60px',
+              }"
+              :style="[
+                { display: employlist == false ? 'block' : 'none' },
+                { margin: '24px' },
+              ]"
+            >
+              <span slot="description"> 暂无数据 </span>
+              <a-button type="primary" @click="handlerNew"> 现在创建 </a-button>
+            </a-empty>
+            <a-table
+              :columns="columns"
+              :data-source="employlist"
+              :scroll="{ x: 1500 }"
+              :pagination="pagination"
+              size="middle"
+              :rowKey="(record) => record.id"
+              :rowClassName="
+                (record, index) => (index % 2 === 1 ? 'table-emplo' : null)
+              "
+              :style="{ display: employlist == false ? 'none' : 'block' }"
+            >
+              <!-- 头像 -->
+              <span slot="pic" slot-scope="text, record">
+                <a-avatar :src="record.avatar" />
+              </span>
+              <!-- 状态 -->
+              <a-badge
+                v-if="text == '已激活'"
+                slot="status"
+                slot-scope="text"
+                status="success"
+                text="已激活"
+              />
+              <a-badge
+                v-else-if="text == '已禁用'"
+                slot="status"
+                slot-scope="text"
+                status="error"
+                text="已禁用"
+              />
+              <!-- 操作 -->
+              <template slot="operation" slot-scope="text, record">
+                <a @click="() => handlerEmpl(record.id)">详情</a>
+                <a-divider type="vertical" />
+                <a @click="() => handlerEdit(record.id)"> 编辑 </a>
+                <a-divider type="vertical" />
+                <a-popconfirm
+                  title="请确认是否要删除该员工？"
+                  ok-text="确定"
+                  cancel-text="取消"
+                  @confirm="() => handlerDelete(record.id)"
+                >
+                  <a class="ant-dropdown-link"> 删除</a>
+                </a-popconfirm>
+                <a-divider type="vertical" />
+                <a class="ant-dropdown-link"> 重置</a>
+              </template>
+            </a-table>
           </div>
         </a-tab-pane>
       </a-tabs>
@@ -165,224 +180,7 @@
         :job_list="job_list"
         :role_list="role_list"
         :visibles2="visibles2"
-        :id="id"
       />
-      <!-- <a-form :form="form" :model="editList" v-bind="formItemLayout">
-        <a-modal
-          v-model="visibles2"
-          title="编辑员工"
-          @ok="handlereDete"
-          :destroyOnClose="true"
-        >
-          <a-form-item label="上传图像：">
-            <a-upload
-              name="avatar"
-              list-type="picture-card"
-              class="avatar-uploader"
-              :show-upload-list="false"
-              :action="imgUrl"
-              :headers="headers"
-              :before-upload="beforeUpload"
-              @change="handleChange"
-            >
-              <img
-                style="width: 128px; height: 128px"
-                v-if="imageUrl"
-                :src="imageUrl"
-                alt="avatar"
-              />
-              <div v-else>
-                <a-icon type="plus" />
-                <div class="ant-upload-text">Upload</div>
-              </div>
-            </a-upload>
-          </a-form-item>
-          <a-form-item label="姓名">
-            <a-input
-              :initialValue="staff_info.nm"
-              :defaultValue="staff_info.nm"
-              v-model="staff_list.nm"
-              placeholder="请输入"
-              v-decorator="[
-                '姓名',
-                {
-                  rules: [{ required: true, message: '该项为必填项' }],
-                },
-              ]"
-            ></a-input>
-          </a-form-item>
-          <a-form-item label="手机号码">
-            <a-input
-              :initialValue="staff_info.mob"
-              :defaultValue="staff_info.mob"
-              v-model="staff_list.mob"
-              onkeyup="this.value=this.value.replace(/\D/g,'')"
-              placeholder="请输入"
-              v-decorator="[
-                '手机号码',
-                {
-                  rules: [{ required: true, message: '该项为必填项' }],
-                },
-              ]"
-            ></a-input>
-          </a-form-item>
-          <a-form-item label="账号">
-            <a-input
-              :initialValue="staff_info.login_nm"
-              :defaultValue="staff_info.login_nm"
-              v-model="staff_list.login_nm"
-              onkeyup="this.value=this.value.replace(/\D/g,'')"
-              placeholder="请输入"
-              v-decorator="[
-                '账号',
-                {
-                  rules: [{ required: true, message: '该项为必填项' }],
-                },
-              ]"
-            ></a-input>
-          </a-form-item>
-          <a-form-item label="角色">
-            <a-select
-              :initialValue="staff_info.role_id"
-              :defaultValue="staff_info.role_id"
-              v-model="staff_list.role_id"
-              style="width: 275.33px"
-              placeholder="请选择"
-              v-decorator="[
-                '角色',
-                {
-                  rules: [{ required: true, message: '该项为必填项' }],
-                },
-              ]"
-            >
-              <a-select-option
-                v-for="(roles, i) in role_list"
-                :key="i"
-                :value="roles.id"
-              >
-                {{ roles.lbl }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label="性别">
-            <a-select
-              v-model="staff_list.gender"
-              style="width: 275.33px"
-              placeholder="请选择"
-              v-decorator="[
-                '性别',
-                {
-                  rules: [{ required: true, message: '该项为必填项' }],
-                },
-              ]"
-            >
-              <a-select-option value="1"> 男 </a-select-option>
-              <a-select-option value="0"> 女 </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label="职位">
-            <a-select
-              v-model="staff_list.job_id"
-              style="width: 275.33px"
-              placeholder="请选择"
-              v-decorator="[
-                '职位',
-                {
-                  rules: [{ required: true, message: '该项为必填项' }],
-                },
-              ]"
-            >
-              <a-select-option
-                v-for="(jobs, i) in job_list"
-                :key="i"
-                :value="jobs.id"
-              >
-                {{ jobs.un }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label="部门">
-            <a-select
-              v-model="staff_list.dept_id"
-              style="width: 275.33px"
-              placeholder="请选择"
-              v-decorator="[
-                '部门',
-                {
-                  rules: [{ required: true, message: '该项为必填项' }],
-                },
-              ]"
-            >
-              <a-select-option
-                v-for="(depts, i) in dept_list"
-                :key="i"
-                :value="depts.id"
-              >
-                {{ depts.nm }}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label="是否领导">
-            <a-select
-              :initialValue="staff_info.is_leader"
-              :defaultValue="staff_info.is_leader"
-              v-model="staff_list.is_leader"
-              style="width: 275.33px"
-              placeholder="请选择"
-              v-decorator="[
-                '是否领导',
-                {
-                  rules: [{ required: true, message: '该项为必填项' }],
-                },
-              ]"
-            >
-              <a-select-option value="true"> 是 </a-select-option>
-              <a-select-option value="false"> 否 </a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label="电话号码">
-            <a-input-group
-              :initialValue="staff_info.phone"
-              :defaultValue="staff_info.phone"
-              v-model="staff_list.phone"
-            >
-              <a-row :gutter="8">
-                <a-col :span="8">
-                  <a-input placeholder="     +86" />
-                </a-col>
-                <a-col :span="16">
-                  <a-input />
-                </a-col>
-              </a-row>
-            </a-input-group>
-          </a-form-item>
-          <a-form-item label="邮箱">
-            <a-input
-              :initialValue="staff_info.email"
-              :defaultValue="staff_info.email"
-              v-model="staff_list.email"
-              placeholder="请输入"
-            ></a-input>
-          </a-form-item>
-          <a-form-item label="地址">
-            <a-cascader
-              :initialValue="staff_info.address"
-              :defaultValue="staff_info.address"
-              v-model="staff_list.address"
-              expand-trigger="hover"
-              style="width: 275.33px; margin-bottom: 24px"
-              placeholder="请选择地址，如“xx省xx市xx区”"
-            ></a-cascader>
-            <a-input placeholder="请输入具体地址，如“xx街道xx小区”"></a-input>
-          </a-form-item>
-          <a-form-item label="状态">
-            <a-radio-group v-model="staff_list.active" name="radioGroup">
-              <a-radio :value="true"> 已激活 </a-radio>
-              <a-radio :value="false"> 已禁用 </a-radio>
-            </a-radio-group>
-          </a-form-item>
-        </a-modal>
-      </a-form> -->
       <Footer />
     </div>
   </div>
@@ -494,9 +292,9 @@ export default {
       columns,
       employlist: [],
       listLenght: {
-        trueLenght: "",
-        falseLenght: "",
-        allLenght: "",
+        trueLenght: 0,
+        falseLenght: 0,
+        allLenght: 0,
       },
       // 状态默认
       value: "a",
@@ -607,7 +405,7 @@ export default {
     handlerReset() {
       this.queryForm.nm = "";
       this.queryForm.dept_nm = "";
-      this.handlerTrue(this.statu);
+      this.handlerInfo(this.statu);
     },
     // 文件上传
     handleChange(info) {
@@ -667,9 +465,11 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.employlist = result.datarows;
-          this.listLenght.trueLenght = result.count_num.active_num;
-          this.listLenght.falseLenght = result.count_num.disabled_num;
-          this.listLenght.allLenght = result.count_num.total_num;
+          if (this.employlist != false) {
+            this.listLenght.trueLenght = result.count_num.active_num;
+            this.listLenght.falseLenght = result.count_num.disabled_num;
+            this.listLenght.allLenght = result.count_num.total_num;
+          }
           this.pagination.total = result.pagination.total_items;
           this.pagination.proj = stat;
           for (let i = 0; i < this.employlist.length; i++) {
@@ -773,7 +573,7 @@ export default {
     },
   },
   mounted() {
-    this.handlerTrue();
+    this.handlerAll();
     this.handlerIn();
   },
 };

@@ -67,17 +67,17 @@
         v-model="value"
         :style="{ display: projeList == false ? 'none' : 'block' }"
       >
-        <a-radio-button class="radio-but" value="a" @click="projectList">
+        <a-radio-button class="radio-but" value="a" @click="handlerAll">
+          全部&nbsp;&nbsp;&nbsp;{{ dataLength.allLength }}
+        </a-radio-button>
+        <a-radio-button class="radio-but" value="b" @click="projectList">
           待立项&nbsp;&nbsp;&nbsp;{{ dataLength.listLength }}
         </a-radio-button>
-        <a-radio-button class="radio-but" value="b" @click="handlerApproved">
+        <a-radio-button class="radio-but" value="c" @click="handlerApproved">
           已立项&nbsp;&nbsp;&nbsp;{{ dataLength.approvedLength }}
         </a-radio-button>
-        <a-radio-button class="radio-but" value="c" @click="handlerWithdrawn">
+        <a-radio-button class="radio-but" value="d" @click="handlerWithdrawn">
           已中止&nbsp;&nbsp;&nbsp;{{ dataLength.withdrawnLength }}
-        </a-radio-button>
-        <a-radio-button class="radio-but" value="d" @click="handlerAll">
-          全部&nbsp;&nbsp;&nbsp;{{ dataLength.allLength }}
         </a-radio-button>
       </a-radio-group>
       <a-table
@@ -298,7 +298,7 @@ export default {
       this.conditionForm.proj_cycle = [];
       this.conditionForm.search = "";
       this.conditionForm.client_nm = "";
-      this.projectList(this.statu);
+      this.getProject(this.statu);
     },
     // 新建项目
     handlerNewpro() {
@@ -375,7 +375,7 @@ export default {
     },
   },
   mounted() {
-    this.projectList();
+    this.handlerAll();
   },
 };
 </script>
