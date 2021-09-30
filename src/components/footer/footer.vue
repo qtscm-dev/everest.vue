@@ -19,10 +19,11 @@ export default {
 
 <style>
 .footer {
-  height: 60px;
-  line-height: 60px;
+  height: 170px;
+  padding: 48px 24px;
+  box-sizing: border-box;
+  line-height: 170px;
   text-align: center;
   font-size: 14px;
-  margin-top: 20px;
 }
 </style>

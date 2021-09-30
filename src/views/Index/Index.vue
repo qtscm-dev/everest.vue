@@ -32,9 +32,31 @@
         />
         <div class="icon">
           <a-icon class="icon-1" type="search" />
+          <a-icon class="icon-1" type="question-circle" />
           <a-icon class="icon-1" type="bell" />
-          <a-avatar :src="imgSrc" alt="" />
-          <span>{{ loginname }}</span>
+          <a-dropdown placement="bottomRight">
+            <div class="icon_log">
+              <a-avatar class="icpn_ava" :src="imgSrc" alt="" />{{ loginname }}
+            </div>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <router-link :to="{ name: 'index' }">
+                  <a-icon type="home" />&nbsp;&nbsp;个人主页
+                </router-link>
+              </a-menu-item>
+              <a-menu-item>
+                <router-link :to="{ name: 'index' }">
+                  <a-icon type="tool" />&nbsp;&nbsp;修改密码
+                </router-link>
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item>
+                <router-link :to="{ name: 'index' }">
+                  <a-icon type="logout" />&nbsp;&nbsp;退出登录
+                </router-link>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </div>
       </a-layout-header>
       <!-- 主体 -->
@@ -98,9 +120,25 @@ export default {
 .icon {
   width: auto;
   float: right;
+  font-size: 14px;
   text-align: center;
 }
+.icon_log {
+  width: 100px;
+  height: 60px;
+  float: right;
+}
+.icon_log:hover {
+  cursor: pointer;
+  background: #fafafa;
+}
 .icon-1 {
+  margin-right: 24px;
+}
+.icon-1:hover {
+  cursor: pointer;
+}
+.icpn_ava {
   margin-right: 8px;
 }
 .icon > img {
@@ -108,9 +146,6 @@ export default {
   height: 25px;
   border-radius: 50%;
   margin-right: 8px;
-}
-.icon span {
-  font-size: 14px;
 }
 .logo img {
   width: 32px;
@@ -124,6 +159,7 @@ export default {
 }
 .logo {
   width: 100%;
+  height: 60px;
   padding: 18px 24px;
   box-sizing: border-box;
 }

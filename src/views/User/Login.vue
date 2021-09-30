@@ -4,9 +4,11 @@
       <div class="appdiv">
         <h1>中南幕墙数字化中台</h1>
         <h5>效率就是生产力</h5>
-        <div>
+        <div
+          style="padding: 0 48px; box-sizing: border-box; text-align: center"
+        >
           <a-tabs default-active-key="1">
-            <a-tab-pane style="border-bottom: 0" key="1" tab="账号密码登录">
+            <a-tab-pane key="1" tab="账号密码登录">
               <a-form :form="form" class="user" :model="loginForm">
                 <a-form-item class="account" prop="username">
                   <a-input
@@ -49,7 +51,7 @@
                 </a-form-item>
               </a-form>
             </a-tab-pane>
-            <a-tab-pane style="border-bottom: 0" key="2" tab="手机号登录">
+            <a-tab-pane key="2" tab="手机号登录">
               <a-form class="phone">
                 <a-form-item class="account">
                   <a-input
@@ -83,8 +85,11 @@
               </a-form>
             </a-tab-pane>
           </a-tabs>
-          <div>
-            <a-button class="login-in" type="primary" @click="loginFun"
+          <div class="login-in">
+            <a-button
+              style="width: 100%; height: 100%"
+              type="primary"
+              @click="loginFun"
               >登录</a-button
             >
           </div>
@@ -120,19 +125,23 @@ export default {
       form: this.$form.createForm(this, { name: "coordinated" }),
     };
   },
+  created() {
+    let that = this;
+    document.onkeydown = function () {
+      let e = window.event;
+      if (e.keyCode == 13) {
+        that.loginFun();
+      }
+    };
+  },
   methods: {
     // 登录
-    loginFun(e) {
-      e.preventDefault();
+    loginFun() {
       this.form.validateFields((err) => {
         if (!err) {
           var qs = require("qs");
-          let param = {
-            username: this.loginForm.username,
-            password: this.loginForm.password,
-          };
           this.$api
-            .post(this.baseURL + "auth/login", qs.stringify(param))
+            .post(this.baseURL + "auth/login", qs.stringify(this.loginForm))
             .then((res) => {
               let result = res.data;
               if (res.data.code == true) {
@@ -141,24 +150,18 @@ export default {
                   "Authorization",
                   "Bearer " + res.data.data.token
                 );
-                localStorage.setItem("username", this.loginForm.username);
-                localStorage.setItem("password", this.loginForm.password);
+                // localStorage.setItem("username", this.loginForm.username);
+                // localStorage.setItem("password", this.loginForm.password);
                 this.$router.push({ name: "index" });
               } else if (res.data.code == false) {
                 message.error(result.data.errmsg, 4);
-                console.log(result.data.errmsg);
               }
             })
             .catch((err) => {
               console.log(err);
             });
-          // console.log("Received values of form: ", values);
         }
       });
-    },
-    // 账号、手机号
-    callback(key) {
-      console.log(key);
     },
     // 其他登录方式
     handlerwechat() {
@@ -170,6 +173,9 @@ export default {
     removeActive($event) {
       $event.currentTarget.className = "";
     },
+  },
+  mounted() {
+    window.addEventListener("keydown", this.keyDown);
   },
 };
 </script>
@@ -191,17 +197,18 @@ export default {
   bottom: 0;
   right: 0;
   margin: auto;
-  text-align: center;
   background: #fff;
 }
 h1 {
   font-size: 28px;
+  text-align: center;
   color: #000;
   opacity: 65%;
   margin: 24px auto 10px;
 }
 h5 {
   font-size: 10px;
+  text-align: center;
   margin: 0 auto 44px;
   opacity: 43%;
 }
@@ -247,6 +254,7 @@ h5 {
 .login-in {
   width: 368px;
   height: 40px;
+  margin: 0 auto;
 }
 .login-on {
   width: 369px;
@@ -295,5 +303,8 @@ a {
   height: 209px;
   border: 1px solid #000;
   margin: 25px auto;
+}
+.ant-tabs-nav-scroll {
+  text-align: center;
 }
 </style>

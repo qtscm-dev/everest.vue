@@ -28,58 +28,60 @@
       </div>
       <div class="informa">
         <a-descriptions>
-          <a-descriptions-item>
+          <a-descriptions-item style="width: 250px">
             <img
               ref="imgs"
               :src="imgSrc"
-              style="width: 303px; height: 240px"
+              style="width: 250px; height: 200px"
               alt=""
             />
           </a-descriptions-item>
         </a-descriptions>
-        <a-descriptions
-          class="informa-ul"
-          :column="{ xxl: 2, xl: 2, lg: 1, md: 1, sm: 1, xs: 1 }"
-        >
-          <!-- <div> -->
-          <a-descriptions-item label="员工ID">
-            {{ empInfo.id }}
-          </a-descriptions-item>
-          <a-descriptions-item label="状态">
-            {{ empInfo.status }}
-          </a-descriptions-item>
-          <a-descriptions-item label="姓名">
-            {{ empInfo.nm }}
-          </a-descriptions-item>
-          <a-descriptions-item label="邮箱">
-            {{ empInfo.email }}
-          </a-descriptions-item>
-          <a-descriptions-item label="性别">
-            {{ empInfo.sex }}
-          </a-descriptions-item>
-          <a-descriptions-item label="职位">
-            {{ empInfo.job }}
-          </a-descriptions-item>
-          <a-descriptions-item label="手机号码">
-            {{ empInfo.mob }}
-          </a-descriptions-item>
-          <a-descriptions-item label="座机号码">
-            {{ empInfo.phone }}
-          </a-descriptions-item>
-          <a-descriptions-item label="是否领导">
-            {{ empInfo.is_leader }}
-          </a-descriptions-item>
-          <a-descriptions-item label="部门顺序">
-            {{ empInfo.dept_id }}
-          </a-descriptions-item>
-          <a-descriptions-item label="所属部门">
-            {{ empInfo.dept_nm }}
-          </a-descriptions-item>
-          <a-descriptions-item label="地址">
-            {{ empInfo.address }}
-          </a-descriptions-item>
-          <!-- </div> -->
-        </a-descriptions>
+        <span>
+          <a-descriptions
+            class="informa-ul"
+            :column="{ xxl: 3, xl: 3, lg: 1, md: 1, sm: 2, xs: 2 }"
+          >
+            <!-- <div> -->
+            <a-descriptions-item label="员工ID">
+              {{ empInfo.id }}
+            </a-descriptions-item>
+            <a-descriptions-item label="状态">
+              {{ empInfo.status }}
+            </a-descriptions-item>
+            <a-descriptions-item label="姓名">
+              {{ empInfo.nm }}
+            </a-descriptions-item>
+            <a-descriptions-item label="邮箱">
+              {{ empInfo.email }}
+            </a-descriptions-item>
+            <a-descriptions-item label="性别">
+              {{ empInfo.sex }}
+            </a-descriptions-item>
+            <a-descriptions-item label="职位">
+              {{ empInfo.job }}
+            </a-descriptions-item>
+            <a-descriptions-item label="手机号码">
+              {{ empInfo.mob }}
+            </a-descriptions-item>
+            <a-descriptions-item label="座机号码">
+              {{ empInfo.phone }}
+            </a-descriptions-item>
+            <a-descriptions-item label="是否领导">
+              {{ empInfo.is_leader }}
+            </a-descriptions-item>
+            <a-descriptions-item label="部门顺序">
+              {{ empInfo.dept_id }}
+            </a-descriptions-item>
+            <a-descriptions-item label="所属部门">
+              {{ empInfo.dept_nm }}
+            </a-descriptions-item>
+            <a-descriptions-item label="地址">
+              {{ empInfo.address }}
+            </a-descriptions-item>
+            <!-- </div> -->
+          </a-descriptions>
+        </span>
       </div>
     </div>
     <Footer />
@@ -172,15 +174,15 @@ export default {
 }
 .concent .informa {
   width: 100%;
-  height: 520px;
+  height: auto;
   padding: 24px 32px;
   box-sizing: border-box;
   position: relative;
 }
 .concent .informa .informa-ul {
-  position: absolute;
+  /* position: absolute;
   left: 420px;
-  top: 24px;
+  top: 24px; */
 }
 .concent .informa .informa-ul ul {
   width: 50%;

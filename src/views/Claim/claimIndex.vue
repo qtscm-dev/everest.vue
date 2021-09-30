@@ -63,71 +63,69 @@
           </a-badge>
         </router-link>
       </div>
+      <a-radio-group class="tableradiolist" v-model="value">
+        <a-radio-button class="tableradio" value="d" @click="handlerWholer">
+          全部&nbsp;&nbsp;{{ dleng }}
+        </a-radio-button>
+        <a-radio-button class="tableradio" value="a" @click="handlerUnclai">
+          待认领&nbsp;&nbsp;{{ aleng }}
+        </a-radio-button>
+        <a-radio-button class="tableradio" value="b" @click="handlerClai">
+          已认领&nbsp;&nbsp;{{ bleng }}
+        </a-radio-button>
+        <a-radio-button class="tableradio" value="c" @click="handlerRevoke">
+          已撤回&nbsp;&nbsp;{{ cleng }}
+        </a-radio-button>
+      </a-radio-group>
       <a-empty :style="{ display: prolist == false ? 'block' : 'none' }" />
-      <div
-        class="protable"
+      <!-- <div class="protable"> -->
+      <a-table
+        :columns="columns"
+        :data-source="prolist"
+        :pagination="pagination"
+        :scroll="{ x: 2000 }"
+        :rowKey="(record) => record.id"
+        size="middle"
+        :rowClassName="
+          (record, index) => (index % 2 === 1 ? 'table-proj' : null)
+        "
         :style="{ display: prolist == false ? 'none' : 'block' }"
+        @change="handlerSort"
       >
-        <a-radio-group class="tableradiolist" v-model="value">
-          <a-radio-button class="tableradio" value="a" @click="handlerUnclai">
-            待认领&nbsp;&nbsp;{{ aleng }}
-          </a-radio-button>
-          <a-radio-button class="tableradio" value="b" @click="handlerClai">
-            已认领&nbsp;&nbsp;{{ bleng }}
-          </a-radio-button>
-          <a-radio-button class="tableradio" value="c" @click="handlerRevoke">
-            已撤回&nbsp;&nbsp;{{ cleng }}
-          </a-radio-button>
-          <a-radio-button class="tableradio" value="d" @click="handlerWholer">
-            全部&nbsp;&nbsp;{{ dleng }}
-          </a-radio-button>
-        </a-radio-group>
-        <a-table
-          :columns="columns"
-          :data-source="prolist"
-          :pagination="pagination"
-          :scroll="{ x: 1500 }"
-          :rowKey="(record) => record.id"
-          size="middle"
-          :rowClassName="
-            (record, index) => (index % 2 === 1 ? 'table-proj' : null)
-          "
-          @change="handlerSort"
-        >
-          <!-- 状态 -->
-          <a-badge
-            v-if="text == '2100'"
-            slot="status"
-            slot-scope="text"
-            status="default"
-            text="待认领"
-          />
-          <a-badge
-            v-else-if="text == '3000'"
-            slot="status"
-            slot-scope="text"
-            status="success"
-            text="已认领"
-          />
-          <a-badge
-            v-else-if="text == '2111'"
-            slot="status"
-            slot-scope="text"
-            status="error"
-            text="已撤回"
-          />
-          <!-- 操作 -->
-          <template slot="operation" slot-scope="text, record">
-            <div>
-              <a
-                style="font-size: 14px"
-                @click="() => handlerDetails(record.id, record.status)"
-                >详情</a
-              >
-            </div>
-          </template>
-        </a-table>
-      </div>
+        <!-- 状态 -->
+        <a-badge
+          v-if="text == '2100'"
+          slot="status"
+          slot-scope="text"
+          status="default"
+          text="待认领"
+        />
+        <a-badge
+          v-else-if="text == '3000'"
+          slot="status"
+          slot-scope="text"
+          status="success"
+          text="已认领"
+        />
+        <a-badge
+          v-else-if="text == '2111'"
+          slot="status"
+          slot-scope="text"
+          status="error"
+          text="已撤回"
+        />
+        <!-- 操作 -->
+        <template slot="operation" slot-scope="text, record">
+          <div>
+            <a
+              style="font-size: 14px"
+              @click="() => handlerDetails(record.id, record.status)"
+              >详情</a
+            >
+          </div>
+        </template>
+      </a-table>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -148,12 +146,12 @@ export default {
       {
         title: "项目",
         dataIndex: "code",
-        width: 150,
-        ellipsis: true,
+        // width: 180,
       },
       {
         title: "状态",
         dataIndex: "status",
+        width: 90,
         scopedSlots: { customRender: "status" },
         sorter: (a, b) => {
           return a.status > b.status ? 1 : -1;
@@ -162,23 +160,28 @@ export default {
       {
         title: "建设单位",
         dataIndex: "client_nm",
+        // width: 100,
       },
       {
         title: "幕墙面积",
         dataIndex: "wall_area",
+        width: 100,
       },
       {
         title: "建筑类型",
         dataIndex: "build_lbl",
+        // width: 200,
         ellipsis: true,
       },
       {
         title: "项目类型",
         dataIndex: "project_lbl",
+        width: 100,
       },
       {
         title: "部门",
         dataIndex: "dept_nm",
+        width: 100,
       },
       {
         title: "设计内容",
@@ -188,17 +191,17 @@ export default {
       {
         title: "项目周期",
         dataIndex: "pro_cycle",
-        width: 220,
+        // width: 220,
       },
       {
         title: "项目地点",
         dataIndex: "bulid_addr",
-        width: 250,
+        // width: 250,
       },
       {
         title: "操作时间",
         dataIndex: "updated",
-        width: 150,
+        // width: 150,
         sorter: (a, b) => {
           return a.updated > b.updated ? 1 : -1;
         },
@@ -233,12 +236,12 @@ export default {
         proj_cycle: [],
       },
       // 单选框
-      value: "a",
+      value: "d",
       // 数据长度
-      aleng: "",
-      bleng: "",
-      cleng: "",
-      dleng: "",
+      aleng: 0,
+      bleng: 0,
+      cleng: 0,
+      dleng: 0,
       // 状态
       satau: "",
       // 项目列表
@@ -246,6 +249,7 @@ export default {
       prolist: [],
       // 分页
       pagination: {
+        pageSizeOptions: ["10", "20", "50", "100"],
         defaultPageSize: 20,
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
@@ -306,10 +310,12 @@ export default {
           for (let i = 0; i < this.prolist.length; i++) {
             this.prolist[i].wall_area = this.prolist[i].wall_area + "平方米";
           }
-          this.aleng = result.count_nm.unclaimed_num;
-          this.bleng = result.count_nm.claimed_num;
-          this.cleng = result.count_nm.revoke_num;
-          this.dleng = result.count_nm.whole_num;
+          if (this.prolist != false) {
+            this.aleng = result.count_nm.unclaimed_num;
+            this.bleng = result.count_nm.claimed_num;
+            this.cleng = result.count_nm.revoke_num;
+            this.dleng = result.count_nm.whole_num;
+          }
           this.pagination.total = result.pagination.total_items;
           this.pagination.proj = sta;
         })
@@ -375,7 +381,7 @@ export default {
     handlerSort,
   },
   mounted() {
-    this.handlerUnclai();
+    this.handlerWholer();
     this.getProject();
   },
 };

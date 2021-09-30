@@ -50,8 +50,18 @@
               >
             </div>
             <a-empty
+              image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+              :image-style="{
+                height: '60px',
+              }"
               :style="{ display: departlist == false ? 'block' : 'none' }"
-            />
+            >
+              <span slot="description"> 暂无数据 </span>
+              <a-button type="primary"> 现在创建 </a-button>
+            </a-empty>
+            <!-- <a-empty
+              
+            /> -->
             <a-table
               :columns="columns"
               :data-source="departlist"

@@ -41,8 +41,10 @@ import {
   Popconfirm,
   ConfigProvider,
   Avatar,
+  FormModel,
 } from "ant-design-vue";
 
+Vue.use(FormModel);
 Vue.use(Avatar);
 Vue.use(Popconfirm);
 Vue.use(Badge);

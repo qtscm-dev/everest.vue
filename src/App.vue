@@ -44,4 +44,14 @@ export default {
   width: 100%;
   height: 100%;
 }
+.ant-tabs-bar {
+  border-bottom: 0;
+}
+.has-error .ant-form-explain,
+.has-error .ant-form-split {
+  text-align: left;
+}
+.ant-table-footer {
+  background: #fff;
+}
 </style>

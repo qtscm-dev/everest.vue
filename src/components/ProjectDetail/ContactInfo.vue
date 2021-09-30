@@ -4,7 +4,16 @@
       <span>联系人列表</span>
     </div>
     <div class="content">
-      <a-empty :style="{ display: contactsList == false ? 'block' : 'none' }" />
+      <a-empty
+        image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+        :image-style="{
+          height: '60px',
+        }"
+        :style="{ display: contactsList == false ? 'block' : 'none' }"
+      >
+        <span slot="description"> 暂无数据 </span>
+        <a-button type="primary"> 现在创建 </a-button>
+      </a-empty>
       <a-table
         :columns="contacts"
         :data-source="contactsList"
@@ -24,13 +33,13 @@
         >
           <div :key="col">
             <a-input
-              v-if="record.editable && col != 'typ'"
+              v-if="record.editable && col != 'typ' && col != 'nm'"
               placeholder="请输入"
               :value="text"
               @change="(e) => handleChange(e.target.value, record.id, col)"
             />
             <a-select
-              v-else-if="record.editable && col == 'typ'"
+              v-else-if="record.editable && col == 'typ' && col != 'nm'"
               placeholder="请选择"
               v-model="record.typ"
               @change="(e) => handleChange(e.target.value, record.id, col)"
@@ -38,6 +47,15 @@
               <a-select-option v-for="list in contact_typ" :key="list.id">{{
                 list.lbl
               }}</a-select-option>
+            </a-select>
+            <a-select
+              v-else-if="record.editable && col != 'typ' && col == 'nm'"
+              placeholder="请选择"
+              v-model="record.nm"
+              @change="(e) => handleChange(e.target.value, record.id, col)"
+            >
+              <a-select-option value="t">是</a-select-option>
+              <a-select-option value="f">否</a-select-option>
             </a-select>
             <template v-else>
               {{ text }}
@@ -86,12 +104,13 @@
             </span>
           </div>
         </template>
+        <template slot="footer">
+          <a-button type="dashed" style="width: 100%" @click="handlerAdd">
+            <a-icon type="plus" /> 添加
+          </a-button>
+        </template>
       </a-table>
-      <div :style="{ display: contactsList == false ? 'none' : 'block' }">
-        <a-button type="dashed" style="width: 100%" @click="handlerAdd">
-          <a-icon type="plus" /> 添加
-        </a-button>
-      </div>
+      <div :style="{ display: contactsList == false ? 'none' : 'block' }"></div>
     </div>
   </div>
 </template>
@@ -149,8 +168,8 @@ export default {
         title: "操作",
         dataIndex: "operation",
         scopedSlots: { customRender: "operation" },
-        fixed: "right",
-        width: 120,
+        // fixed: "right",
+        // width: 120,
       },
     ];
     return {
@@ -290,7 +309,7 @@ export default {
         nm: list.nm,
         mob: list.mob,
         comp_nm: list.comp_nm,
-        typ: list.typ,
+        typ: (list.typ = "是"),
         job: list.job,
         dept_nm: list.dept_nm,
       };
