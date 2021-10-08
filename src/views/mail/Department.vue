@@ -98,7 +98,6 @@
           </div>
         </a-tab-pane>
       </a-tabs>
-      <Footer />
       <!-- 新增部门 -->
       <a-form
         :form="form"
@@ -223,10 +222,8 @@
 
 <script>
 import { Modal } from "ant-design-vue";
-import Footer from "../../components/Footer/Footer";
 export default {
   name: "department",
-  components: { Footer },
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: "normal_login" });
   },
@@ -324,6 +321,7 @@ export default {
       // 分页
       pagination: {
         total: 0,
+        pageSizeOptions: ["10", "20", "50", "100"],
         defaultPageSize: 20,
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
@@ -527,7 +525,7 @@ export default {
 };
 </script>
 
-<style scooed>
+<style scoped>
 .table-depa {
   background: #fafafa;
 }

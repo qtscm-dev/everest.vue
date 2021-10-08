@@ -91,13 +91,48 @@
           <a-form-model-item label="项目类型" prop="proj_type_id">
             <a-select
               style="width: 70%"
-              v-model="newproForm.proj_type_id"
               placeholder="请选择"
+              v-model="newproForm.proj_type_id"
             >
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e) => e.preventDefault()"
+                  @click="addItem(project_typeFrom)"
+                >
+                  <a-icon type="plus" /> 添加数据
+                </div>
+                <a-modal
+                  v-model="visibl"
+                  title="添加数据"
+                  :allowClear="true"
+                  :destroyOnClose="true"
+                  on-ok="handleOk"
+                >
+                  <template slot="footer">
+                    <a-button key="back" @click="handlerAddClear">
+                      取消
+                    </a-button>
+                    <a-button
+                      key="submit"
+                      type="primary"
+                      @click="handlerAddNum"
+                    >
+                      确定
+                    </a-button>
+                  </template>
+                  <a-input
+                    v-model="lbl"
+                    placeholder="请输入"
+                    style="margin: 24px auto"
+                  />
+                </a-modal>
+              </div>
               <a-select-option
-                v-for="(projects, i) in project_typeFrom"
-                :key="i"
-                :value="projects.id"
+                v-for="projects in project_typeFrom"
+                :key="projects.id"
               >
                 {{ projects.lbl }}
               </a-select-option>
@@ -195,7 +230,7 @@
                 <div
                   style="padding: 4px 8px; cursor: pointer"
                   @mousedown="(e) => e.preventDefault()"
-                  @click="addItem"
+                  @click="addItem(build_typeForm)"
                 >
                   <a-icon type="plus" /> 添加数据
                 </div>
@@ -239,6 +274,7 @@
             <a-select
               mode="multiple"
               style="width: 70%"
+              :showArrow="true"
               placeholder="请选择(可多选)"
               v-model="newproForm.design_type_id"
             >
@@ -248,7 +284,7 @@
                 <div
                   style="padding: 4px 8px; cursor: pointer"
                   @mousedown="(e) => e.preventDefault()"
-                  @click="addItem"
+                  @click="addItem(work_typeForm)"
                 >
                   <a-icon type="plus" /> 添加数据
                 </div>
@@ -291,11 +327,43 @@
               placeholder="请选择"
               v-model="newproForm.main_major_id"
             >
-              <a-select-option
-                v-for="(works, i) in work_typeForm"
-                :key="i"
-                :value="works.id"
-              >
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e) => e.preventDefault()"
+                  @click="addItem(work_typeForm)"
+                >
+                  <a-icon type="plus" /> 添加数据
+                </div>
+                <a-modal
+                  v-model="visibl"
+                  title="添加数据"
+                  :allowClear="true"
+                  :destroyOnClose="true"
+                  on-ok="handleOk"
+                >
+                  <template slot="footer">
+                    <a-button key="back" @click="handlerAddClear">
+                      取消
+                    </a-button>
+                    <a-button
+                      key="submit"
+                      type="primary"
+                      @click="handlerAddNum"
+                    >
+                      确定
+                    </a-button>
+                  </template>
+                  <a-input
+                    v-model="lbl"
+                    placeholder="请输入"
+                    style="margin: 24px auto"
+                  />
+                </a-modal>
+              </div>
+              <a-select-option v-for="works in work_typeForm" :key="works.id">
                 {{ works.lbl }}
               </a-select-option>
             </a-select>
@@ -303,28 +371,18 @@
         </a-col>
         <a-col :span="24">
           <a-form-model-item label="建设地点" prop="build_addr">
-            <a-input-group>
-              <a-cascader
-                style="width: 23.5%; margin-right: 15px; float: left"
-                :options="options"
-                expand-trigger="hover"
-                placeholder="请选择"
-                v-model="newproForm.build_addr[0]"
-                labelInValue="true"
-              />
-              <a-input
-                style="width: 65.5%"
-                placeholder="街道，门牌号（可选输入）"
-                v-model="newproForm.build_addr[1]"
-                v-decorator="[
-                  '地点',
-                  {
-                    initialValue: [newproForm.build_addr[1]],
-                    rules: [{ required: true, message: '该项为必填项' }],
-                  },
-                ]"
-              />
-            </a-input-group>
+            <a-cascader
+              style="width: 23.5%; margin-right: 15px"
+              :options="options"
+              expand-trigger="hover"
+              placeholder="请选择"
+              v-model="newproForm.build_addr[0]"
+            />
+            <a-input
+              style="width: 65.5%"
+              placeholder="街道，门牌号（可选输入）"
+              v-model="newproForm.build_addr[1]"
+            />
           </a-form-model-item>
         </a-col>
         <a-col :span="24">
@@ -336,7 +394,10 @@
               :label="i === 0 ? '竞争单位' : ''"
               prop="competitor"
             >
-              <a-input placeholder="请输入" v-model="newproForm.competitor" />
+              <a-input
+                placeholder="请输入"
+                v-model="newproForm.competitor[i]"
+              />
             </a-form-model-item>
             <div style="position: absolute; top: 39px; left: 45%">
               <a-icon
@@ -370,14 +431,14 @@
               <a-input
                 style="width: 23.5%; margin-right: 15px"
                 placeholder="请输入"
-                v-model="newproForm.quote.nm"
+                v-model="newproForm.quote[0]"
               />
               <a-input
                 style="width: 20.5%"
                 addon-before="￥"
                 suffix="RMB"
                 placeholder="0"
-                v-model="newproForm.quote.rmb"
+                v-model="newproForm.quote[1]"
               />
             </a-input-group>
           </a-form-model-item>
@@ -608,7 +669,7 @@ export default {
         main_major_id: "",
         build_addr: [],
         competitor: [],
-        quote: { nm: "", rmb: "" },
+        quote: [],
         agent_constr: "",
         parent_company: "",
         cmt: "",
@@ -621,7 +682,7 @@ export default {
       ],
       // 建设地点
       options: options,
-      // 新增建筑类型
+      // 新增类型
       visibl: false,
       pid: "",
       lbl: "",
@@ -676,7 +737,6 @@ export default {
         u == ""
       ) {
         this.$router.push({ name: "project" });
-        // console.log("dd");
       } else {
         this.handlerModel();
       }
@@ -684,6 +744,7 @@ export default {
     // 保存后返回列表页
     handlerModel() {
       let that = this;
+      console.log(that.newproForm);
       Modal.confirm({
         title: "返回",
         content: "当前内容未保存，返回后内容将不保存",
@@ -703,6 +764,7 @@ export default {
             )
             .then((res) => {
               let result = res.data;
+              console.log(result);
               if (result.code) {
                 that.$router.push({ name: "project" });
               } else {
@@ -731,9 +793,6 @@ export default {
           this.project_typeFrom = result.project_type;
           this.build_typeForm = result.build_type;
           this.work_typeForm = result.work_type;
-          for (let i = 0; i < this.build_typeForm.length; i++) {
-            this.pid = this.build_typeForm[i].pid;
-          }
         })
         .catch((err) => {
           console.log(err);
@@ -741,6 +800,7 @@ export default {
     },
     // 提交项目
     handlerNewpro(form) {
+      console.log(this.newproForm);
       this.$refs[form].validate((valid) => {
         if (valid) {
           var qs = require("qs");
@@ -755,7 +815,12 @@ export default {
               }
             )
             .then((res) => {
-              console.log(res);
+              if (res.data.code) {
+                message.success("成功");
+                this.$router.push({ name: "project" });
+              } else {
+                message.error(res.data.data.errmsg);
+              }
             })
             .catch((err) => {
               console.log(err);
@@ -801,9 +866,12 @@ export default {
           console.log(err);
         });
     },
-    // 新增增建筑类型
-    addItem() {
+    // 新增类型
+    addItem(form) {
       this.visibl = true;
+      for (let i = 0; i < form.length; i++) {
+        this.pid = form[i].pid;
+      }
     },
     handlerAddNum() {
       var qs = require("qs");

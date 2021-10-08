@@ -61,6 +61,6 @@ export default {
   height: 78.89px;
 }
 .ant-col-8 {
-  height: 102.9px;
+  height: 102.8px;
 }
 </style>

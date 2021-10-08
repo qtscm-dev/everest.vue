@@ -111,7 +111,6 @@
               ]"
             >
               <span slot="description"> 暂无数据 </span>
-              <a-button type="primary" @click="handlerNew"> 现在创建 </a-button>
             </a-empty>
             <a-table
               :columns="columns"
@@ -171,7 +170,7 @@
         :dept_list="dept_list"
         :job_list="job_list"
         :role_list="role_list"
-        :visibles1="visibles1"
+        :visibles1="vi"
       />
       <!-- 编辑员工 -->
       <EditEmploy
@@ -181,7 +180,6 @@
         :role_list="role_list"
         :visibles2="visibles2"
       />
-      <Footer />
     </div>
   </div>
 </template>
@@ -190,7 +188,6 @@
 import imgSrc1 from "../../../public/portrait/woman.jpg";
 import imgSrc2 from "../../../public/portrait/man.jpg";
 import { message, Modal } from "ant-design-vue";
-import Footer from "../../components/Footer/Footer";
 import NewEmploy from "./NewEmploy/NewEmploy";
 import EditEmploy from "./EditEmploy/EditEmploy";
 function getBase64(img, callback) {
@@ -200,7 +197,7 @@ function getBase64(img, callback) {
 }
 export default {
   name: "employee",
-  components: { Footer, NewEmploy, EditEmploy },
+  components: { NewEmploy, EditEmploy },
   data() {
     const columns = [
       {
@@ -283,7 +280,7 @@ export default {
           sm: { span: 12 },
         },
       },
-      visibles1: false,
+      vi: false,
       visibles2: false,
       headers: {
         Authorization: localStorage.getItem("Authorization"),
@@ -310,7 +307,7 @@ export default {
           phone: "",
           active: "",
           email: "",
-          address: "",
+          address: [[], []],
           avatar: "",
           job_id: "",
           dept_id: "",
@@ -330,28 +327,12 @@ export default {
         dept_nm: "",
       },
       // 编辑员工
-      staff_list: [
-        /* {
-          login_nm: "",
-          nm: "",
-          mob: "",
-          phone: "",
-          active: "",
-          email: "",
-          address: "",
-          avatar: "",
-          job_id: "",
-          dept_id: "",
-          is_leader: "",
-          gender: "",
-          role_id: "",
-          user_id: "",
-        }, */
-      ],
+      staff_list: [],
       id: "",
       // 分页
       currt: 1,
       pagination: {
+        pageSizeOptions: ["10", "20", "50", "100"],
         defaultPageSize: 20,
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
@@ -432,7 +413,7 @@ export default {
     },
     // 新增员工
     handlerNew() {
-      this.visibles1 = true;
+      this.vi = true;
     },
     // 获取全部员工信息
     handlerAll() {
@@ -555,6 +536,7 @@ export default {
           let result = res.data.data.data;
           this.staff_list = result.staff_info;
           this.staff_list.user_id = id;
+          console.log(this.staff_list);
           if (this.staff_list.sta == "t") {
             this.staff_list.active = "t";
           } else {

@@ -63,6 +63,11 @@
       <a-layout-content>
         <router-view></router-view>
       </a-layout-content>
+      <!-- <a-layout-footer
+        :style="[{ textAlign: 'center' }, { 'z-index': '9999999' }]"
+      >
+        copyright © 2021 浙江中南建设有限公司
+      </a-layout-footer> -->
     </a-layout>
   </a-layout>
 </template>

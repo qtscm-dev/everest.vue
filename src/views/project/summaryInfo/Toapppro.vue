@@ -28,257 +28,377 @@
         <a-button type="primary" @click="handleSearch">提交项目</a-button>
       </div>
     </div>
-    <a-form class="ant-advanced-search-form" :form="form">
-      <a-row :gutter="24">
+    <a-form-model
+      ref="editproForm"
+      :rules="rules"
+      :model="editproForm"
+      class="concentor"
+    >
+      <a-row>
         <a-col :span="8">
-          <a-form-item label="项目编号">
+          <a-form-model-item
+            label="项目编号"
+            prop="code"
+            style="position: relative"
+          >
             <a-input
-              v-model="viewForm.id"
-              v-decorator="[
-                '项目编号',
-                {
-                  rules: [
-                    {
-                      required: true,
-                      initialValue: viewList.id,
-                      message: '该项为必填项',
-                    },
-                  ],
-                },
-              ]"
-              placeholder="请输入"
-            />
-            <div></div>
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="项目名称">
-            <a-input
-              v-model="viewForm.nm"
-              v-decorator="[
-                '项目名称',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="合同编号">
-            <a-input
-              v-model="viewForm.contract_id"
-              v-decorator="[
-                '合同编号',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="流程编号">
-            <a-input
-              v-model="viewForm.proc_code"
-              v-decorator="[
-                '流程编号',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="项目类型">
-            <a-select
-              v-model="viewForm.project_lbl"
-              v-decorator="[
-                '项目类型',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              placeholder="请选择"
-            >
-              <a-select-option value="1">ggg </a-select-option>
-              <a-select-option value="2">ggg </a-select-option>
-              <a-select-option value="3">ggg </a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="建设单位">
-            <a-input
-              v-model="viewForm.client_nm"
-              v-decorator="[
-                '建设单位',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="建筑面积">
-            <a-input
-              v-model="viewForm.build_area"
-              v-decorator="[
-                '建筑面积',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              suffix="平米"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="幕墙面积">
-            <a-input
-              v-model="viewForm.wall_area"
-              v-decorator="[
-                '幕墙面积',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              suffix="平米"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="门窗面积">
-            <a-input
-              v-model="viewForm.dw_area"
-              v-decorator="[
-                '门窗面积',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              suffix="平米"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="建筑高度">
-            <a-input
-              v-model="viewForm.build_height"
-              v-decorator="[
-                '建筑高度',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              suffix="米"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="幕墙高度">
-            <a-input
-              v-model="viewForm.wall_height"
-              v-decorator="[
-                '幕墙高度',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              suffix="米"
-              placeholder="请输入"
-            />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <a-form-item label="项目周期">
-            <a-range-picker
-              v-model="viewForm.proj_cycle"
               style="width: 70%"
-              v-decorator="['项目周期', rangeConfig]"
-              @change="sonChange"
+              :default-Value="editproForm.code"
+              v-model="editproForm.code"
+              placeholder="请输入"
+            />
+            <span
+              ref="itemNo"
+              style="
+                display: none;
+                color: red;
+                position: absolute;
+                top: 16px;
+                left: 0;
+              "
+              >该项为必填项</span
+            >
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="项目名称" prop="nm">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.nm"
+              placeholder="请输入"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="合同编号" prop="contract_no">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.contract_no"
+              placeholder="请输入"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="流程编号" prop="proc_code">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.proc_code"
+              placeholder="请输入"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="项目类型" prop="proj_type_id">
+            <a-select
+              style="width: 70%"
+              placeholder="请选择"
+              v-model="editproForm.proj_type_id"
+            >
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e) => e.preventDefault()"
+                  @click="addItem(project_typeFrom)"
+                >
+                  <a-icon type="plus" /> 添加数据
+                </div>
+                <a-modal
+                  v-model="visibl"
+                  title="添加数据"
+                  :allowClear="true"
+                  :destroyOnClose="true"
+                  on-ok="handleOk"
+                >
+                  <template slot="footer">
+                    <a-button key="back" @click="handlerAddClear">
+                      取消
+                    </a-button>
+                    <a-button
+                      key="submit"
+                      type="primary"
+                      @click="handlerAddNum"
+                    >
+                      确定
+                    </a-button>
+                  </template>
+                  <a-input
+                    v-model="lbl"
+                    placeholder="请输入"
+                    style="margin: 24px auto"
+                  />
+                </a-modal>
+              </div>
+              <a-select-option
+                v-for="projects in project_typeFrom"
+                :key="projects.id"
+              >
+                {{ projects.lbl }}
+              </a-select-option>
+            </a-select>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="建设单位" prop="build_unit">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.build_unit"
+              placeholder="请输入"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="建筑面积" prop="build_area">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.build_area"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
+              placeholder="请输入"
+              suffix="平米"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="幕墙面积" prop="wall_area">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.wall_area"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
+              placeholder="请输入"
+              suffix="平米"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="门窗面积" prop="dw_area">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.dw_area"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
+              placeholder="请输入"
+              suffix="平米"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="建筑高度" prop="build_height">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.build_height"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
+              placeholder="请输入"
+              suffix="米"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="幕墙高度" prop="wall_height">
+            <a-input
+              style="width: 70%"
+              v-model="editproForm.wall_height"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
+              placeholder="请输入"
+              suffix="米"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="8">
+          <a-form-model-item label="项目周期" prop="proj_cycle">
+            <a-range-picker
+              style="width: 70%"
+              v-model="editproForm.proj_cycle"
+              @change="onChange"
             >
               <a-icon slot="suffixIcon" type="calendar" />
             </a-range-picker>
-          </a-form-item>
+          </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-item label="建筑类型">
+          <a-form-model-item label="建筑类型" prop="build_type_id">
             <a-select
-              v-model="viewForm.build_lbl"
-              v-decorator="[
-                '建筑类型',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              placeholder="请输入"
+              mode="multiple"
+              class="sele"
+              style="width: 70%"
+              v-model="editproForm.build_type_id"
+              :showArrow="true"
+              placeholder="请选择(可多选)"
             >
-              <a-select-option value="1">222 </a-select-option>
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e) => e.preventDefault()"
+                  @click="addItem(build_typeForm)"
+                >
+                  <a-icon type="plus" /> 添加数据
+                </div>
+                <a-modal
+                  v-model="visibl"
+                  title="添加数据"
+                  :allowClear="true"
+                  :destroyOnClose="true"
+                  on-ok="handleOk"
+                >
+                  <template slot="footer">
+                    <a-button key="back" @click="handlerAddClear">
+                      取消
+                    </a-button>
+                    <a-button
+                      key="submit"
+                      type="primary"
+                      @click="handlerAddNum"
+                    >
+                      确定
+                    </a-button>
+                  </template>
+                  <a-input
+                    v-model="lbl"
+                    placeholder="请输入"
+                    style="margin: 24px auto"
+                  />
+                </a-modal>
+              </div>
+              <a-select-option
+                v-for="builds in build_typeForm"
+                :key="builds.id"
+              >
+                {{ builds.lbl }}
+              </a-select-option>
             </a-select>
-          </a-form-item>
+          </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-item label="主设专业">
+          <a-form-model-item label="设计类型" prop="design_type_id">
             <a-select
-              v-model="viewForm.main_major_lbl"
-              v-decorator="[
-                '主设专业',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              placeholder="请输入"
+              mode="multiple"
+              style="width: 70%"
+              :showArrow="true"
+              placeholder="请选择(可多选)"
+              v-model="editproForm.design_type_id"
             >
-              <a-select-option value="1">222 </a-select-option>
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e) => e.preventDefault()"
+                  @click="addItem(work_typeForm)"
+                >
+                  <a-icon type="plus" /> 添加数据
+                </div>
+                <a-modal
+                  v-model="visibl"
+                  title="添加数据"
+                  :allowClear="true"
+                  :destroyOnClose="true"
+                  on-ok="handleOk"
+                >
+                  <template slot="footer">
+                    <a-button key="back" @click="handlerAddClear">
+                      取消
+                    </a-button>
+                    <a-button
+                      key="submit"
+                      type="primary"
+                      @click="handlerAddNum"
+                    >
+                      确定
+                    </a-button>
+                  </template>
+                  <a-input
+                    v-model="lbl"
+                    placeholder="请输入"
+                    style="margin: 24px auto"
+                  />
+                </a-modal>
+              </div>
+              <a-select-option v-for="works in work_typeForm" :key="works.id">
+                {{ works.lbl }}
+              </a-select-option>
             </a-select>
-          </a-form-item>
+          </a-form-model-item>
         </a-col>
         <a-col :span="8">
-          <a-form-item label="设计类型">
+          <a-form-model-item label="主设专业" prop="main_major_id">
             <a-select
-              v-model="viewForm.major_lbl"
-              v-decorator="[
-                '设计类型',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              placeholder="请输入"
+              style="width: 70%"
+              placeholder="请选择"
+              v-model="editproForm.main_major_id"
             >
-              <a-select-option value="1">222 </a-select-option>
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e) => e.preventDefault()"
+                  @click="addItem(work_typeForm)"
+                >
+                  <a-icon type="plus" /> 添加数据
+                </div>
+                <a-modal
+                  v-model="visibl"
+                  title="添加数据"
+                  :allowClear="true"
+                  :destroyOnClose="true"
+                  on-ok="handleOk"
+                >
+                  <template slot="footer">
+                    <a-button key="back" @click="handlerAddClear">
+                      取消
+                    </a-button>
+                    <a-button
+                      key="submit"
+                      type="primary"
+                      @click="handlerAddNum"
+                    >
+                      确定
+                    </a-button>
+                  </template>
+                  <a-input
+                    v-model="lbl"
+                    placeholder="请输入"
+                    style="margin: 24px auto"
+                  />
+                </a-modal>
+              </div>
+              <a-select-option v-for="works in work_typeForm" :key="works.id">
+                {{ works.lbl }}
+              </a-select-option>
             </a-select>
-          </a-form-item>
+          </a-form-model-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label="建设地点">
+          <a-form-model-item label="建设地点" prop="build_addr">
             <a-cascader
-              v-model="viewForm.bulid_addr"
-              style="width: 40%; margin-right: 15px"
+              style="width: 23.5%; margin-right: 15px"
               :options="options"
               expand-trigger="hover"
-              v-decorator="[
-                '建设地点',
-                { rules: [{ required: true, message: '该项为必填项' }] },
-              ]"
-              @change="onChange"
+              placeholder="请选择"
+              v-model="editproForm.build_addr[0]"
             />
             <a-input
-              v-model="viewForm.bulid_addr"
-              style="width: 57%"
+              style="width: 65.5%"
               placeholder="街道，门牌号（可选输入）"
+              v-model="editproForm.detail"
             />
-          </a-form-item>
+          </a-form-model-item>
         </a-col>
-        <a-col :span="16">
+        <a-col :span="24">
           <div>
-            <a-form-item
+            <a-form-model-item
               style="width: 45%"
               v-for="(item, i) in plus"
               :key="i"
               :label="i === 0 ? '竞争单位' : ''"
+              prop="competitor"
             >
               <a-input
-                v-model="viewForm.competitor"
                 placeholder="请输入"
-                v-decorator="[
-                  `竞争单位[${i}]`,
-                  {
-                    rules: [
-                      {
-                        required: true,
-                        whitespace: true,
-                        message: '该项为必填项',
-                      },
-                    ],
-                  },
-                ]"
+                v-model="editproForm.competitor[i]"
               />
-            </a-form-item>
+            </a-form-model-item>
             <div style="position: absolute; top: 39px; left: 45%">
               <a-icon
                 type="plus-circle"
@@ -305,186 +425,84 @@
             </div>
           </div>
         </a-col>
-        <a-col :span="16">
-          <a-form-item label="设计报价">
+        <a-col :span="24">
+          <a-form-model-item label="设计报价" prop="quote">
             <a-input-group>
               <a-input
-                v-model="viewForm.quote.nm"
-                style="width: 50%; margin-right: 15px"
-                v-decorator="[
-                  '设计报价',
-                  { rules: [{ required: true, message: '该项为必填项' }] },
-                ]"
+                style="width: 23.5%; margin-right: 15px"
                 placeholder="请输入"
+                v-model="editproForm.quote[0]"
               />
               <a-input
-                v-model="viewForm.quote.rem"
-                style="width: 45%"
+                style="width: 20.5%"
                 addon-before="￥"
                 suffix="RMB"
-                v-decorator="[
-                  '设计报价',
-                  { rules: [{ required: true, message: '该项为必填项' }] },
-                ]"
-                placeholder="请输入"
+                placeholder="0"
+                v-model="editproForm.quote[1]"
               />
             </a-input-group>
-          </a-form-item>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="16">
+          <a-form-model-item label="代建">
+            <a-input
+              v-model="editproForm.agent_constr"
+              style="width: 68%"
+              placeholder="请输入"
+            ></a-input>
+          </a-form-model-item>
+        </a-col>
+        <a-col :span="16">
+          <a-form-model-item label="母公司">
+            <a-input
+              v-model="editproForm.parent_company"
+              style="width: 68%"
+              placeholder="请输入"
+            ></a-input>
+          </a-form-model-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label="备注">
-            <a-textarea v-model="viewForm.cmt" placeholder="请输入" />
-          </a-form-item>
+          <a-form-model-item label="备注（可选）">
+            <a-textarea
+              v-model="editproForm.cmt"
+              style="width: 89.5%"
+              placeholder="请输入备注"
+            ></a-textarea>
+          </a-form-model-item>
         </a-col>
       </a-row>
-    </a-form>
+    </a-form-model>
     <Footer />
   </div>
 </template>
 
 <script>
-import { Modal } from "ant-design-vue";
+import { Modal, message } from "ant-design-vue";
+import options from "../../../address/add";
 import Footer from "../../../components/Footer/Footer";
 export default {
   name: "toapppro",
-  components: { Footer },
+  components: {
+    Footer,
+    VNodes: {
+      functional: true,
+      render: (h, ctx) => ctx.props.vnodes,
+    },
+  },
+  // props: {
+  //   editproForm: [],
+  // },
   data() {
+    let GloTips = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("该项不能为空"));
+      } else {
+        callback();
+      }
+    };
     return {
-      form: this.$form.createForm(this, { name: "advanced_search" }),
-      rangeConfig: {
-        rules: [{ type: "array", required: true, message: "该项为必填项" }],
-      },
       // 建设地点
-      options: [
-        {
-          value: "zhejiang",
-          label: "Zhejiang",
-          children: [
-            {
-              value: "hangzhou",
-              label: "Hangzhou",
-              children: [
-                {
-                  value: "xihu",
-                  label: "West Lake",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "jiangsu",
-          label: "Jiangsu",
-          children: [
-            {
-              value: "nanjing",
-              label: "Nanjing",
-              children: [
-                {
-                  value: "zhonghuamen",
-                  label: "Zhong Hua Men",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "jiang",
-          label: "Jiang",
-          children: [
-            {
-              value: "nanji",
-              label: "Nanji",
-              children: [
-                {
-                  value: "zhonghuam",
-                  label: "Zhong Hua M",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "jian",
-          label: "Jiangsu",
-          children: [
-            {
-              value: "nanj",
-              label: "Nanj",
-              children: [
-                {
-                  value: "zhonghua",
-                  label: "Zhong Hua",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "jia",
-          label: "Jia",
-          children: [
-            {
-              value: "nan",
-              label: "Nanjing",
-              children: [
-                {
-                  value: "zhonghu",
-                  label: "Zhong Hu",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "ji",
-          label: "Ji",
-          children: [
-            {
-              value: "nanjin",
-              label: "Nanjin",
-              children: [
-                {
-                  value: "zhonghuame",
-                  label: "Zhong Hua Me",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "jiangs",
-          label: "Jiangs",
-          children: [
-            {
-              value: "na",
-              label: "Na",
-              children: [
-                {
-                  value: "zhongh",
-                  label: "Zhong H",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "j",
-          label: "J",
-          children: [
-            {
-              value: "n",
-              label: "N",
-              children: [
-                {
-                  value: "z",
-                  label: "Z",
-                },
-              ],
-            },
-          ],
-        },
-      ],
+      options: options,
       // 竞争单位
       plus: [
         {
@@ -492,90 +510,268 @@ export default {
         },
       ],
       // 参数
-      parame: "",
-      // 提交项目
-      viewForm: {
-        project_id: "",
-        biz_catg_code: "",
-        biz_catg_id: "",
-        build_area: "",
-        build_height: "",
-        build_lbl: "",
-        bulid_addr: "",
-        client_id: "",
-        client_nm: "",
-        cmt: "",
+      parame: this.$router.currentRoute.params.id.slice(4),
+      // 项目
+      editproForm: {
         code: "",
-        compete_unit: "",
-        competitor: "",
-        construction: "",
-        contract_id: "",
-        contract_no: "",
-        created: "",
-        creator_id: "",
-        dept_nm: "",
-        dw_area: "",
-        end_date: "",
-        fee: "",
-        id: "",
-        main_major_id: "",
-        main_major_lbl: "",
-        major_lbl: "",
         nm: "",
-        org_acct_id: "",
-        owner_id: "",
-        parent_company: "",
-        pro_cycle: "",
-        pro_status: "",
+        contract_no: "",
         proc_code: "",
         proj_type_id: "",
-        project_contact_id: "",
-        project_lbl: "",
-        quote: "",
-        stage: "",
-        start_date: "",
-        status: "",
-        updated: "",
-        updator_id: "",
+        build_unit: "",
+        build_area: "",
         wall_area: "",
+        dw_area: "",
+        build_heigh: "",
         wall_height: "",
+        proj_cycle: [],
+        build_type_id: [],
+        design_type_id: [],
+        main_major_id: "",
+        build_addr: [["内蒙古自治区", "呼和浩特市", "土默特左旗"], ["士大夫"]],
+        province: "",
+        city: "",
+        region: "",
+        detail: "",
+        competitor: [],
+        quote: [],
+        agent_constr: "",
+        parent_company: "",
+        cmt: "",
+      },
+      // 校验规则
+      rules: {
+        code: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "blur",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        proj_cycle: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        nm: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        contract_no: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        proc_code: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        proj_type_id: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_unit: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        competitor: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_area: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        wall_area: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        dw_area: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_height: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        wall_height: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_type_id: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        design_type_id: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        main_major_id: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        build_addr: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        quote: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "change",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
       },
       viewList: [],
+      // 项目类型
+      project_typeFrom: [],
+      // 建筑类型
+      build_typeForm: [],
+      // 设计类型
+      work_typeForm: [],
+      // 新增类型
+      visibl: false,
+      pid: "",
+      lbl: "",
+      lbl_nm: [],
     };
   },
   beforeCreate() {
     this.$forceUpdate();
   },
   methods: {
-    //提交项目
+    // 获取类型
+    getProject() {
+      this.$api
+        .get(this.baseURL + "project/new_project/", {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          this.project_typeFrom = result.project_type;
+          this.build_typeForm = result.build_type;
+          this.work_typeForm = result.work_type;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 获取数据
+    getParame() {
+      this.$api
+        .get(this.baseURL + "project/project_detail/", {
+          params: {
+            project_id: this.parame,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          this.editproForm = result.project_info[0];
+          console.log(this.editproForm);
+          return this.editproForm;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 提交项目
     handleSearch(e) {
       e.preventDefault();
-      this.viewForm.project_id = this.viewList.id;
-      console.log(this.viewForm);
-      var qs = require("qs");
-      this.form.validateFields((err) => {
-        if (!err) {
-          this.$api
-            .post(this.baseURL + "", qs.stringify(this.viewForm), {
-              headers: {
-                Authorization: localStorage.getItem("Authorization"),
-              },
-            })
-            .then((res) => {
-              console.log(res.data);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      });
+      console.log(this.editproForm);
+      // var qs = require("qs");
+      // this.form.validateFields((err) => {
+      //   if (!err) {
+      //     this.$api
+      //       .post(this.baseURL + "", qs.stringify(this.viewForm), {
+      //         headers: {
+      //           Authorization: localStorage.getItem("Authorization"),
+      //         },
+      //       })
+      //       .then((res) => {
+      //         console.log(res.data);
+      //       })
+      //       .catch((err) => {
+      //         console.log(err);
+      //       });
+      //   }
+      // });
     },
     //
     handleReset() {
       this.form.resetFields();
     },
-    //
+    // 当前内容未保存
     waring() {
+      console.log(this.editproForm);
       let that = this;
       Modal.confirm({
         title: "返回",
@@ -587,7 +783,7 @@ export default {
           that.$api
             .post(
               that.baseURL + "project/save_project/",
-              qs.stringify(that.newproForm),
+              qs.stringify(that.editproForm),
               {
                 headers: {
                   Authorization: localStorage.getItem("Authorization"),
@@ -626,42 +822,63 @@ export default {
     // 项目周期
     sonChange(date, dateString) {
       console.log(date);
-      this.viewList.proj_cycle = dateString;
-      console.log(this.viewList.proj_cycle);
+      this.editproForm.proj_cycle = dateString;
     },
-    // 获取参数/数据
-    getParame() {
-      this.parame = this.$router.currentRoute.params.id.slice(4);
+    // 新增类型
+    addItem(form) {
+      this.visibl = true;
+      for (let i = 0; i < form.length; i++) {
+        this.pid = form[i].pid;
+      }
+    },
+    handlerAddNum() {
+      var qs = require("qs");
+      let params = {
+        lbl: this.lbl,
+        pid: this.pid,
+      };
       this.$api
-        .get(this.baseURL + "project/project_detail/", {
-          params: {
-            project_id: this.parame,
-          },
+        .post(this.baseURL + "project/new_csd/", qs.stringify(params), {
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
         })
         .then((res) => {
-          let result = res.data;
-          this.viewList = result.data.data.project_info[0];
-          console.log(this.viewList);
+          if (res.data.code) {
+            message.success("数据添加成功");
+            this.lbl = "";
+            this.editproForm.build_type_id.push(res.data.data.data.n_id);
+            this.getProject();
+          } else {
+            message.error(res.data.data.errmsg);
+          }
+          this.visibl = false;
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    handlerAddClear() {
+      this.lbl = "";
+      this.visibl = false;
+    },
   },
   mounted() {
     this.getParame();
+    this.getProject();
   },
 };
 </script>
 
 <style scoped>
+.sele:hover {
+  cursor: pointer;
+}
 .header {
   width: 100%;
-  height: 80px;
+  height: 90px;
   background: #fff;
+  padding-right: 24px;
 }
 .header > .title {
   padding: 8px 32px;
@@ -674,18 +891,12 @@ export default {
   color: #000;
   padding: 12px 32px 0;
 }
-.apppro-tabs {
-  width: 100%;
-  padding: 0 24px;
-  box-sizing: border-box;
-}
-.ant-tabs-tabpane {
-  background: #fff;
-  box-sizing: border-box;
-}
-.ant-advanced-search-form {
-  margin: 24px;
+.concentor {
+  width: 97%;
+  height: auto;
+  margin: 24px auto;
   padding: 24px;
+  box-sizing: border-box;
   background: #fff;
 }
 </style>

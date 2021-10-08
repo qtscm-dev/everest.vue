@@ -61,12 +61,7 @@
           >新建项目</a-button
         >
       </div>
-      <a-empty :style="{ display: projeList == false ? 'block' : 'none' }" />
-      <a-radio-group
-        class="pro_radio"
-        v-model="value"
-        :style="{ display: projeList == false ? 'none' : 'block' }"
-      >
+      <a-radio-group class="pro_radio" v-model="value">
         <a-radio-button class="radio-but" value="a" @click="handlerAll">
           全部&nbsp;&nbsp;&nbsp;{{ dataLength.allLength }}
         </a-radio-button>
@@ -80,6 +75,7 @@
           已中止&nbsp;&nbsp;&nbsp;{{ dataLength.withdrawnLength }}
         </a-radio-button>
       </a-radio-group>
+      <a-empty :style="{ display: projeList == false ? 'block' : 'none' }" />
       <a-table
         :style="{ display: projeList == false ? 'none' : 'block' }"
         :columns="columns"
@@ -124,15 +120,12 @@
         </template>
       </a-table>
     </div>
-    <Footer />
   </div>
 </template>
 
 <script>
-import Footer from "../../components/Footer/Footer";
 export default {
   name: "project",
-  components: { Footer },
   data() {
     const columns = [
       {
@@ -238,6 +231,7 @@ export default {
       // 分页
       currt: 1,
       pagination: {
+        pageSizeOptions: ["10", "20", "50", "100"],
         defaultPageSize: 20,
         showTotal: (total) => `共 ${total} 条数据`,
         showSizeChanger: true,
@@ -254,10 +248,10 @@ export default {
       },
       // 数据长度
       dataLength: {
-        listLength: "",
-        approvedLength: "",
-        withdrawnLength: "",
-        allLength: "",
+        listLength: 0,
+        approvedLength: 0,
+        withdrawnLength: 0,
+        allLength: 0,
       },
     };
   },
