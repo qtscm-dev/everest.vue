@@ -550,7 +550,7 @@
         </a-form>
       </div>
     </div>
-    <!-- <Footer /> -->
+    <Footer />
   </div>
 </template>
 
@@ -558,7 +558,7 @@
 import imgUrl1 from "../../../public/portrait/woman.jpg";
 import imgUrl2 from "../../../public/portrait/man.jpg";
 import { Modal, message } from "ant-design-vue";
-// import Footer from "../../components/Footer/Footer";
+import Footer from "../../components/Footer/Footer";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -569,7 +569,7 @@ function getBase64(file) {
 }
 export default {
   name: "dedetails",
-  // components: { Footer },
+  components: { Footer },
   data() {
     const columns = [
       {
