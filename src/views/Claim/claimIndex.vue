@@ -22,12 +22,19 @@
           </a-col>
           <a-col :span="6">
             <a-form-item label="日期">
-              <a-range-picker v-model="projForm.proj_cycle" />
+              <a-range-picker
+                v-model="projForm.proj_cycle"
+                @change="onChange"
+              />
             </a-form-item>
           </a-col>
           <a-col :span="6">
             <a-form-item label="部门">
-              <a-select placeholder="请选择" v-model="projForm.proj_nm" />
+              <a-select placeholder="请选择" v-model="projForm.proj_nm">
+                <a-select-option v-for="depts in dept" :key="depts.nm">
+                  {{ depts.nm }}
+                </a-select-option>
+              </a-select>
             </a-form-item>
           </a-col>
           <a-col :span="6" :style="{ textAlign: 'right' }">
@@ -42,13 +49,18 @@
             >
               收起
             </a>
-            <a-icon style="color: #1890ff" :type="expand ? 'up' : 'down'" />
+            <a-icon style="color: #1890ff" :type="expand ? 'down' : 'up'" />
           </a-col>
         </a-row>
         <a-row :style="{ display: 4 < count ? 'none' : 'block' }">
           <a-col :span="6">
             <a-form-item label="工程地点">
-              <a-cascader placeholder="请选择" v-model="projForm.proj_addr" />
+              <a-cascader
+                placeholder="请选择"
+                :options="options"
+                change-on-select
+                v-model="projForm.address"
+              />
             </a-form-item>
           </a-col>
         </a-row>
@@ -129,6 +141,7 @@
 </template>
 
 <script>
+import options from "../../address/add";
 function handlerSort(pagination, filters, sorter) {
   console.log("params", pagination, filters, sorter);
 }
@@ -226,7 +239,10 @@ export default {
       projForm: {
         search: "",
         proj_cycle: [],
+        address: null,
       },
+      // 部门
+      dept: "",
       // 单选框
       value: "d",
       // 数据长度
@@ -254,6 +270,8 @@ export default {
         },
         showQuickJumper: true,
       },
+      // 工程地点
+      options: options,
     };
   },
   methods: {
@@ -310,6 +328,7 @@ export default {
           }
           this.pagination.total = result.pagination.total_items;
           this.pagination.proj = sta;
+          this.dept = result.dept_list;
         })
         .catch((err) => {
           console.log(err);
@@ -351,6 +370,8 @@ export default {
             status: this.statu,
             search: this.projForm.search,
             proj_cycle: this.projForm.proj_cycle,
+            dept_nm: this.projForm.proj_nm,
+            address: this.projForm.address,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),

@@ -1,36 +1,33 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb class="title">
+      <a-breadcrumb>
         <a-breadcrumb-item>首页</a-breadcrumb-item>
         <a-breadcrumb-item>立项中心</a-breadcrumb-item>
       </a-breadcrumb>
-      <span>立项中心</span>
-      <div
-        :style="{
-          float: 'right',
-          padding: ' 0 24px',
-        }"
-      >
-        <a-button :style="styles" type="danger" ghost @click="handlerWithpro"
-          >中止立项</a-button
-        >
-        <a-dropdown placement="bottomRight">
-          <a-button>返回</a-button>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <span>返回列表页</span>
-            </a-menu-item>
-            <a-menu-item>
-              <router-link href="javascript:;" :to="{ name: 'index' }"
-                >返回首页</router-link
-              >
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
-        <a-button :style="styless" type="primary" @click="handlerRecover"
-          >恢复项目</a-button
-        >
+      <div>
+        <span class="ss">立项中心</span>
+        <div style="float: right">
+          <a-button :style="styles" type="danger" ghost @click="handlerWithpro"
+            >中止立项</a-button
+          >
+          <a-dropdown placement="bottomRight">
+            <a-button>返回</a-button>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <span>返回列表页</span>
+              </a-menu-item>
+              <a-menu-item>
+                <router-link href="javascript:;" :to="{ name: 'index' }"
+                  >返回首页</router-link
+                >
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+          <a-button :style="styless" type="primary" @click="handlerRecover"
+            >恢复项目</a-button
+          >
+        </div>
       </div>
       <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="1">
         <a-tab-pane key="1" tab="概要信息">
@@ -398,23 +395,19 @@ export default {
 }
 .header {
   width: 100%;
-  height: 112px;
+  height: 120px;
+  padding: 18px 24px;
+  box-sizing: border-box;
   background: #fff;
 }
-.header > .title {
-  padding: 8px 32px;
-  font-size: 14px;
-  opacity: 65%;
-}
-.header > span {
+.header .ss {
   font-size: 20px;
-  font-weight: bold;
+  line-height: 40px;
   color: #000;
-  padding: 12px 32px 0;
+  font-weight: bold;
+  margin-top: 10px;
 }
 .apppro-tabs {
   width: 100%;
-  padding: 0 24px;
-  box-sizing: border-box;
 }
 </style>

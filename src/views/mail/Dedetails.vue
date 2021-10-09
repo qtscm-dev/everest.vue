@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb class="title">
+      <a-breadcrumb>
         <a-breadcrumb-item>首页</a-breadcrumb-item>
         <a-breadcrumb-item>通讯录管理</a-breadcrumb-item>
         <a-breadcrumb-item>部门管理</a-breadcrumb-item>
       </a-breadcrumb>
-      <span>部门管理</span>
+      <h3>部门管理</h3>
     </div>
     <div class="conter">
       <div class="top">
@@ -943,19 +943,15 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 80px;
+  height: 100px;
+  padding: 18px 24px;
+  box-sizing: border-box;
   background: #fff;
 }
-.header > .title {
-  padding: 8px 32px;
-  font-size: 14px;
-  opacity: 65%;
-}
-.header > span {
+.header > h3 {
   font-size: 20px;
   font-weight: bold;
-  color: #000;
-  padding: 12px 32px 0;
+  margin-top: 10px;
 }
 .conter {
   width: 100%;

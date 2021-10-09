@@ -140,20 +140,20 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 80px;
+  height: 100px;
+  padding: 18px 24px;
+  box-sizing: border-box;
   background: #fff;
-  padding-right: 24px;
 }
 .header > .title {
-  padding: 8px 32px;
   font-size: 14px;
   opacity: 65%;
 }
 .header > span {
   font-size: 20px;
+  line-height: 40px;
   font-weight: bold;
   color: #000;
-  padding: 12px 32px 0;
 }
 .concent {
   width: 98%;

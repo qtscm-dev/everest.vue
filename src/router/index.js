@@ -91,7 +91,7 @@ const router = new VueRouter({
         // 设计中心
         {
           path: "/index/design/design",
-          name: "Favtodatail",
+          name: "DesignIndex",
           component: () => import("../views/Design/DesignIndex"),
         },
       ],

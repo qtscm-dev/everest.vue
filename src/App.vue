@@ -66,4 +66,7 @@ export default {
 .table-depa {
   background: #fafafa;
 }
+.table-proj {
+  background: #fafafa;
+}
 </style>

@@ -32,13 +32,22 @@
         >
           <div :key="col">
             <a-input
-              v-if="record.editable && col != 'typ'"
+              v-if="record.editable && col != 'typ' && col != 'mob'"
               placeholder="请输入"
               :value="text"
               @change="(e) => handleChange(e.target.value, record.id, col)"
             />
+            <a-input
+              v-else-if="record.editable && col != 'typ' && col == 'mob'"
+              placeholder="请输入"
+              type="phone"
+              :maxLength="11"
+              onkeyup="this.value=this.value.replace(/\D/g,'')"
+              :value="text"
+              @change="(e) => handleChange(e.target.value, record.id, col)"
+            />
             <a-select
-              v-else-if="record.editable && col == 'typ' && col != 'nm'"
+              v-else-if="record.editable && col == 'typ'"
               placeholder="请选择"
               v-model="record.typ"
               @change="(e) => handleChange(e.target.value, record.id, col)"
@@ -164,6 +173,7 @@ export default {
       contacts,
       editingKey: "",
       saveingKey: "",
+      dis: false,
       param: this.$router.currentRoute.params.id.slice(4),
       // 分页
       /* pagination: {
@@ -297,10 +307,11 @@ export default {
         nm: list.nm,
         mob: list.mob,
         comp_nm: list.comp_nm,
-        typ: (list.typ = "是"),
+        typ: list.typ,
         job: list.job,
         dept_nm: list.dept_nm,
       };
+      console.log(params);
       this.$api
         .post(this.baseURL + "project/new_contact", qs.stringify(params), {
           headers: {
@@ -308,7 +319,7 @@ export default {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          console.log(res);
           if (res.data.code) {
             message.success("保存成功");
             this.reload();

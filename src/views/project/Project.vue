@@ -1,35 +1,39 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb class="title">
+      <a-breadcrumb>
         <a-breadcrumb-item>首页</a-breadcrumb-item>
         <a-breadcrumb-item>立项中心</a-breadcrumb-item>
       </a-breadcrumb>
-      <span>公司项目</span>
+      <h3>公司项目</h3>
     </div>
-    <a-form v-bind="formItemLayout" class="ant-advanced-search-form">
+    <a-form-model
+      :model="conditionForm"
+      v-bind="formItemLayout"
+      class="ant-advanced-search-form"
+    >
       <a-row>
         <a-col :span="6">
-          <a-form-item label="编号名称">
+          <a-form-model-item label="编号名称">
             <a-input
               v-model="conditionForm.search"
               placeholder="请输入编号/名称"
             />
-          </a-form-item>
+          </a-form-model-item>
         </a-col>
         <a-col :span="6">
-          <a-form-item label="选择日期">
+          <a-form-model-item label="选择日期">
             <a-range-picker
               v-model="conditionForm.proj_cycle"
               v-decorator="['range-picker']"
               @change="onChange"
             />
-          </a-form-item>
+          </a-form-model-item>
         </a-col>
         <a-col :span="6">
-          <a-form-item label="建设单位">
+          <a-form-model-item label="建设单位">
             <a-input v-model="conditionForm.client_nm" placeholder="请输入" />
-          </a-form-item>
+          </a-form-model-item>
         </a-col>
         <a-col :span="6" :style="{ textAlign: 'right' }">
           <a-button type="primary" @click="handlerSubmit"> 查询 </a-button>
@@ -43,17 +47,22 @@
           >
             收起
           </a>
-          <a-icon style="color: #1890ff" :type="expand ? 'up' : 'down'" />
+          <a-icon style="color: #1890ff" :type="expand ? 'down' : 'up'" />
         </a-col>
       </a-row>
       <a-row :style="{ display: 3 < count ? 'none' : 'block' }">
         <a-col :span="6">
-          <a-form-item label="工程地点">
-            <a-cascader placeholder="请输入" />
-          </a-form-item>
+          <a-form-model-item label="工程地点">
+            <a-cascader
+              :options="options"
+              placeholder="请输入"
+              change-on-select
+              v-model="conditionForm.address"
+            />
+          </a-form-model-item>
         </a-col>
       </a-row>
-    </a-form>
+    </a-form-model>
     <div class="concent">
       <div class="concent-title">
         <span>项目列表</span>
@@ -124,6 +133,7 @@
 </template>
 
 <script>
+import options from "../../address/add";
 export default {
   name: "project",
   data() {
@@ -220,6 +230,7 @@ export default {
         proj_cycle: [],
         search: "",
         client_nm: "",
+        address: null,
       },
       // 详情查询
       viewForm: {
@@ -253,6 +264,8 @@ export default {
         withdrawnLength: 0,
         allLength: 0,
       },
+      // 工程地点
+      options: options,
     };
   },
   computed: {
@@ -263,6 +276,7 @@ export default {
   methods: {
     // 条件查询
     handlerSubmit() {
+      console.log(this.conditionForm.address);
       this.$api
         .get(this.baseURL + "project/project/", {
           params: {
@@ -270,12 +284,14 @@ export default {
             search: this.conditionForm.search,
             proj_cycle: this.conditionForm.proj_cycle,
             client_nm: this.conditionForm.client_nm,
+            address: this.conditionForm.address,
           },
           headers: {
             Authorization: localStorage.getItem("Authorization"),
           },
         })
         .then((res) => {
+          console.log(res);
           let result = res.data.data.data;
           this.projeList = result.datarows;
         })
@@ -386,19 +402,15 @@ export default {
 }
 .header {
   width: 100%;
-  height: 80px;
+  height: 100px;
+  padding: 18px 24px;
+  box-sizing: border-box;
   background: #fff;
 }
-.header > .title {
-  padding: 8px 32px;
-  font-size: 14px;
-  opacity: 65%;
-}
-.header > span {
+.header > h3 {
   font-size: 20px;
   font-weight: bold;
-  color: #000;
-  padding: 12px 32px 0;
+  margin-top: 10px;
 }
 .concent {
   width: 98%;

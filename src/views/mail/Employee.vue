@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb class="title">
+      <a-breadcrumb>
         <a-breadcrumb-item>首页</a-breadcrumb-item>
         <a-breadcrumb-item>通讯录管理</a-breadcrumb-item>
         <a-breadcrumb-item>员工管理</a-breadcrumb-item>
       </a-breadcrumb>
-      <span>员工管理</span>
-      <a-tabs class="tabs" default-active-key="1">
+      <h3>员工管理</h3>
+      <a-tabs default-active-key="1">
         <a-tab-pane class="tabs-item" key="1" tab="内部系统">
           <div class="tabs-item-top">
             <a-form
@@ -573,23 +573,15 @@ export default {
 }
 .header {
   width: 100%;
-  height: 110px;
+  height: 120px;
+  padding: 18px 24px;
+  box-sizing: border-box;
   background: #fff;
-  position: relative;
 }
-.header > .title {
-  padding: 8px 32px;
-  font-size: 14px;
-  opacity: 65%;
-}
-.header > span {
+.header > h3 {
   font-size: 20px;
   font-weight: bold;
-  color: #000;
-  padding: 12px 32px 0;
-}
-.header > .tabs {
-  padding: 0 24px;
+  margin-top: 10px;
 }
 .tabs-item-top {
   width: 99%;

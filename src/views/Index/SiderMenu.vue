@@ -26,15 +26,15 @@
         </a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="sub4">
-        <span slot="title"><a-icon type="form" /><span>认领中心</span></span>
+        <span slot="title"><a-icon type="monitor" /><span>认领中心</span></span>
         <a-menu-item key="41">
           <router-link :to="{ name: 'claimIndex' }">部门项目</router-link>
         </a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="sub5">
-        <span slot="title"><a-icon type="form" /><span>设计中心</span></span>
+        <span slot="title"><a-icon type="edit" /><span>设计中心</span></span>
         <a-menu-item key="51">
-          <router-link :to="{ name: 'claimIndex' }">部门项目</router-link>
+          <router-link :to="{ name: 'DesignIndex' }">部门项目</router-link>
         </a-menu-item>
       </a-sub-menu>
     </a-menu>

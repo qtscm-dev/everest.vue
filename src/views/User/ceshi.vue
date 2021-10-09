@@ -1,19 +1,28 @@
-rules:{ nm: [ { required: true, message: "该项为必填项", trigger: "blur", }, {
-validator: GloTips, trigger: "change" }, ], mob: [ { required: true, message:
-"该项为必填项", trigger: "blur", }, { validator: GloTips, trigger: "change" },
-], login_nm: [ { required: true, message: "该项为必填项", trigger: "blur", }, {
-validator: GloTips, trigger: "change" }, ], role_id: [ { required: true,
-message: "该项为必填项", trigger: "blur", }, { validator: GloTips, trigger:
-"change" }, ], gender: [ { required: true, message: "该项为必填项", trigger:
-"blur", }, { validator: GloTips, trigger: "change" }, ], job_id: [ { required:
-true, message: "该项为必填项", trigger: "blur", }, { validator: GloTips,
-trigger: "change" }, ], dept_id: [ { required: true, message: "该项为必填项",
-trigger: "blur", }, { validator: GloTips, trigger: "change" }, ], is_leader: [ {
-required: true, message: "该项为必填项", trigger: "blur", }, { validator:
-GloTips, trigger: "change" }, ], phone: [ { required: true, message:
-"该项为必填项", trigger: "blur", }, { validator: GloTips, trigger: "change" },
-], email: [ { required: true, message: "该项为必填项", trigger: "blur", }, {
-validator: GloTips, trigger: "change" }, ], address: [ { required: true,
-message: "该项为必填项", trigger: "blur", }, { validator: GloTips, trigger:
-"change" }, ], active: [ { required: true, message: "该项为必填项", trigger:
-"blur", }, { validator: GloTips, trigger: "change" }, ], }
+<template>
+  <div>
+    <a-select default-value="lucy" style="width: 120px" @change="handleChange">
+      <a-select-option value="jack"> Jack </a-select-option>
+      <a-select-option value="lucy"> Lucy </a-select-option>
+      <a-select-option value="disabled" :disabled="dis">
+        Disabled
+      </a-select-option>
+      <a-select-option value="Yiminghe"> yiminghe </a-select-option>
+    </a-select>
+    <a-select default-value="lucy" style="width: 120px" disabled>
+      <a-select-option value="lucy"> Lucy </a-select-option>
+    </a-select>
+    <a-select default-value="lucy" style="width: 120px" loading>
+      <a-select-option value="lucy"> Lucy </a-select-option>
+    </a-select>
+    han(id,recoped.is_leader)
+  </div>
+</template>
+<script>
+export default {
+  methods: {
+    handleChange(value) {
+      console.log(`selected ${value}`);
+    },
+  },
+};
+</script>
