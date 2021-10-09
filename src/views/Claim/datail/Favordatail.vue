@@ -332,7 +332,8 @@ export default {
       this.getProject();
     },
     // 详情
-    handlerDetails(id) {
+    handlerDetails(id, sta) {
+      console.log(sta);
       this.$router.push("/index/claim/claimindex/favtodatail/:id=" + id);
     },
   },

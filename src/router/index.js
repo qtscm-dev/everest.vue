@@ -87,6 +87,13 @@ const router = new VueRouter({
           name: "Favtodatail",
           component: () => import("../views/Claim/datail/Favtodatail"),
         },
+
+        // 设计中心
+        {
+          path: "/index/design/design",
+          name: "Favtodatail",
+          component: () => import("../views/Design/DesignIndex"),
+        },
       ],
     },
     {

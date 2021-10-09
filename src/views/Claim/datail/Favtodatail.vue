@@ -10,6 +10,9 @@
       <h3>
         项目管理
         <span>
+          <a-button type="danger" :style="sty" ghost @click="handlerWaidatail">
+            放弃认领
+          </a-button>
           <a-dropdown placement="bottomRight">
             <a-button>返回</a-button>
             <a-menu slot="overlay">
@@ -25,7 +28,9 @@
               </a-menu-item>
             </a-menu>
           </a-dropdown>
-          <a-button type="primary" style="margin-left: 16px">认领项目</a-button>
+          <a-button type="primary" :style="styl" @click="handlerDatail"
+            >认领项目</a-button
+          >
         </span>
       </h3>
       <a-tabs :tabBarGutter="0" default-active-key="1">
@@ -54,6 +59,7 @@
 </template>
 
 <script>
+import { Modal, message } from "ant-design-vue";
 import BasicInfo from "../../../components/ProjectDetail/BasicInfo";
 import DepartInfo from "../../../components/ProjectDetail/DepartInfo";
 import ContactInfo from "../../../components/ProjectDetail/ContactInfo";
@@ -78,6 +84,8 @@ export default {
       contact_typ: [],
       // 项目文件
       proj_doculist: [],
+      sty: "",
+      styl: "",
     };
   },
   methods: {
@@ -95,15 +103,22 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.ProjectBasicInfo = result.sub_info[0];
+          console.log(this.ProjectBasicInfo);
           if (this.ProjectBasicInfo.sub_status == "2100") {
             this.status.badges = "default";
             this.status.msg = "待认领";
+            this.sty = "display: none";
+            this.styl = "margin-left: 16px";
           } else if (this.ProjectBasicInfo.sub_status == "3000") {
             this.status.badges = "success";
             this.status.msg = "已认领";
+            this.styl = "display: none";
+            this.sty = "margin-right: 16px";
           } else if (this.ProjectBasicInfo.sub_status == "2111") {
             this.status.badges = "error";
             this.status.msg = "已撤回";
+            this.sty = "display: none";
+            this.styl = "margin-left: 16px";
           }
         })
         .catch((err) => {
@@ -173,6 +188,74 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    // 认领项目
+    handlerDatail() {
+      let that = this;
+      var qs = require("qs");
+      let params = {
+        sub_id: this.id,
+      };
+      Modal.confirm({
+        title: "认领项目",
+        content: "请确定是否要领取该项目",
+        okText: "确定",
+        cancelText: "取消",
+        onOk() {
+          that.$api
+            .post(that.baseURL + "claim/claim_proj/", qs.stringify(params), {
+              headers: {
+                Authorization: localStorage.getItem("Authorization"),
+              },
+            })
+            .then((res) => {
+              if (res.data.code) {
+                message.success(that.ProjectBasicInfo.code + "认领成功");
+                that.$router.push({ name: "Favordatail" });
+              } else {
+                message.error(that.ProjectBasicInfo.code + "认领失败");
+              }
+              console.log(res.data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+      });
+    },
+    // 放弃认领
+    handlerWaidatail() {
+      let that = this;
+      let qs = require("qs");
+      let params = {
+        sub_id: that.id,
+      };
+      Modal.confirm({
+        title: "放弃认领",
+        content: "请确定是否要放弃认领该项目",
+        okText: "确定",
+        cancelText: "取消",
+        onOk() {
+          that.$api
+            .post(that.baseURL + "claim/discard_claim/", qs.stringify(params), {
+              headers: {
+                Authorization: localStorage.getItem("Authorization"),
+              },
+            })
+            .then((res) => {
+              if (res.data.code) {
+                message.success(that.ProjectBasicInfo.code + "放弃认领成功");
+                that.$router.push({ name: "Favordatail" });
+              } else {
+                message.error(res.data.data.errmsg);
+              }
+              console.log(res.data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+      });
     },
   },
   mounted() {

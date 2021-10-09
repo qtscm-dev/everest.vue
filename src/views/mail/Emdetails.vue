@@ -27,61 +27,53 @@
         <span>员工信息</span>
       </div>
       <div class="informa">
-        <a-descriptions>
-          <a-descriptions-item style="width: 250px">
-            <img
-              ref="imgs"
-              :src="imgSrc"
-              style="width: 250px; height: 200px"
-              alt=""
-            />
+        <img
+          ref="imgs"
+          :src="imgSrc"
+          style="width: 250px; height: 200px"
+          alt=""
+        />
+        <a-descriptions
+          class="informa-ul"
+          :column="{ xxl: 3, xl: 3, lg: 1, md: 1, sm: 2, xs: 2 }"
+        >
+          <a-descriptions-item label="员工ID">
+            {{ empInfo.id }}
+          </a-descriptions-item>
+          <a-descriptions-item label="状态">
+            {{ empInfo.status }}
+          </a-descriptions-item>
+          <a-descriptions-item label="姓名">
+            {{ empInfo.nm }}
+          </a-descriptions-item>
+          <a-descriptions-item label="邮箱">
+            {{ empInfo.email }}
+          </a-descriptions-item>
+          <a-descriptions-item label="性别">
+            {{ empInfo.sex }}
+          </a-descriptions-item>
+          <a-descriptions-item label="职位">
+            {{ empInfo.job }}
+          </a-descriptions-item>
+          <a-descriptions-item label="手机号码">
+            {{ empInfo.mob }}
+          </a-descriptions-item>
+          <a-descriptions-item label="座机号码">
+            {{ empInfo.phone }}
+          </a-descriptions-item>
+          <a-descriptions-item label="是否领导">
+            {{ empInfo.is_leader }}
+          </a-descriptions-item>
+          <a-descriptions-item label="部门顺序">
+            {{ empInfo.dept_id }}
+          </a-descriptions-item>
+          <a-descriptions-item label="所属部门">
+            {{ empInfo.dept_nm }}
+          </a-descriptions-item>
+          <a-descriptions-item label="地址">
+            {{ empInfo.address }}
           </a-descriptions-item>
         </a-descriptions>
-        <span>
-          <a-descriptions
-            class="informa-ul"
-            :column="{ xxl: 3, xl: 3, lg: 1, md: 1, sm: 2, xs: 2 }"
-          >
-            <!-- <div> -->
-            <a-descriptions-item label="员工ID">
-              {{ empInfo.id }}
-            </a-descriptions-item>
-            <a-descriptions-item label="状态">
-              {{ empInfo.status }}
-            </a-descriptions-item>
-            <a-descriptions-item label="姓名">
-              {{ empInfo.nm }}
-            </a-descriptions-item>
-            <a-descriptions-item label="邮箱">
-              {{ empInfo.email }}
-            </a-descriptions-item>
-            <a-descriptions-item label="性别">
-              {{ empInfo.sex }}
-            </a-descriptions-item>
-            <a-descriptions-item label="职位">
-              {{ empInfo.job }}
-            </a-descriptions-item>
-            <a-descriptions-item label="手机号码">
-              {{ empInfo.mob }}
-            </a-descriptions-item>
-            <a-descriptions-item label="座机号码">
-              {{ empInfo.phone }}
-            </a-descriptions-item>
-            <a-descriptions-item label="是否领导">
-              {{ empInfo.is_leader }}
-            </a-descriptions-item>
-            <a-descriptions-item label="部门顺序">
-              {{ empInfo.dept_id }}
-            </a-descriptions-item>
-            <a-descriptions-item label="所属部门">
-              {{ empInfo.dept_nm }}
-            </a-descriptions-item>
-            <a-descriptions-item label="地址">
-              {{ empInfo.address }}
-            </a-descriptions-item>
-            <!-- </div> -->
-          </a-descriptions>
-        </span>
       </div>
     </div>
     <Footer />
@@ -120,18 +112,19 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.empInfo = result.staff_info;
-          if (this.empInfo.avatar) {
+          console.log(this.empInfo.avatar);
+          console.log(this.empInfo.sex);
+          if (this.empInfo.avatar != null) {
             this.imgSrc = this.baseURL + this.empInfo.avatar;
-          } else {
+          } else if (this.empInfo.avatar == null) {
             if (this.empInfo.sex == "男") {
               this.imgSrc = imgSrc1;
             } else if (this.empInfo.sex == "女") {
               this.imgSrc = imgSrc2;
+            } else {
+              this.imgSrc = imgSrc1;
             }
           }
-          console.log(result);
-          console.log(this.empInfo);
-          console.log(this.empInfo.sex);
         })
         .catch((err) => {
           console.log(err);

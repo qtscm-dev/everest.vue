@@ -7,7 +7,7 @@
           ><a href="javascript;">认领中心</a></a-breadcrumb-item
         >
       </a-breadcrumb>
-      <h3>认领中心</h3>
+      <h3>部门项目</h3>
     </div>
     <div class="formQuery">
       <a-form class="formlist" v-bind="formItemLayout" v-model="projForm">
@@ -78,7 +78,6 @@
         </a-radio-button>
       </a-radio-group>
       <a-empty :style="{ display: prolist == false ? 'block' : 'none' }" />
-      <!-- <div class="protable"> -->
       <a-table
         :columns="columns"
         :data-source="prolist"
@@ -125,7 +124,6 @@
           </div>
         </template>
       </a-table>
-      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -146,7 +144,6 @@ export default {
       {
         title: "项目",
         dataIndex: "code",
-        // width: 180,
       },
       {
         title: "状态",
@@ -160,7 +157,6 @@ export default {
       {
         title: "建设单位",
         dataIndex: "client_nm",
-        // width: 100,
       },
       {
         title: "幕墙面积",
@@ -170,7 +166,6 @@ export default {
       {
         title: "建筑类型",
         dataIndex: "build_lbl",
-        // width: 200,
         ellipsis: true,
       },
       {
@@ -191,17 +186,14 @@ export default {
       {
         title: "项目周期",
         dataIndex: "pro_cycle",
-        // width: 220,
       },
       {
         title: "项目地点",
         dataIndex: "bulid_addr",
-        // width: 250,
       },
       {
         title: "操作时间",
         dataIndex: "updated",
-        // width: 150,
         sorter: (a, b) => {
           return a.updated > b.updated ? 1 : -1;
         },

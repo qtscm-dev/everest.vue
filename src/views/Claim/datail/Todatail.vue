@@ -164,7 +164,7 @@ export default {
             .then((res) => {
               if (res.data.code) {
                 message.success(that.ProjectBasicInfo.code + "认领成功");
-                that.reload();
+                that.$router.push({ name: "claimIndex" });
               } else {
                 message.error(that.ProjectBasicInfo.code + "认领失败");
               }
@@ -198,7 +198,7 @@ export default {
             .then((res) => {
               if (res.data.code) {
                 message.success(that.ProjectBasicInfo.code + "放弃认领成功");
-                that.reload();
+                that.$router.push({ name: "claimIndex" });
               } else {
                 message.error(res.data.data.errmsg);
               }

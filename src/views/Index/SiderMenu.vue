@@ -31,6 +31,12 @@
           <router-link :to="{ name: 'claimIndex' }">部门项目</router-link>
         </a-menu-item>
       </a-sub-menu>
+      <a-sub-menu key="sub5">
+        <span slot="title"><a-icon type="form" /><span>设计中心</span></span>
+        <a-menu-item key="51">
+          <router-link :to="{ name: 'claimIndex' }">部门项目</router-link>
+        </a-menu-item>
+      </a-sub-menu>
     </a-menu>
   </div>
 </template>

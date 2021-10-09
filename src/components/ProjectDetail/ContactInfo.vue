@@ -12,12 +12,11 @@
         :style="{ display: contactsList == false ? 'block' : 'none' }"
       >
         <span slot="description"> 暂无数据 </span>
-        <a-button type="primary"> 现在创建 </a-button>
+        <a-button type="primary" @click="handlerAdd"> 现在创建 </a-button>
       </a-empty>
       <a-table
         :columns="contacts"
         :data-source="contactsList"
-        :pagination="pagination"
         :scroll="{ x: 1500 }"
         :rowKey="(record) => record.id"
         :rowClassName="
@@ -33,7 +32,7 @@
         >
           <div :key="col">
             <a-input
-              v-if="record.editable && col != 'typ' && col != 'nm'"
+              v-if="record.editable && col != 'typ'"
               placeholder="请输入"
               :value="text"
               @change="(e) => handleChange(e.target.value, record.id, col)"
@@ -47,15 +46,6 @@
               <a-select-option v-for="list in contact_typ" :key="list.id">{{
                 list.lbl
               }}</a-select-option>
-            </a-select>
-            <a-select
-              v-else-if="record.editable && col != 'typ' && col == 'nm'"
-              placeholder="请选择"
-              v-model="record.nm"
-              @change="(e) => handleChange(e.target.value, record.id, col)"
-            >
-              <a-select-option value="t">是</a-select-option>
-              <a-select-option value="f">否</a-select-option>
             </a-select>
             <template v-else>
               {{ text }}
@@ -168,8 +158,6 @@ export default {
         title: "操作",
         dataIndex: "operation",
         scopedSlots: { customRender: "operation" },
-        // fixed: "right",
-        // width: 120,
       },
     ];
     return {
@@ -178,7 +166,7 @@ export default {
       saveingKey: "",
       param: this.$router.currentRoute.params.id.slice(4),
       // 分页
-      pagination: {
+      /* pagination: {
         pagination: false,
         defaultPageSize: 20,
         showTotal: (total) => `共 ${total} 条数据`,
@@ -187,7 +175,7 @@ export default {
         total: 0,
         proj: "",
         onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
-      },
+      }, */
     };
   },
   methods: {

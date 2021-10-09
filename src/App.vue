@@ -63,4 +63,7 @@ export default {
 .ant-col-8 {
   height: 102.8px;
 }
+.table-depa {
+  background: #fafafa;
+}
 </style>

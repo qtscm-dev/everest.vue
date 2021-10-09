@@ -253,8 +253,6 @@ export default {
           },
         })
         .then((res) => {
-          let result = res.data;
-          console.log(result);
           if (res.data.code) {
             message.success("修改成功");
           } else {

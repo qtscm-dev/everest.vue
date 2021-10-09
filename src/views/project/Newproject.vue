@@ -800,7 +800,6 @@ export default {
     },
     // 提交项目
     handlerNewpro(form) {
-      console.log(this.newproForm);
       this.$refs[form].validate((valid) => {
         if (valid) {
           var qs = require("qs");

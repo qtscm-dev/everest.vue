@@ -536,7 +536,6 @@ export default {
           let result = res.data.data.data;
           this.staff_list = result.staff_info;
           this.staff_list.user_id = id;
-          console.log(this.staff_list);
           if (this.staff_list.sta == "t") {
             this.staff_list.active = "t";
           } else {
@@ -547,7 +546,6 @@ export default {
           } else {
             this.staff_list.is_leader = "f";
           }
-          console.log(this.staff_list);
         })
         .catch((err) => {
           console.log(err);
@@ -562,6 +560,9 @@ export default {
 </script>
 
 <style scooed>
+.ant-col-8 {
+  height: auto;
+}
 .table-emplo {
   background: #fafafa;
 }

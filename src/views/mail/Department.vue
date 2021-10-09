@@ -10,10 +10,10 @@
       <a-tabs class="tabs" default-active-key="1">
         <a-tab-pane class="tabs-item" key="1" tab="内部系统">
           <div class="tabs-item-top">
-            <a-form :model="departForm" v-bind="formItemLayout">
+            <a-form-model :model="departForm" v-bind="formItemLayout">
               <a-row>
                 <a-col :span="8">
-                  <a-form-item
+                  <a-form-model-item
                     style="margin-bottom: 12px; margin-top: 12px"
                     label="部门名称"
                   >
@@ -21,7 +21,7 @@
                       v-model="departForm.nm"
                       placeholder="请输入"
                     ></a-input>
-                  </a-form-item>
+                  </a-form-model-item>
                 </a-col>
                 <a-col :span="16">
                   <span
@@ -40,7 +40,7 @@
                   </span>
                 </a-col>
               </a-row>
-            </a-form>
+            </a-form-model>
           </div>
           <div class="tabs-item-content">
             <div style="height: 32px; line-height: 32px; margin-bottom: 24px">
@@ -99,129 +99,76 @@
         </a-tab-pane>
       </a-tabs>
       <!-- 新增部门 -->
-      <a-form
-        :form="form"
-        :model="depaForm"
-        style="box-size: border-box; padding-left: 90px"
-        v-bind="formItemLayout"
-      >
-        <a-modal
-          v-model="visible"
-          title="新增部门"
-          on-ok="handleOk"
-          :destroyOnClose="true"
+      <a-modal v-model="visible" title="新增部门" :destroyOnClose="true">
+        <template slot="footer">
+          <a-button key="back" @click="handleCancel"> 返回 </a-button>
+          <a-button key="submit" type="primary" @click="handleOk('depaForm')">
+            提交
+          </a-button>
+        </template>
+        <a-alert
+          class="modal-alert"
+          type="error"
+          :message="msg"
+          banner
+          :style="dis"
+        />
+        <a-form-model
+          ref="depaForm"
+          :model="depaForm"
+          :rules="rules"
+          v-bind="formItemLayout"
         >
-          <template slot="footer">
-            <a-button key="back" @click="handleCancel"> 返回 </a-button>
-            <a-button key="submit" type="primary" @click="handleOk">
-              提交
-            </a-button>
-          </template>
-          <a-alert
-            class="modal-alert"
-            type="error"
-            message="请填写必填字段：部门名称"
-            banner
-          />
-          <a-form-item label="部门名称">
-            <a-input
-              placeholder="请输入"
-              v-model="depaForm.nm"
-              v-decorator="['名称', { rules: [{ required: true }] }]"
-            />
-          </a-form-item>
-          <a-form-item label="上级部门">
-            <a-select
-              style="width: 236px"
-              placeholder="请选择"
-              v-model="depaForm.pid"
-              v-decorator="['上级部门', { rules: [{ required: true }] }]"
-            >
-              <a-select-option
-                v-for="(superiors, i) in superiorForm"
-                :key="i"
-                :value="superiors.id"
-              >
-                {{ superiors.nm }}
+          <a-form-model-item label="部门名称" prop="nm">
+            <a-input placeholder="请输入" v-model="depaForm.nm" />
+          </a-form-model-item>
+          <a-form-model-item label="上级部门" prop="pid">
+            <a-select placeholder="请选择" v-model="depaForm.pid">
+              <a-select-option v-for="supes in superiorForm" :key="supes.id">
+                {{ supes.nm }}
               </a-select-option>
             </a-select>
-          </a-form-item>
-          <a-form-item label="部门顺序">
-            <a-input
-              placeholder="请输入"
-              v-model="depaForm.o"
-              v-decorator="[
-                '顺序',
-                {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your note!',
-                    },
-                  ],
-                },
-              ]"
-            />
-          </a-form-item>
-        </a-modal>
-      </a-form>
+          </a-form-model-item>
+          <a-form-model-item label="部门顺序" prop="o">
+            <a-input placeholder="请输入" v-model="depaForm.o" />
+          </a-form-model-item>
+        </a-form-model>
+      </a-modal>
       <!-- 编辑 -->
       <a-modal v-model="visibilie" title="编辑部门" :destroyOnClose="true">
         <template slot="footer">
           <a-button @click="handleBack"> 返回 </a-button>
-          <a-button type="primary" @click="handlerDetemine">
+          <a-button type="primary" @click="handlerDetemine('editList')">
             提交
-          </a-button> </template
-        ><a-form
-          :form="form"
-          style="box-size: border-box; padding-left: 90px"
+          </a-button>
+        </template>
+        <a-form-model
+          ref="editList"
+          :model="editList"
+          :rules="rules"
           v-bind="formItemLayout"
         >
-          <a-form-item label="部门名称">
-            <a-input
-              placeholder="请输入"
-              v-decorator="['名称', { rules: [{ required: true }] }]"
-            />
-          </a-form-item>
-          <a-form-item label="上级部门">
-            <a-select
-              placeholder="请选择"
-              v-model="editList.pnm"
-              v-decorator="['上级部门', { rules: [{ required: true }] }]"
-            >
-              <a-select-option
-                v-for="superiors in superiorForm"
-                :key="superiors.id"
-              >
-                {{ superiors.nm }}
+          <a-form-model-item label="部门名称" prop="nm">
+            <a-input placeholder="请输入" v-model="editList.nm" />
+          </a-form-model-item>
+          <a-form-model-item label="上级部门" prop="pid">
+            <a-select placeholder="请选择" v-model="editList.pnm">
+              <a-select-option v-for="supes in superiorForm" :key="supes.id">
+                {{ supes.nm }}
               </a-select-option>
             </a-select>
-          </a-form-item>
-          <a-form-item label="部门顺序">
-            <a-input
-              placeholder="请输入"
-              v-model="editList.o"
-              v-decorator="[
-                '顺序',
-                {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your note!',
-                    },
-                  ],
-                },
-              ]"
-            />
-          </a-form-item>
-        </a-form>
+          </a-form-model-item>
+          <a-form-model-item label="部门顺序" prop="o">
+            <a-input placeholder="请输入" v-model="editList.o" />
+          </a-form-model-item>
+        </a-form-model>
       </a-modal>
     </div>
   </div>
 </template>
 
 <script>
-import { Modal } from "ant-design-vue";
+import { Modal, message } from "ant-design-vue";
 export default {
   name: "department",
   beforeCreate() {
@@ -276,9 +223,14 @@ export default {
         scopedSlots: { customRender: "operation" },
       },
     ];
+    let GloTips = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("该项不能为空"));
+      } else {
+        callback();
+      }
+    };
     return {
-      // 表单
-      form: this.$form.createForm(this, { name: "coordinated" }),
       // 栅格布局
       formItemLayout: {
         labelCol: {
@@ -289,6 +241,33 @@ export default {
           xs: { span: 24 },
           sm: { span: 12 },
         },
+      },
+      // 校验规则
+      rules: {
+        nm: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "blur",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        pid: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "blur",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
+        o: [
+          {
+            required: true,
+            message: "该项为必填项",
+            trigger: "blur",
+          },
+          { validator: GloTips, trigger: "change" },
+        ],
       },
       // 列表信息
       columns,
@@ -310,14 +289,7 @@ export default {
       // 详情
       id: "",
       // 编辑部门
-      editForm: "",
-      editList: {
-        id: "",
-        nm: "",
-        pnm: "",
-        pid: "",
-        o: "",
-      },
+      editList: {},
       // 分页
       pagination: {
         total: 0,
@@ -332,6 +304,8 @@ export default {
         },
         showQuickJumper: true,
       },
+      dis: "display: none",
+      msg: "",
     };
   },
   methods: {
@@ -363,11 +337,10 @@ export default {
     handlerNew() {
       this.visible = true;
     },
-    handleOk(e) {
-      e.preventDefault();
-      var qs = require("qs");
-      this.form.validateFields((err) => {
-        if (!err) {
+    handleOk(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          var qs = require("qs");
           this.$api
             .post(
               this.baseURL + "dept/new_dept/",
@@ -379,20 +352,24 @@ export default {
               }
             )
             .then((res) => {
-              if (res.data.code == false) {
+              if (res.data.code) {
+                this.visible = false;
+                message.success("成功");
+                this.departmentList();
+              } else if (!res.data.code) {
                 Modal.error({
-                  title: "部门顺序重复",
+                  title: res.data.data.errmsg,
                   content: "请选择其他顺序编号",
                 });
                 this.visible = true;
-              } else if (res.data.code !== false) {
-                this.visible = false;
-                this.departmentList();
               }
             })
             .catch((err) => {
               console.log(err);
             });
+        } else {
+          this.dis = "display: block";
+          this.msg = "请填写必填字段：";
         }
       });
     },
@@ -413,38 +390,43 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
-          this.editForm = result.dept_info;
-          console.log(this.editForm);
-          return this.editForm;
+          this.editList = result.dept_info;
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    handlerDetemine(e) {
+    handlerDetemine(form) {
       var qs = require("qs");
-      e.preventDefault;
-      let params = {
-        dept_id: this.id,
-        nm: this.editList.nm,
-        pid: this.editList.pid == null ? this.editList.id : this.editForm.pid,
-        o: this.editList.o == null ? this.editList.o : this.editForm.o,
-      };
-      this.$api
-        .post(this.baseURL + "dept/edit_dept/", qs.stringify(params), {
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
-        })
-        .then((res) => {
-          let result = res.data;
-          console.log(result);
-          this.visibilie = false;
-          this.departmentList();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          let params = {
+            dept_id: this.editList.id,
+            nm: this.editList.nm,
+            pid: this.editList.pid,
+            o: this.editList.o,
+          };
+          this.$api
+            .post(this.baseURL + "dept/edit_dept/", qs.stringify(params), {
+              headers: {
+                Authorization: localStorage.getItem("Authorization"),
+              },
+            })
+            .then((res) => {
+              if (res.data.code) {
+                message.success("成功");
+                this.visibilie = false;
+                this.departmentList();
+              } else {
+                message.error(res.data.data.errmsg);
+                this.visibilie = true;
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
     },
     handleBack() {
       this.visibilie = false;
@@ -470,7 +452,6 @@ export default {
             });
           }
           this.departmentList();
-          console.log(result);
         })
         .catch((err) => {
           console.log(err);
@@ -526,8 +507,8 @@ export default {
 </script>
 
 <style scoped>
-.table-depa {
-  background: #fafafa;
+.ant-col-8 {
+  height: auto;
 }
 .ant-spin-nested-loading {
   position: relative;
