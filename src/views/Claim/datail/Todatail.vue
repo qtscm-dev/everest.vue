@@ -1,12 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb>
-        <a-breadcrumb-item><a href="javascript;">首页</a></a-breadcrumb-item>
-        <a-breadcrumb-item
-          ><a href="javascript;">项目管理</a></a-breadcrumb-item
-        >
-      </a-breadcrumb>
       <h3>
         项目管理
         <span>
@@ -88,10 +82,7 @@ export default {
       disabled: "",
       // 概要信息
       ProjectBasicInfo: {},
-      status: {
-        badges: "",
-        msg: "",
-      },
+      status: {},
       // 项目部门
       prodepa: [],
       // 联系人
@@ -315,7 +306,7 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 125px;
+  height: 105px;
   padding: 18px 24px;
   box-sizing: border-box;
   background: #fff;

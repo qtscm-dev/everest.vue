@@ -1,35 +1,35 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb>
-        <a-breadcrumb-item><a href="javascript;">首页</a></a-breadcrumb-item>
-        <a-breadcrumb-item>
-          <a href="javascript;">认领中心</a>
-        </a-breadcrumb-item>
-      </a-breadcrumb>
       <h3>部门项目</h3>
     </div>
     <!-- 查询 -->
     <div class="query">
-      <a-form-model v-bind="formItemLayout">
+      <a-form-model :model="projForm" v-bind="formItemLayout">
         <a-row>
           <a-col :span="6">
             <a-form-model-item label="项目">
-              <a-input placeholder="请输入项目ID/名称" />
+              <a-input
+                placeholder="请输入项目ID/名称"
+                v-model="projForm.proj_nm"
+              />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="日期">
-              <a-range-picker @change="onChange" />
+              <a-range-picker
+                @change="onChange"
+                v-model="projForm.proj_cycle"
+              />
             </a-form-model-item>
           </a-col>
           <a-col :span="6">
             <a-form-model-item label="建设单位">
-              <a-input placeholder="请输入" />
+              <a-input placeholder="请输入" v-model="projForm.client_nm" />
             </a-form-model-item>
           </a-col>
           <a-col :span="6" :style="{ textAlign: 'right' }">
-            <a-button type="primary"> 查询 </a-button>
+            <a-button type="primary" @click="handlerQuery"> 查询 </a-button>
             <a-button :style="{ marginLeft: '8px' }"> 重置 </a-button>
             <a
               ref="run"
@@ -47,6 +47,7 @@
               <a-cascader
                 placeholder="请选择"
                 :options="options"
+                v-model="projForm.address"
                 change-on-select
               />
             </a-form-item>
@@ -93,12 +94,57 @@
         "
         :style="{ display: datalist == false ? 'none' : 'block' }"
       >
+        <!-- 状态 -->
+        <a-badge
+          v-if="text == '1000'"
+          slot="status"
+          slot-scope="text"
+          status="default"
+          text="待分配"
+        />
+        <a-badge
+          v-else-if="text == '2000'"
+          slot="status"
+          slot-scope="text"
+          status="default"
+          text="待开始"
+        />
+        <a-badge
+          v-else-if="text == '3000'"
+          slot="status"
+          slot-scope="text"
+          status="processing"
+          text="设计中"
+        />
+        <a-badge
+          v-else-if="text == '4000'"
+          slot="status"
+          slot-scope="text"
+          status="success"
+          text="设计归档"
+        />
+        <a-badge
+          v-else-if="text == '5000'"
+          slot="status"
+          slot-scope="text"
+          status="processing"
+          text="设计交付"
+        />
+        <a-badge
+          v-else-if="text == '9111'"
+          slot="status"
+          slot-scope="text"
+          status="error"
+          text="已中止"
+        />
         <!-- 操作 -->
         <template slot="operation" slot-scope="text, record">
           <div>
             <a
+              :href="url"
+              target="_blank"
               style="font-size: 14px"
-              @click="() => handlerDetails(record.id, record.status)"
+              @click="() => handlerDetails(record.sub_id, record.status)"
               >详情</a
             >
           </div>
@@ -122,6 +168,12 @@ export default {
       {
         title: "项目名称",
         dataIndex: "proj_nm",
+      },
+      {
+        title: "状态",
+        dataIndex: "status",
+        width: 100,
+        scopedSlots: { customRender: "status" },
       },
       {
         title: "部门",
@@ -149,6 +201,7 @@ export default {
       {
         title: "设计内容",
         dataIndex: "major_lbl",
+        ellipsis: true,
       },
       {
         title: "项目周期",
@@ -190,7 +243,7 @@ export default {
       value: "a",
       // 表格
       columns,
-      datalist: false,
+      datalist: [],
       // 分页
       pagination: {
         pageSizeOptions: ["10", "20", "50", "100"],
@@ -214,6 +267,17 @@ export default {
       e: 0,
       f: 0,
       g: 0,
+      // 状态
+      sta: "",
+      // 查询
+      projForm: {
+        proj_nm: null,
+        proj_cycle: null,
+        client_nm: null,
+        address: null,
+      },
+      // 详情
+      url: "",
     };
   },
   methods: {
@@ -232,6 +296,36 @@ export default {
       console.log(date);
       this.projForm.proj_cycle = dateString;
     },
+    handlerQuery() {
+      this.$api
+        .get(this.baseURL + "design/design_list/", {
+          params: {
+            status: this.sta,
+            proj_nm: this.projForm.proj_nm,
+            proj_cycle: this.projForm.proj_cycle,
+            client_nm: this.projForm.client_nm,
+            address: this.projForm.address,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          this.datalist = result.datarows;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 重置
+    handlerReset() {
+      this.projForm.proj_cycle = "";
+      this.projForm.proj_cycle = "";
+      this.projForm.proj_cycle = "";
+      this.projForm.proj_cycle = "";
+      this.handlerData(this.sta);
+    },
     // 数据
     handlerData(sta, page, perpage) {
       this.$api
@@ -247,7 +341,11 @@ export default {
         })
         .then((res) => {
           let result = res.data.data.data;
-          this.datalist = result.datarows;
+          if (result.datarows != false) {
+            this.datalist = result.datarows;
+          } else {
+            this.datalist = [];
+          }
           this.a = result.count_num.whole_num;
           this.b = result.count_num.unassign_num;
           this.c = result.count_num.start_num;
@@ -256,7 +354,6 @@ export default {
           this.f = result.count_num.deliv_num;
           this.g = result.count_num.stop_num;
           this.pagination.proj = sta;
-          console.log(this.datalist);
         })
         .catch((err) => {
           console.log(err);
@@ -265,33 +362,48 @@ export default {
     // 全部
     handlerAll() {
       this.handlerData("all");
+      this.sta = "all";
     },
     // 设计待分配
     handlerWait() {
       this.handlerData("1000");
+      this.sta = "1000";
     },
     // 设计待开始
     handlerAntion() {
       this.handlerData("2000");
+      this.sta = "2000";
     },
     // 设计中
     handlerIng() {
       this.handlerData("3000");
+      this.sta = "3000";
     },
     // 设计交付
     handlerDeli() {
       this.handlerData("5000");
+      this.sta = "5000";
     },
     // 设计归档
     handlerFile() {
       this.handlerData("4000");
+      this.sta = "4000";
     },
     // 项目终止
     handlerEnd() {
       this.handlerData("9111");
+      this.sta = "9111";
     },
     // 详情
-    handlerDetails() {},
+    handlerDetails(id, sta) {
+      console.log(sta);
+      if (sta != "9111") {
+        this.url = "/design/desideta/:id=" + id;
+      }
+      // else if (sta == "3000") {
+      //   this.Url = "/design/desideta/:id=" + id;
+      // }
+    },
   },
   mounted() {
     this.handlerAll();
@@ -302,7 +414,7 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 100px;
+  height: 60px;
   padding: 18px 24px;
   box-sizing: border-box;
   background: #fff;
@@ -310,7 +422,6 @@ export default {
 .header > h3 {
   font-size: 20px;
   font-weight: bold;
-  margin-top: 10px;
 }
 .query {
   width: 99%;

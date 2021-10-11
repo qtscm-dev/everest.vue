@@ -392,7 +392,6 @@
               v-for="(item, i) in plus"
               :key="i"
               :label="i === 0 ? '竞争单位' : ''"
-              prop="competitor"
             >
               <a-input
                 placeholder="请输入"
@@ -426,7 +425,7 @@
           </div>
         </a-col>
         <a-col :span="24">
-          <a-form-model-item label="设计报价" prop="quote">
+          <a-form-model-item label="设计报价">
             <a-input-group>
               <a-input
                 style="width: 23.5%; margin-right: 15px"
@@ -597,14 +596,6 @@ export default {
           },
           { validator: GloTips, trigger: "change" },
         ],
-        competitor: [
-          {
-            required: true,
-            message: "该项为必填项",
-            trigger: "change",
-          },
-          { validator: GloTips, trigger: "change" },
-        ],
         build_area: [
           {
             required: true,
@@ -670,14 +661,6 @@ export default {
           { validator: GloTips, trigger: "change" },
         ],
         build_addr: [
-          {
-            required: true,
-            message: "该项为必填项",
-            trigger: "change",
-          },
-          { validator: GloTips, trigger: "change" },
-        ],
-        quote: [
           {
             required: true,
             message: "该项为必填项",

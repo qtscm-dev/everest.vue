@@ -9,7 +9,7 @@
         :columns="columns"
         :data-source="prodepa"
         :pagination="pagination"
-        :rowKey="(record) => record.id"
+        :rowKey="(record) => record.code"
         :rowClassName="
           (record, index) => (index % 2 === 1 ? 'table-apppro' : null)
         "

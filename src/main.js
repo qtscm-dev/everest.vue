@@ -42,8 +42,10 @@ import {
   ConfigProvider,
   Avatar,
   FormModel,
+  TreeSelect,
 } from "ant-design-vue";
 
+Vue.use(TreeSelect);
 Vue.use(FormModel);
 Vue.use(Avatar);
 Vue.use(Popconfirm);

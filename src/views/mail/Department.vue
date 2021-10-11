@@ -1,11 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb>
-        <a-breadcrumb-item>首页</a-breadcrumb-item>
-        <a-breadcrumb-item>通讯录管理</a-breadcrumb-item>
-        <a-breadcrumb-item>部门管理</a-breadcrumb-item>
-      </a-breadcrumb>
       <h3>部门管理</h3>
       <a-tabs default-active-key="1">
         <a-tab-pane class="tabs-item" key="1" tab="内部系统">
@@ -78,7 +73,12 @@
               "
             >
               <template slot="operation" slot-scope="text, record">
-                <a @click="() => handlerInfo(record.id)">详情</a>
+                <a
+                  :href="url"
+                  target="_blank"
+                  @click="() => handlerInfo(record.id)"
+                  >详情</a
+                >
                 <a-divider type="vertical" />
                 <a @click="() => handleredit(record.id)"> 编辑 </a>
                 <a-divider type="vertical" />
@@ -288,6 +288,7 @@ export default {
       },
       // 详情
       id: "",
+      url: "",
       // 编辑部门
       editList: {},
       // 分页
@@ -496,7 +497,7 @@ export default {
     },
     // 详情
     handlerInfo(id) {
-      this.$router.push("/index/department/dedetails/:id=" + id);
+      this.url = "/department/dedetails/:id=" + id;
     },
   },
   mounted() {
@@ -517,7 +518,7 @@ export default {
 }
 .header {
   width: 100%;
-  height: 120px;
+  height: 100px;
   padding: 18px 24px;
   box-sizing: border-box;
   background: #fff;
@@ -525,7 +526,7 @@ export default {
 .header > h3 {
   font-size: 20px;
   font-weight: bold;
-  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .tabs-item-top {
   width: 99%;

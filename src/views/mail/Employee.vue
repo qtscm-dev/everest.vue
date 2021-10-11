@@ -1,11 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb>
-        <a-breadcrumb-item>首页</a-breadcrumb-item>
-        <a-breadcrumb-item>通讯录管理</a-breadcrumb-item>
-        <a-breadcrumb-item>员工管理</a-breadcrumb-item>
-      </a-breadcrumb>
       <h3>员工管理</h3>
       <a-tabs default-active-key="1">
         <a-tab-pane class="tabs-item" key="1" tab="内部系统">
@@ -145,7 +140,12 @@
               />
               <!-- 操作 -->
               <template slot="operation" slot-scope="text, record">
-                <a @click="() => handlerEmpl(record.id)">详情</a>
+                <a
+                  :href="url"
+                  target="_blank"
+                  @click="() => handlerEmpl(record.id)"
+                  >详情</a
+                >
                 <a-divider type="vertical" />
                 <a @click="() => handlerEdit(record.id)"> 编辑 </a>
                 <a-divider type="vertical" />
@@ -267,19 +267,6 @@ export default {
       },
     ];
     return {
-      // 表单
-      form: this.$form.createForm(this, { name: "coordinated" }),
-      // 栅格布局
-      formItemLayout: {
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 8 },
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 12 },
-        },
-      },
       vi: false,
       visibles2: false,
       headers: {
@@ -307,7 +294,7 @@ export default {
           phone: "",
           active: "",
           email: "",
-          address: [[], []],
+          address: [],
           avatar: "",
           job_id: "",
           dept_id: "",
@@ -346,6 +333,8 @@ export default {
         },
         showQuickJumper: true,
       },
+      // 详情
+      url: "",
     };
   },
   methods: {
@@ -500,7 +489,7 @@ export default {
     },
     // 详情
     handlerEmpl(id) {
-      this.$router.push("/index/employee/emdetails/:id=" + id);
+      this.url = "/employee/emdetails/:id=" + id;
     },
     handlerIn() {
       this.$api
@@ -521,6 +510,7 @@ export default {
     },
     // 编辑员工
     handlerEdit(id) {
+      console.log(id);
       this.visibles2 = true;
       this.id = id;
       this.$api
@@ -573,7 +563,7 @@ export default {
 }
 .header {
   width: 100%;
-  height: 120px;
+  height: 100px;
   padding: 18px 24px;
   box-sizing: border-box;
   background: #fff;
@@ -581,7 +571,7 @@ export default {
 .header > h3 {
   font-size: 20px;
   font-weight: bold;
-  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .tabs-item-top {
   width: 99%;

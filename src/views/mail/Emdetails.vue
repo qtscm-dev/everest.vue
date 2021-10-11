@@ -1,10 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb class="title">
-        <a-breadcrumb-item>首页</a-breadcrumb-item>
-        <a-breadcrumb-item>通讯录管理</a-breadcrumb-item>
-      </a-breadcrumb>
       <span>员工管理</span>
       <a-dropdown>
         <a-button style="float: right" @click="(e) => e.preventDefault()"
@@ -112,8 +108,6 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.empInfo = result.staff_info;
-          console.log(this.empInfo.avatar);
-          console.log(this.empInfo.sex);
           if (this.empInfo.avatar != null) {
             this.imgSrc = this.baseURL + this.empInfo.avatar;
           } else if (this.empInfo.avatar == null) {
@@ -140,20 +134,16 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 100px;
+  height: 60px;
   padding: 18px 24px;
   box-sizing: border-box;
   background: #fff;
 }
-.header > .title {
-  font-size: 14px;
-  opacity: 65%;
-}
 .header > span {
   font-size: 20px;
-  line-height: 40px;
-  font-weight: bold;
   color: #000;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 .concent {
   width: 98%;

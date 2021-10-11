@@ -119,7 +119,6 @@
 
 <script>
 import { message } from "ant-design-vue";
-// import { message } from "ant-design-vue";
 import options from "../../../address/add";
 function getBase64(img, callback) {
   const reader = new FileReader();

@@ -1,12 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb>
-        <a-breadcrumb-item><a href="javascript;">首页</a></a-breadcrumb-item>
-        <a-breadcrumb-item
-          ><a href="javascript;">认领中心</a></a-breadcrumb-item
-        >
-      </a-breadcrumb>
       <h3>部门项目</h3>
     </div>
     <div class="formQuery">
@@ -101,7 +95,6 @@
           (record, index) => (index % 2 === 1 ? 'table-proj' : null)
         "
         :style="{ display: prolist == false ? 'none' : 'block' }"
-        @change="handlerSort"
       >
         <!-- 状态 -->
         <a-badge
@@ -129,6 +122,8 @@
         <template slot="operation" slot-scope="text, record">
           <div>
             <a
+              :href="url"
+              target="_blank"
               style="font-size: 14px"
               @click="() => handlerDetails(record.id, record.status)"
               >详情</a
@@ -142,9 +137,6 @@
 
 <script>
 import options from "../../address/add";
-function handlerSort(pagination, filters, sorter) {
-  console.log("params", pagination, filters, sorter);
-}
 export default {
   name: "claimIndex",
   computed: {
@@ -272,6 +264,8 @@ export default {
       },
       // 工程地点
       options: options,
+      // 详情
+      url: "",
     };
   },
   methods: {
@@ -356,7 +350,7 @@ export default {
     },
     // 详情
     handlerDetails(id) {
-      this.$router.push("/index/claim/claimindex/todatail/:id=" + id);
+      this.url = "/claim/claimindex/todatail/:id=" + id;
     },
     // 查询
     onChange(date, dateString) {
@@ -389,9 +383,10 @@ export default {
     handlerReset() {
       this.projForm.search = "";
       this.projForm.proj_cycle = "";
+      this.projForm.proj_nm = "";
+      this.projForm.address = "";
       this.getProtable(this.statu);
     },
-    handlerSort,
   },
   mounted() {
     this.handlerWholer();
@@ -403,7 +398,7 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 100px;
+  height: 60px;
   padding: 18px 24px;
   box-sizing: border-box;
   background: #fff;
@@ -411,7 +406,7 @@ export default {
 .header > h3 {
   font-size: 20px;
   font-weight: bold;
-  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .formQuery {
   width: 97%;

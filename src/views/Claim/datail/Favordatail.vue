@@ -121,6 +121,8 @@
           <template slot="operation" slot-scope="text, record">
             <div>
               <a
+                :href="url"
+                target="_blank"
                 style="font-size: 14px"
                 @click="() => handlerDetails(record.id, record.status)"
                 >详情</a
@@ -240,6 +242,8 @@ export default {
         },
         showQuickJumper: true,
       },
+      // 详情
+      url: "",
     };
   },
   methods: {
@@ -332,9 +336,8 @@ export default {
       this.getProject();
     },
     // 详情
-    handlerDetails(id, sta) {
-      console.log(sta);
-      this.$router.push("/index/claim/claimindex/favtodatail/:id=" + id);
+    handlerDetails(id) {
+      this.url = "/claim/claimindex/favtodatail/:id=" + id;
     },
   },
   mounted() {

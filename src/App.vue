@@ -69,4 +69,12 @@ export default {
 .table-proj {
   background: #fafafa;
 }
+.ant-tabs-nav-scroll {
+  background: #fff;
+  padding: 0 24px;
+}
+// .ant-tabs .ant-tabs-top-content > .ant-tabs-tabpane,
+// .ant-tabs .ant-tabs-bottom-content > .ant-tabs-tabpane {
+//   padding: 0 24px;
+// }
 </style>

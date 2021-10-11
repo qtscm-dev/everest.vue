@@ -103,19 +103,18 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.ProjectBasicInfo = result.sub_info[0];
-          console.log(this.ProjectBasicInfo);
           if (this.ProjectBasicInfo.sub_status == "2100") {
-            this.status.badges = "default";
+            this.status.badge = "default";
             this.status.msg = "待认领";
             this.sty = "display: none";
             this.styl = "margin-left: 16px";
           } else if (this.ProjectBasicInfo.sub_status == "3000") {
-            this.status.badges = "success";
+            this.status.badge = "success";
             this.status.msg = "已认领";
             this.styl = "display: none";
             this.sty = "margin-right: 16px";
           } else if (this.ProjectBasicInfo.sub_status == "2111") {
-            this.status.badges = "error";
+            this.status.badge = "error";
             this.status.msg = "已撤回";
             this.sty = "display: none";
             this.styl = "margin-left: 16px";

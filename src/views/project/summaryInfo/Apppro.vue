@@ -1,10 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <a-breadcrumb>
-        <a-breadcrumb-item>首页</a-breadcrumb-item>
-        <a-breadcrumb-item>立项中心</a-breadcrumb-item>
-      </a-breadcrumb>
       <div>
         <span class="ss">立项中心</span>
         <div style="float: right">
@@ -15,7 +11,7 @@
             <a-button>返回</a-button>
             <a-menu slot="overlay">
               <a-menu-item>
-                <span>返回列表页</span>
+                <router-link :to="{ name: 'project' }">返回列表页</router-link>
               </a-menu-item>
               <a-menu-item>
                 <router-link href="javascript:;" :to="{ name: 'index' }"
@@ -390,9 +386,6 @@ export default {
 </script>
 
 <style scoped>
-.table-apppro {
-  background: #fafafa;
-}
 .header {
   width: 100%;
   height: 120px;
