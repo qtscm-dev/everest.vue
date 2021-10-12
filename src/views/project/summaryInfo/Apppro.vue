@@ -25,28 +25,25 @@
           >
         </div>
       </div>
-      <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="1">
-        <a-tab-pane key="1" tab="概要信息">
-          <ProjectBasicInfo
-            :ProjectBasicInfo="projectBasicInfo"
-            :status="status"
-          />
-        </a-tab-pane>
-        <a-tab-pane key="2" tab="项目部门" force-render>
-          <DepartInfo :prodepa="prodepa" />
-        </a-tab-pane>
-        <a-tab-pane key="3" tab="联系人">
-          <ContactInfo
-            :contactsList="contactsList"
-            :contact_typ="contact_typ"
-          />
-        </a-tab-pane>
-        <a-tab-pane key="4" tab="项目文件">
-          <DocumentInfo :proj_doculist="proj_doculist" />
-        </a-tab-pane>
-      </a-tabs>
-      <Footer class="footent" />
     </div>
+    <a-tabs :tabBarGutter="0" class="apppro-tabs" default-active-key="1">
+      <a-tab-pane key="1" tab="概要信息">
+        <ProjectBasicInfo
+          :ProjectBasicInfo="projectBasicInfo"
+          :status="status"
+        />
+      </a-tab-pane>
+      <a-tab-pane key="2" tab="项目部门" force-render>
+        <DepartInfo :prodepa="prodepa" />
+      </a-tab-pane>
+      <a-tab-pane key="3" tab="联系人">
+        <ContactInfo :contactsList="contactsList" :contact_typ="contact_typ" />
+      </a-tab-pane>
+      <a-tab-pane key="4" tab="项目文件">
+        <DocumentInfo :proj_doculist="proj_doculist" />
+      </a-tab-pane>
+    </a-tabs>
+    <Footer class="footent" />
   </div>
 </template>
 
@@ -94,20 +91,6 @@ export default {
       contact_typ: [],
       // 项目文件
       proj_doculist: [],
-      // 分页
-      pagination: {
-        defaultPageSize: 20,
-        showTotal: (total) => `共 ${total} 条数据`,
-        showSizeChanger: true,
-        size: "middle",
-        total: 0,
-        proj: "",
-        onShowSizeChange: (current, pageSize) => (this.pageSize = pageSize),
-        // onChange: (current, pageSize) => {
-        //   this.getProject(this.pagination.proj, current, pageSize);
-        // },
-        showQuickJumper: true,
-      },
     };
   },
   methods: {
@@ -369,7 +352,6 @@ export default {
           if (result.datarows) {
             this.proj_doculist = result.datarows;
           }
-          this.pagination.total = result.pagination.total_items;
         })
         .catch((err) => {
           console.log(err);
@@ -388,7 +370,7 @@ export default {
 <style scoped>
 .header {
   width: 100%;
-  height: 120px;
+  height: 60px;
   padding: 18px 24px;
   box-sizing: border-box;
   background: #fff;
@@ -399,8 +381,5 @@ export default {
   color: #000;
   font-weight: bold;
   margin-top: 10px;
-}
-.apppro-tabs {
-  width: 100%;
 }
 </style>

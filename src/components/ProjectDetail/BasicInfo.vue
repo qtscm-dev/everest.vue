@@ -26,19 +26,44 @@
         ProjectBasicInfo.client_nm
       }}</a-descriptions-item>
       <a-descriptions-item label="建筑面积"
-        >{{ ProjectBasicInfo.build_area }}平方米
+        ><span
+          :style="{
+            display: ProjectBasicInfo.build_area == '' ? 'none' : 'block',
+          }"
+          >{{ ProjectBasicInfo.build_area }}平方米</span
+        >
       </a-descriptions-item>
       <a-descriptions-item label="幕墙面积"
-        >{{ ProjectBasicInfo.wall_area }}平方米</a-descriptions-item
+        ><span
+          :style="{
+            display: ProjectBasicInfo.wall_area == '' ? 'none' : 'block',
+          }"
+          >{{ ProjectBasicInfo.wall_area }}平方米</span
+        ></a-descriptions-item
       >
       <a-descriptions-item label="门窗面积"
-        >{{ ProjectBasicInfo.dw_area }}平方米</a-descriptions-item
+        ><span
+          :style="{
+            display: ProjectBasicInfo.dw_area == '' ? 'none' : 'block',
+          }"
+          >{{ ProjectBasicInfo.dw_area }}平方米</span
+        ></a-descriptions-item
       >
       <a-descriptions-item label="建筑高度"
-        >{{ ProjectBasicInfo.build_height }}米</a-descriptions-item
+        ><span
+          :style="{
+            display: ProjectBasicInfo.build_height == '' ? 'none' : 'block',
+          }"
+          >{{ ProjectBasicInfo.build_height }}米</span
+        ></a-descriptions-item
       >
       <a-descriptions-item label="幕墙高度"
-        >{{ ProjectBasicInfo.wall_height }}米</a-descriptions-item
+        ><span
+          :style="{
+            display: ProjectBasicInfo.wall_height == '' ? 'none' : 'block',
+          }"
+          >{{ ProjectBasicInfo.wall_height }}米</span
+        ></a-descriptions-item
       >
       <a-descriptions-item label="项目周期">{{
         ProjectBasicInfo.pro_cycle
@@ -93,7 +118,7 @@ export default {
 </script>
 <style scoped>
 .concenter {
-  width: 100%;
+  width: 97%;
   height: auto;
   background: #fff;
 }

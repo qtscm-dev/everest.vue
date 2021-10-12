@@ -63,7 +63,7 @@
         </template>
         <!-- 操作 -->
         <template slot="operation" slot-scope="text, record">
-          <div v-if="saveingKey == ''" class="editable-row-operations">
+          <div v-if="saveingKey == ''">
             <span v-if="record.editable">
               <a @click="() => handlerSave(record.id)">保存</a
               >&nbsp;&nbsp;&nbsp;
@@ -83,7 +83,7 @@
               >
             </span>
           </div>
-          <div v-else class="editable-row-operations">
+          <div v-else>
             <span v-if="record.editable">
               <a @click="handlerNewcon">保存</a>&nbsp;&nbsp;&nbsp;
               <a @click="() => handlerClear(record.id)">取消</a>
@@ -338,7 +338,7 @@ export default {
 
 <style>
 .concenter {
-  width: 100%;
+  width: 97%;
   height: auto;
 }
 .concenter .title {

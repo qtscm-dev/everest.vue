@@ -1,9 +1,11 @@
 <template>
   <div>
     <div class="header">
-      <span>{{ stat }}项目</span>
+      <span>{{ status.msg }}项目</span>
       <div style="float: right">
-        <a-button :style="style3" type="danger" ghost>中止立项</a-button>
+        <a-button :style="style3" type="danger" ghost @click="handlerEnding"
+          >中止立项</a-button
+        >
         <a-dropdown placement="bottomRight">
           <a-button>返回</a-button>
           <a-menu slot="overlay">
@@ -19,11 +21,15 @@
             </a-menu-item>
           </a-menu>
         </a-dropdown>
-        <a-button :style="style1" type="primary">分配负责人</a-button>
-        <a-button :style="style2" type="primary">开始设计</a-button>
+        <a-button :style="style1" type="primary" @click="handlerPerson"
+          >分配负责人</a-button
+        >
+        <a-button :style="style2" type="primary" @click="handlerAction"
+          >开始设计</a-button
+        >
       </div>
     </div>
-    <a-tabs default-active-key="1">
+    <a-tabs :tabBarGutter="0" default-active-key="1">
       <a-tab-pane key="1" tab="概要信息">
         <ProjectBasicInfo
           :ProjectBasicInfo="projectBasicInfo"
@@ -31,19 +37,28 @@
           class="summary"
         />
       </a-tab-pane>
-      <!-- <a-tab-pane key="2" tab="Tab 2" force-render>
-        Content of Tab Pane 2
+      <a-tab-pane key="2" tab="项目部门" force-render>
+        <DepartInfo :prodepa="prodepa" class="depar" />
       </a-tab-pane>
-      <a-tab-pane key="3" tab="Tab 3"> Content of Tab Pane 3 </a-tab-pane> -->
+      <a-tab-pane key="3" tab="联系人">
+        <ContactInfo :contactsList="contactsList" :contact_typ="contact_typ" />
+      </a-tab-pane>
+      <a-tab-pane key="4" tab="项目文件">
+        <DocumentInfo :proj_doculist="proj_doculist" />
+      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
 
 <script>
 import ProjectBasicInfo from "../../../components/ProjectDetail/BasicInfo";
+import DepartInfo from "../../../components/ProjectDetail/DepartInfo";
+import ContactInfo from "../../../components/ProjectDetail/ContactInfo";
+import DocumentInfo from "../../../components/ProjectDetail/DocumentInfo";
+import { message } from "ant-design-vue";
 export default {
   name: "DesiDeta",
-  components: { ProjectBasicInfo },
+  components: { ProjectBasicInfo, DepartInfo, ContactInfo, DocumentInfo },
   data() {
     return {
       stat: "",
@@ -55,9 +70,17 @@ export default {
       // 概要信息
       projectBasicInfo: {},
       status: {},
+      // 项目部门
+      prodepa: [],
+      // 联系人
+      contactsList: [],
+      contact_typ: [],
+      // 项目文件
+      proj_doculist: [],
     };
   },
   methods: {
+    // 概要信息
     getIndex() {
       this.$api
         .get(this.baseURL + "design/design_detail/", {
@@ -71,7 +94,6 @@ export default {
         .then((res) => {
           let result = res.data.data.data;
           this.projectBasicInfo = result.project_info[0];
-          console.log(this.projectBasicInfo.status);
           if (this.projectBasicInfo.status == "1000") {
             this.status.badge = "default";
             this.status.msg = "待分配";
@@ -99,9 +121,126 @@ export default {
           console.log(err);
         });
     },
+    // 项目部门
+    getProdepa() {
+      this.$api
+        .get(this.baseURL + "project/proj_dept", {
+          params: {
+            proj_id: this.id,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          if (result.datarows) {
+            this.prodepa = result.datarows;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 联系人
+    getContacts() {
+      this.$api
+        .get(this.baseURL + "project/proj_contact", {
+          params: {
+            proj_id: this.id,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          if (result.datarows) {
+            this.contactsList = result.datarows;
+          }
+          this.contact_typ = result.contact_typ;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 项目文件
+    getProjdoculist() {
+      this.$api
+        .get(this.baseURL + "project/proj_file", {
+          params: {
+            proj_id: this.id,
+          },
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          let result = res.data.data.data;
+          if (result.datarows) {
+            this.proj_doculist = result.datarows;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 分配负责人
+    handlerPerson() {
+      this.$router.push({ name: "DesignPerson" });
+    },
+    // 中止项目
+    handlerEnding() {
+      var qs = require("qs");
+      let params = {
+        sub_id: this.id,
+      };
+      this.$api
+        .post(this.baseURL + "design/revoke_design/", qs.stringify(params), {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          if (res.data.code) {
+            message.success("中止立项成功");
+            this.$router.push({ name: "DesignIndex" });
+          } else {
+            message.error("中止立项失败");
+          }
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 开始设计
+    handlerAction() {
+      var qs = require("qs");
+      let params = {
+        sub_id: this.id,
+      };
+      this.$api
+        .post(this.baseURL + "design/start_design/", qs.stringify(params), {
+          headers: {
+            Authorization: localStorage.getItem("Authorization"),
+          },
+        })
+        .then((res) => {
+          if (res.data.code) {
+            message.success("成功");
+            this.$router.push({ name: "DesignIndex" });
+          } else {
+            message.error("失败");
+          }
+        });
+    },
   },
   mounted() {
     this.getIndex();
+    this.getProdepa();
+    this.getContacts();
+    this.getProjdoculist();
   },
 };
 </script>
@@ -120,6 +259,7 @@ export default {
   font-weight: bold;
 }
 .summary {
+  width: 97%;
   margin: 12px 24px 24px;
 }
 </style>

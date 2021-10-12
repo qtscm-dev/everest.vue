@@ -15,7 +15,7 @@
         <a-button @click="handlerReset">重置</a-button>
       </div>
     </a-form>
-    <div style="padding: 24px; background: #fff">
+    <div class="tabges">
       <div class="concent-title">
         <span>项目文件</span>
         <a-upload
@@ -278,7 +278,7 @@ export default {
 <style>
 .top {
   padding: 24px;
-  margin-bottom: 24px;
+  margin: 12px 24px 24px;
   position: relative;
   background: #fff;
 }
@@ -295,7 +295,9 @@ export default {
   font-size: 16px;
   color: #000;
 }
-.table-apppro {
-  background: #fafafa;
+.tabges {
+  padding: 24px;
+  background: #fff;
+  margin: 0 24px 24px;
 }
 </style>

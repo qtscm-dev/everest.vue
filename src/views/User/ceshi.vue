@@ -1,58 +1,136 @@
 <template>
-  <a-tree-select
-    v-model="value"
-    style="width: 100%"
-    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-    :tree-data="treeData"
-    placeholder="Please select"
-    tree-default-expand-all
-  >
-    <!-- <span
-      v-if="id === '0-0-1'"
-      slot="title"
-      slot-scope="{ id }"
-      style="color: #08c"
+  <a-table :columns="columns" :data-source="data" bordered>
+    <template
+      v-for="col in ['name', 'age', 'address']"
+      :slot="col"
+      slot-scope="text, record"
     >
-      Child Node1 {{ treeData.children.nm }}
-    </span> -->
-  </a-tree-select>
+      <div :key="col">
+        <a-input
+          v-if="record.editable"
+          style="margin: -5px 0"
+          :value="text"
+          @change="(e) => handleChange(e.target.value, record.key, col)"
+        />
+        <template v-else>
+          {{ text }}
+        </template>
+      </div>
+    </template>
+    <template slot="operation" slot-scope="text, record">
+      <div class="editable-row-operations">
+        <span v-if="record.editable">
+          <a @click="() => save(record.key)">Save</a>
+          <a-popconfirm
+            title="Sure to cancel?"
+            @confirm="() => cancel(record.key)"
+          >
+            <a>Cancel</a>
+          </a-popconfirm>
+        </span>
+        <span v-else>
+          <a :disabled="editingKey !== ''" @click="() => edit(record.key)"
+            >Edit</a
+          >
+        </span>
+      </div>
+    </template>
+  </a-table>
 </template>
-
 <script>
+const columns = [
+  {
+    title: "name",
+    dataIndex: "name",
+    width: "25%",
+    scopedSlots: { customRender: "name" },
+  },
+  {
+    title: "age",
+    dataIndex: "age",
+    width: "15%",
+    scopedSlots: { customRender: "age" },
+  },
+  {
+    title: "address",
+    dataIndex: "address",
+    width: "40%",
+    scopedSlots: { customRender: "address" },
+  },
+  {
+    title: "operation",
+    dataIndex: "operation",
+    scopedSlots: { customRender: "operation" },
+  },
+];
+
+const data = [];
+for (let i = 0; i < 100; i++) {
+  data.push({
+    key: i.toString(),
+    name: `Edrward ${i}`,
+    age: 32,
+    address: `London Park no. ${i}`,
+  });
+}
 export default {
   data() {
+    this.cacheData = data.map((item) => ({ ...item }));
     return {
-      value: undefined,
-      treeData: [],
+      data,
+      columns,
+      editingKey: "",
     };
   },
   methods: {
-    getIndex() {
-      this.$api
-        .get(this.baseURL + "assign/direct_assign/", {
-          headers: {
-            Authorization: localStorage.getItem("Authorization"),
-          },
-        })
-        .then((res) => {
-          let result = res.data.data.data;
-          this.treeData = result;
-          // console.log(result);
-          console.log(this.value);
-          // console.log(this.treeData);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    handleChange(value, key, column) {
+      const newData = [...this.data];
+      const target = newData.filter((item) => key === item.key)[0];
+      if (target) {
+        target[column] = value;
+        this.data = newData;
+      }
     },
-  },
-  mounted() {
-    this.getIndex();
-  },
-  watch: {
-    value(value) {
-      console.log(value);
+    edit(key) {
+      const newData = [...this.data];
+      const target = newData.filter((item) => key === item.key)[0];
+      this.editingKey = key;
+      if (target) {
+        target.editable = true;
+        this.data = newData;
+      }
+    },
+    save(key) {
+      const newData = [...this.data];
+      const newCacheData = [...this.cacheData];
+      const target = newData.filter((item) => key === item.key)[0];
+      const targetCache = newCacheData.filter((item) => key === item.key)[0];
+      if (target && targetCache) {
+        delete target.editable;
+        this.data = newData;
+        Object.assign(targetCache, target);
+        this.cacheData = newCacheData;
+      }
+      this.editingKey = "";
+    },
+    cancel(key) {
+      const newData = [...this.data];
+      const target = newData.filter((item) => key === item.key)[0];
+      this.editingKey = "";
+      if (target) {
+        Object.assign(
+          target,
+          this.cacheData.filter((item) => key === item.key)[0]
+        );
+        delete target.editable;
+        this.data = newData;
+      }
     },
   },
 };
 </script>
+<style scoped>
+.editable-row-operations a {
+  margin-right: 8px;
+}
+</style>

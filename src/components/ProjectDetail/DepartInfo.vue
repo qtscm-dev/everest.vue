@@ -118,18 +118,18 @@ export default {
 
 <style>
 .concenter {
-  width: 100%;
+  width: 97%;
   height: auto;
+  margin: 12px 24px;
+  box-sizing: border-box;
   background: #fff;
 }
 .concenter .title {
-  line-height: 56px;
-  padding: 0 24px;
   font-size: 16px;
+  padding: 24px 24px;
   color: #000;
 }
-.concenter .content {
-  box-sizing: border-box;
-  padding: 0 24px;
+.content {
+  padding: 0 24px 24px;
 }
 </style>

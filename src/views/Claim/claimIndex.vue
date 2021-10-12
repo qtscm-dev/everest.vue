@@ -195,6 +195,7 @@ export default {
       {
         title: "项目地点",
         dataIndex: "bulid_addr",
+        ellipsis: true,
       },
       {
         title: "操作时间",

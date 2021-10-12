@@ -210,6 +210,10 @@ export default {
         dataIndex: "nm",
       },
       {
+        title: "登陆账号",
+        dataIndex: "login_nm",
+      },
+      {
         title: "手机号码",
         dataIndex: "mob",
         width: 120,

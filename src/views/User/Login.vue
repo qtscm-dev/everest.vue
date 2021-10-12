@@ -161,8 +161,6 @@ export default {
                   "Authorization",
                   "Bearer " + res.data.data.token
                 );
-                // localStorage.setItem("username", this.loginForm.username);
-                // localStorage.setItem("password", this.loginForm.password);
                 this.$router.push({ name: "index" });
               } else if (res.data.code == false) {
                 message.error(result.data.errmsg, 4);

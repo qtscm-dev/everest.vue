@@ -130,6 +130,11 @@ const router = new VueRouter({
               name: "DesiDeta",
               component: () => import("../views/Design/Detail/DesiDeta"),
             },
+            {
+              path: "/design/designperson/:id",
+              name: "DesignPerson",
+              component: () => import("../views/Design/Detail/DesignPerson"),
+            },
           ],
         },
       ],

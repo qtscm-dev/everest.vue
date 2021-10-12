@@ -395,14 +395,8 @@ export default {
       this.sta = "9111";
     },
     // 详情
-    handlerDetails(id, sta) {
-      console.log(sta);
-      if (sta != "9111") {
-        this.url = "/design/desideta/:id=" + id;
-      }
-      // else if (sta == "3000") {
-      //   this.Url = "/design/desideta/:id=" + id;
-      // }
+    handlerDetails(id) {
+      this.url = "/design/desideta/:id=" + id;
     },
   },
   mounted() {
